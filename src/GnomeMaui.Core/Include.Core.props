@@ -214,6 +214,15 @@
         <Compile Include="../../ext/maui/src/Core/src/Handlers/NavigationPage/INavigationViewHandler.cs" Link="Handlers/NavigationPage/INavigationViewHandler.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/NavigationPage/NavigationViewHandler.cs" Link="Handlers/NavigationPage/NavigationViewHandler.cs" />
 
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Entry/IEntryHandler.cs" Link="Handlers/Entry/IEntryHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Entry/EntryHandler.cs" Link="Handlers/Entry/EntryHandler.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Editor/IEditorHandler.cs" Link="Handlers/Editor/IEditorHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Editor/EditorHandler.cs" Link="Handlers/Editor/EditorHandler.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Image/IImageHandler.cs" Link="Handlers/Image/IImageHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Image/ImageHandler.cs" Link="Handlers/Image/ImageHandler.cs" />
+
         <Compile Include="../../ext/maui/src/Core/src/Hosting/IMauiFactory.cs" Link="Hosting/IMauiFactory.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Hosting/IMauiHandlersCollection.cs" Link="Hosting/IMauiHandlersCollection.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Hosting/IMauiHandlersFactory.cs" Link="Hosting/IMauiHandlersFactory.cs" />
@@ -237,6 +246,7 @@
         <Compile Include="../../ext/maui/src/Core/src/Hosting/Fonts/FontsMauiAppBuilderExtensions.cs" Link="Hosting/Fonts/FontsMauiAppBuilderExtensions.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Hosting/Fonts/IFontCollection.cs" Link="Hosting/Fonts/IFontCollection.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Hosting/Fonts/FontDescriptor.cs" Link="Hosting/Fonts/FontDescriptor.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Hosting/Fonts/FontCollectionExtensions.cs" Link="Hosting/Fonts/FontCollectionExtensions.cs" />
 
         <Compile Include="../../ext/maui/src/Core/src/Hosting/ImageSources/ImageSourcesMauiAppBuilderExtensions.cs" Link="Hosting/ImageSources/ImageSourcesMauiAppBuilderExtensions.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Hosting/ImageSources/IImageSourceServiceCollection.cs" Link="Hosting/ImageSources/IImageSourceServiceCollection.cs" />
@@ -291,6 +301,7 @@
         <Compile Include="../../ext/maui/src/Core/src/Layouts/AbsoluteLayoutManager.cs" Link="Layouts/AbsoluteLayoutManager.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Layouts/VerticalStackLayoutManager.cs" Link="Layouts/VerticalStackLayoutManager.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Layouts/StackLayoutManager.cs" Link="Layouts/StackLayoutManager.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Layouts/HorizontalStackLayoutManager.cs" Link="Layouts/HorizontalStackLayoutManager.cs" />
 
         <Compile Include="../../ext/maui/src/Core/src/LifecycleEvents/ILifecycleBuilder.cs" Link="LifecycleEvents/ILifecycleBuilder.cs" />
         <Compile Include="../../ext/maui/src/Core/src/LifecycleEvents/ILifecycleEventService.cs" Link="LifecycleEvents/ILifecycleEventService.cs" />
@@ -398,6 +409,9 @@
         <Compile Include="../../ext/maui/src/Core/src/Handlers/MenuBarItem/MenuBarItemHandler.Standard.cs" Link="Handlers/MenuBarItem/MenuBarItemHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/MenuFlyoutHandler/MenuFlyoutHandler.Standard.cs" Link="Handlers/MenuFlyoutHandler/MenuFlyoutHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/Button/ButtonHandler.Standard.cs" Link="Handlers/Button/ButtonHandler.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Entry/EntryHandler.Standard.cs" Link="Handlers/Entry/EntryHandler.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Editor/EditorHandler.Standard.cs" Link="Handlers/Editor/EditorHandler.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Image/ImageHandler.Standard.cs" Link="Handlers/Image/ImageHandler.netruntime.cs" />
 
         <Compile Include="../../ext/maui/src/Core/src/Handlers/FlyoutView/FlyoutViewHandler.Standard.cs" Link="Handlers/FlyoutView/FlyoutViewHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/NavigationPage/NavigationViewHandler.Standard.cs" Link="Handlers/NavigationPage/NavigationViewHandler.netruntime.cs" />

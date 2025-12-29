@@ -1,0 +1,92 @@
+diff --git a/src/Maui/DrawnUi/Internals/Extensions/DrawnExtensions.cs b/src/Maui/DrawnUi/Internals/Extensions/DrawnExtensions.cs
+index ba79447..32b20bb 100644
+--- a/src/Maui/DrawnUi/Internals/Extensions/DrawnExtensions.cs
++++ b/src/Maui/DrawnUi/Internals/Extensions/DrawnExtensions.cs
+@@ -432,6 +432,52 @@ public static partial class DrawnExtensions
+ 
+             });
+ 
++#elif GNOME
++
++            AppLifecycle.AddGnome((gnome) =>
++            {
++                gnome.OnStartup((application, args) =>
++                {
++                    Super.Init();
++                });
++
++                gnome.OnActivate((application, args) =>
++                {
++                    Super.App = Super.Services.GetRequiredService<IApplication>();
++
++                    var appWindow = Super.App.Windows.First() as Microsoft.Maui.Controls.Window;
++
++                    if (appWindow != null)
++                    {
++                        Super.Screen.Density = DeviceDisplay.Current.MainDisplayInfo.Density;
++
++                        appWindow.DisplayDensityChanged += (sender, eventArgs) =>
++                        {
++                            Super.Screen.Density = eventArgs.DisplayDensity;
++                        };
++
++                        if (StartupSettings != null)
++                        {
++                            if (StartupSettings.DesktopWindow != null)
++                            {
++                                Super.ResizeWindow(appWindow,
++                                    StartupSettings.DesktopWindow.Value.Width,
++                                    StartupSettings.DesktopWindow.Value.Height,
++                                    StartupSettings.DesktopWindow.Value.IsFixedSize);
++                            }
++                        }
++                    }
++
++                    Super.OnMauiAppCreated?.Invoke();
++                    Super.OnCreated();
++                });
++
++                gnome.OnShutdown((application, args) =>
++                {
++                    // Cleanup if needed
++                });
++            });
++
+ #endif
+ 
+         });
+diff --git a/src/Maui/DrawnUi/Super.Maui.cs b/src/Maui/DrawnUi/Super.Maui.cs
+index ec7767c..d9011d4 100644
+--- a/src/Maui/DrawnUi/Super.Maui.cs
++++ b/src/Maui/DrawnUi/Super.Maui.cs
+@@ -173,6 +173,8 @@ namespace DrawnUi.Draw
+             MauiApplication.Current.Services;
+ #elif IOS || MACCATALYST
+             MauiUIApplicationDelegate.Current.Services;
++#elif GNOME
++            MauiAdwApplication.Current?.Services;            
+ #else
+                         null;
+ #endif
+diff --git a/src/Maui/DrawnUi/Views/Canvas.cs b/src/Maui/DrawnUi/Views/Canvas.cs
+index d5155f1..c2e9fa2 100644
+--- a/src/Maui/DrawnUi/Views/Canvas.cs
++++ b/src/Maui/DrawnUi/Views/Canvas.cs
+@@ -424,7 +424,7 @@ public class Canvas : DrawnView, IGestureListener
+         {
+             OnGesturesAttachChanged();
+ 
+-#if WINDOWS || ANDROID
++#if WINDOWS || ANDROID || GNOME
+             InitFrameworkPlatform(true);
+ #endif
+         }
+@@ -437,7 +437,7 @@ public class Canvas : DrawnView, IGestureListener
+             DetachGestures();
+         }
+ 
+-#if WINDOWS || ANDROID
++#if WINDOWS || ANDROID || GNOME
+         if (args.NewHandler == null)
+             InitFrameworkPlatform(false);
+ #endif

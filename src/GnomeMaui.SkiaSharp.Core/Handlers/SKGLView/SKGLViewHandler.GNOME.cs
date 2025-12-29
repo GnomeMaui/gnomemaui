@@ -1,6 +1,6 @@
-using System;
 using Microsoft.Maui.Handlers;
 using SkiaSharp.Views.Maui.Platform;
+using System;
 
 namespace SkiaSharp.Views.Maui.Handlers;
 
@@ -85,7 +85,14 @@ public partial class SKGLViewHandler : ViewHandler<ISKGLView, SKGLArea>
 		handler.touchHandler?.SetEnabled(handler.PlatformView, view.EnableTouchEvents);
 	}
 
-	public static void OnInvalidateSurface(SKGLViewHandler handler, ISKGLView view, object? args) { }
+	public static void OnInvalidateSurface(SKGLViewHandler handler, ISKGLView view, object? args)
+	{
+		if (handler?.PlatformView == null)
+			return;
+
+		if (!handler.PlatformView.EnableRenderLoop)
+			handler.PlatformView.Invalidate();
+	}
 
 	SKPoint OnGetScaledCoord(double x, double y)
 	{

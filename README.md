@@ -43,9 +43,11 @@ And minimal support for the following MAUI features:
 
 | Area | Status |
 | - | - |
-| Shell navigation | ✅ Basic |
-| Label | ✅ Basic |
-| Button | ✅ Basic |
+| Alert manager | ✅ Ready |
+| Shell navigation | 🚧 Basic |
+| Label | 🚧 Basic |
+| Button | 🚧 Basic |
+| Image | 🚧 Basic |
 
 ## Skia-based integrations
 
@@ -53,11 +55,17 @@ And minimal support for the following MAUI features:
 
 One of the strongest features of GNOME MAUI .NET is its Skia-based rendering ecosystem, which performs exceptionally well on Linux. This is not traditional widget composition, but a consciously designed, GPU-friendly rendering pipeline.
 
-**DrawnUI** is a Skia-based, fully drawn UI approach with its own layout and animation pipeline. Instead of managing thousands of native controls, everything is rendered onto a unified surface, resulting in precise control, smooth animations, and high performance. On Linux, this model truly shines: write the code once, and execute it directly on the GPU.
+| Area | Status |
+| - | - |
+| DrawnUi | 🧩 Almost Ready ~97% |
+
+Sample available at: [samples/MauiDrawnUi1](/samples/MauiDrawnUi1)
+
+**DrawnUi** is a Skia-based, fully drawn UI approach with its own layout and animation pipeline. Instead of managing thousands of native controls, everything is rendered onto a unified surface, resulting in precise control, smooth animations, and high performance. On Linux, this model truly shines: write the code once, and execute it directly on the GPU.
 
 The same rendering philosophy underpins the following integrations, which are actively planned and under development (coming soon):
 
-- **DrawnUI** – fully drawn UI, animations, gestures, effects
+- **DrawnUi** – fully drawn UI, animations, gestures, effects
 - **Mapsui** – maps, layers, large object counts, continuous redraw
 - **LiveCharts2** – charts, animations, real-time updates
 
@@ -66,8 +74,6 @@ Together, these components define a graphics stack where MAUI on Linux is not a 
 ## Developer environment
 
 Detailed instructions for setting up a GNOME MAUI .NET development environment on Linux: [gnomemaui-linux-dev-setup.md](docs/gnomemaui-linux-dev-setup.md)
-
-
 
 ## License
 

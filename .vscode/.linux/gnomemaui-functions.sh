@@ -62,6 +62,9 @@ delete_nuget_packages() {
     if [ -d "$HOME/.nuget/packages/gnomemaui.blazor" ]; then
         rm -rf "$HOME/.nuget/packages/gnomemaui.blazor"
     fi
+        if [ -d "$HOME/.nuget/packages/gnomemaui.drawnui" ]; then
+        rm -rf "$HOME/.nuget/packages/gnomemaui.drawnui"
+    fi
 }
 
 delete_objbin_folders() {
@@ -109,6 +112,9 @@ delete_objbin_folders() {
     if [ -d "$GNOMEMAUI/src/GnomeMaui.Blazor/obj" ]; then
         rm -rf "$GNOMEMAUI/src/GnomeMaui.Blazor/obj"
     fi
+    if [ -d "$GNOMEMAUI/src/GnomeMaui.DrawnUi/obj" ]; then
+        rm -rf "$GNOMEMAUI/src/GnomeMaui.DrawnUi/obj"
+    fi
 
     if [ -d "$GNOMEMAUI/src/GnomeMaui.Sdk.Manifest/bin" ]; then
         rm -rf "$GNOMEMAUI/src/GnomeMaui.Sdk.Manifest/bin"
@@ -151,5 +157,8 @@ delete_objbin_folders() {
     fi
     if [ -d "$GNOMEMAUI/src/GnomeMaui.Blazor/bin" ]; then
         rm -rf "$GNOMEMAUI/src/GnomeMaui.Blazor/bin"
+    fi
+    if [ -d "$GNOMEMAUI/src/GnomeMaui.DrawnUi/bin" ]; then
+        rm -rf "$GNOMEMAUI/src/GnomeMaui.DrawnUi/bin"
     fi
 }

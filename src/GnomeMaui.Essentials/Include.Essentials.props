@@ -25,6 +25,16 @@
         <Compile Include="../../ext/maui/src/Essentials/src/VersionTracking/VersionTracking.shared.cs" Link="VersionTracking/VersionTracking.shared.cs" />
 
         <Compile Include="../../ext/maui/src/Essentials/src/Screenshot/Screenshot.shared.cs" Link="Screenshot/Screenshot.shared.cs" />
+
+        <Compile Include="../../ext/maui/src/Essentials/src/Connectivity/Connectivity.shared.cs" Link="Connectivity/Connectivity.shared.cs" />
+        <Compile Include="../../ext/maui/src/Essentials/src/Connectivity/Connectivity.shared.enums.cs" Link="Connectivity/Connectivity.shared.enums.cs" />
+
+        <Compile Include="../../ext/maui/src/Essentials/src/MainThread/MainThread.shared.cs" Link="MainThread/MainThread.shared.cs" />
+
+        <Compile Include="../../ext/maui/src/Essentials/src/FileSystem/FileSystem.shared.cs" Link="FileSystem/FileSystem.shared.cs" />
+
+        <Compile Include="../../ext/maui/src/Essentials/src/HapticFeedback/HapticFeedback.shared.cs" Link="HapticFeedback/HapticFeedback.shared.cs" />
+        <Compile Include="../../ext/maui/src/Essentials/src/HapticFeedback/HapticFeedbackType.shared.cs" Link="HapticFeedback/HapticFeedbackType.shared.cs" />
     </ItemGroup>
 
     <!-- Files for net10.0 target -->
@@ -38,6 +48,10 @@
         <Compile Include="../../ext/maui/src/Essentials/src/DeviceInfo/DeviceInfo.netstandard.cs" Link="DeviceInfo/DeviceInfo.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Essentials/src/Preferences/Preferences.netstandard.cs" Link="Preferences/Preferences.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Essentials/src/Screenshot/Screenshot.netstandard.watchos.macos.cs" Link="Screenshot/Screenshot.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Essentials/src/Connectivity/Connectivity.netstandard.watchos.cs" Link="Connectivity/Connectivity.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Essentials/src/MainThread/MainThread.netstandard.cs" Link="MainThread/MainThread.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Essentials/src/FileSystem/FileSystem.netstandard.cs" Link="FileSystem/FileSystem.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Essentials/src/HapticFeedback/HapticFeedback.netstandard.tvos.watchos.cs" Link="HapticFeedback/HapticFeedback.netruntime.cs" />
     </ItemGroup>
 
     <!-- Files for net10.0-gnome target -->

@@ -15,7 +15,15 @@
 .vscode/.linux/scripts/
 .vscode/.linux/templates/
 .vscode/.linux/themes/
+.vscode/.linux/vsicons-custom-icons/
 
+# Ext
+# ext/drawnui/
+# ext/gircore
+# ext/maui
+# ext/skiasharp
+# ext/mapsui
+# ext/livecharts
 
 # Linux packages
 **/os/arch
@@ -51,5 +59,7 @@ devenv.tar.bz2
 .nvmrc
 package.json
 stylelint.config.ts
+AGENTS.md
+
 
 

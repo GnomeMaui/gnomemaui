@@ -1,0 +1,1923 @@
+diff --git a/src/BlazorWebView/src/SharedSource/BlazorWebViewInitializedEventArgs.cs b/src/BlazorWebView/src/SharedSource/BlazorWebViewInitializedEventArgs.cs
+index ba8e1e62..8ad6ea78 100644
+--- a/src/BlazorWebView/src/SharedSource/BlazorWebViewInitializedEventArgs.cs
++++ b/src/BlazorWebView/src/SharedSource/BlazorWebViewInitializedEventArgs.cs
+@@ -15,6 +15,8 @@ using AWebView = Android.Webkit.WebView;
+ using WebKit;
+ #elif TIZEN
+ using TWebView = Tizen.NUI.BaseComponents.WebView;
++#elif GNOME
++using WebKitGTK = WebKit.WebView;
+ #endif
+ 
+ namespace Microsoft.AspNetCore.Components.WebView
+@@ -46,6 +48,11 @@ namespace Microsoft.AspNetCore.Components.WebView
+ 		/// Gets the <see cref="TWebView"/> instance that was initialized.
+ 		/// </summary>
+ 		public TWebView WebView { get; internal set; }
++#elif GNOME
++		/// <summary>
++		/// Gets the <see cref="WebKitGTK"/> instance that was initialized.
++		/// </summary>
++		public WebKitGTK WebView { get; internal set; }
+ #endif
+ 	}
+ }
+diff --git a/src/BlazorWebView/src/SharedSource/BlazorWebViewInitializingEventArgs.cs b/src/BlazorWebView/src/SharedSource/BlazorWebViewInitializingEventArgs.cs
+index f14ccd65..202db7d3 100644
+--- a/src/BlazorWebView/src/SharedSource/BlazorWebViewInitializingEventArgs.cs
++++ b/src/BlazorWebView/src/SharedSource/BlazorWebViewInitializingEventArgs.cs
+@@ -14,6 +14,8 @@ using AWebView = Android.Webkit.WebView;
+ using WebKit;
+ #elif TIZEN
+ using TWebView = Tizen.WebView.WebView;
++#elif GNOME
++using WebKitGTK = WebKit.WebView;
+ #endif
+ 
+ namespace Microsoft.AspNetCore.Components.WebView
+@@ -45,6 +47,9 @@ namespace Microsoft.AspNetCore.Components.WebView
+ 		/// Gets or sets the web view <see cref="WKWebViewConfiguration"/>.
+ 		/// </summary>
+ 		public WKWebViewConfiguration Configuration { get; set; }
++
++#elif GNOME
++
+ #endif
+ 	}
+ }
+diff --git a/src/BlazorWebView/src/SharedSource/HostAddressHelper.cs b/src/BlazorWebView/src/SharedSource/HostAddressHelper.cs
+index 1ae50ab2..9df692ff 100644
+--- a/src/BlazorWebView/src/SharedSource/HostAddressHelper.cs
++++ b/src/BlazorWebView/src/SharedSource/HostAddressHelper.cs
+@@ -13,7 +13,11 @@ internal static class HostAddressHelper
+ 		AppContext.TryGetSwitch(AppHostAddressAlways0000Switch, out var enabled) && enabled;
+ 
+ 	public static string GetAppHostAddress()
++#if GNOME
++		=> "127.0.0.1";
++#else
+ 		=> IsAppHostAddressAlways0000Enabled
+ 			? "0.0.0.0"
+ 			: "0.0.0.1";
++#endif
+ }
+diff --git a/src/Controls/src/Core/Cells/Cell.cs b/src/Controls/src/Core/Cells/Cell.cs
+index 42c4399b..0d0c4f06 100644
+--- a/src/Controls/src/Core/Cells/Cell.cs
++++ b/src/Controls/src/Core/Cells/Cell.cs
+@@ -139,14 +139,14 @@ namespace Microsoft.Maui.Controls
+ 			get
+ 			{
+ #pragma warning disable CS0618 // Type or member is obsolete
+-				var table = RealParent as TableView;
+-				if (table != null)
+-					return table.HasUnevenRows && Height > 0 ? Height : table.RowHeight;
++				// var table = RealParent as TableView;
++				// if (table != null)
++				// 	return table.HasUnevenRows && Height > 0 ? Height : table.RowHeight;
+ 
+-				var list = RealParent as ListView;
++				// var list = RealParent as ListView;
+ #pragma warning restore CS0618 // Type or member is obsolete
+-				if (list != null)
+-					return list.HasUnevenRows && Height > 0 ? Height : list.RowHeight;
++				// if (list != null)
++				// 	return list.HasUnevenRows && Height > 0 ? Height : list.RowHeight;
+ 
+ 				return DefaultCellHeight;
+ 			}
+@@ -169,11 +169,11 @@ namespace Microsoft.Maui.Controls
+ 				return;
+ 
+ #pragma warning disable CS0618 // Type or member is obsolete
+-			if ((Parent as ListView)?.HasUnevenRows == true || (Parent as TableView)?.HasUnevenRows == true)
+-			{
+-				_nextCallToForceUpdateSizeQueued = true;
+-				OnForceUpdateSizeRequested();
+-			}
++			// if ((Parent as ListView)?.HasUnevenRows == true || (Parent as TableView)?.HasUnevenRows == true)
++			// {
++			// 	_nextCallToForceUpdateSizeQueued = true;
++			// 	OnForceUpdateSizeRequested();
++			// }
+ #pragma warning restore CS0618 // Type or member is obsolete
+ 		}
+ 
+@@ -236,9 +236,9 @@ namespace Microsoft.Maui.Controls
+ 			OnAppearing();
+ 
+ #pragma warning disable CS0618 // Type or member is obsolete
+-			var container = RealParent as ListView;
++			// var container = RealParent as ListView;
+ #pragma warning restore CS0618 // Type or member is obsolete
+-			container?.SendCellAppearing(this);
++			// container?.SendCellAppearing(this);
+ 		}
+ 
+ 		/// <summary>Internal API for Microsoft.Maui.Controls platform use.</summary>
+@@ -249,9 +249,9 @@ namespace Microsoft.Maui.Controls
+ 			OnDisappearing();
+ 
+ #pragma warning disable CS0618 // Type or member is obsolete
+-			var container = RealParent as ListView;
++			// var container = RealParent as ListView;
+ #pragma warning restore CS0618 // Type or member is obsolete
+-			container?.SendCellDisappearing(this);
++			// container?.SendCellDisappearing(this);
+ 		}
+ 
+ 		void IPropertyPropagationController.PropagatePropertyChanged(string propertyName)
+diff --git a/src/Controls/src/Core/DataTemplateSelector.cs b/src/Controls/src/Core/DataTemplateSelector.cs
+index 7f58a838..853383ad 100644
+--- a/src/Controls/src/Core/DataTemplateSelector.cs
++++ b/src/Controls/src/Core/DataTemplateSelector.cs
+@@ -13,15 +13,16 @@ namespace Microsoft.Maui.Controls
+ 		public DataTemplate SelectTemplate(object item, BindableObject container)
+ 		{
+ #pragma warning disable CS0618 // Type or member is obsolete
+-			var listView = container as ListView;
++			// var listView = container as ListView;
+ #pragma warning restore CS0618 // Type or member is obsolete
+ 
+-			var recycle = listView == null ? false :
+-				(listView.CachingStrategy & ListViewCachingStrategy.RecycleElementAndDataTemplate) ==
+-					ListViewCachingStrategy.RecycleElementAndDataTemplate;
++			// var recycle = listView == null ? false :
++			// 	(listView.CachingStrategy & ListViewCachingStrategy.RecycleElementAndDataTemplate) ==
++			// 		ListViewCachingStrategy.RecycleElementAndDataTemplate;
+ 
+ 			DataTemplate dataTemplate = null;
+-			if (recycle && _dataTemplates.TryGetValue(item.GetType(), out dataTemplate))
++			// if (recycle && _dataTemplates.TryGetValue(item.GetType(), out dataTemplate))
++			if (_dataTemplates.TryGetValue(item.GetType(), out dataTemplate))
+ 				return dataTemplate;
+ 
+ 			dataTemplate = OnSelectTemplate(item, container);
+@@ -29,14 +30,14 @@ namespace Microsoft.Maui.Controls
+ 				throw new NotSupportedException(
+ 					"DataTemplateSelector.OnSelectTemplate must not return another DataTemplateSelector");
+ 
+-			if (recycle)
+-			{
+-				if (!dataTemplate.CanRecycle)
+-					throw new NotSupportedException(
+-						"RecycleElementAndDataTemplate requires DataTemplate activated with ctor taking a type.");
++			// if (recycle)
++			// {
++			// 	if (!dataTemplate.CanRecycle)
++			// 		throw new NotSupportedException(
++			// 			"RecycleElementAndDataTemplate requires DataTemplate activated with ctor taking a type.");
+ 
+-				_dataTemplates[item.GetType()] = dataTemplate;
+-			}
++			// 	_dataTemplates[item.GetType()] = dataTemplate;
++			// }
+ 
+ 			return dataTemplate;
+ 		}
+diff --git a/src/Controls/src/Core/Handlers/Shell/ShellHandler.cs b/src/Controls/src/Core/Handlers/Shell/ShellHandler.cs
+index 47b43fed..addda6e2 100644
+--- a/src/Controls/src/Core/Handlers/Shell/ShellHandler.cs
++++ b/src/Controls/src/Core/Handlers/Shell/ShellHandler.cs
+@@ -1,5 +1,5 @@
+ ﻿#nullable disable
+-#if WINDOWS || TIZEN
++#if WINDOWS || TIZEN || GNOME
+ using System;
+ using System.Collections.Generic;
+ using System.Text;
+diff --git a/src/Controls/src/Core/Hosting/AppHostBuilderExtensions.cs b/src/Controls/src/Core/Hosting/AppHostBuilderExtensions.cs
+index 28bb3894..57bd4b55 100644
+--- a/src/Controls/src/Core/Hosting/AppHostBuilderExtensions.cs
++++ b/src/Controls/src/Core/Hosting/AppHostBuilderExtensions.cs
+@@ -3,8 +3,10 @@ using System.Diagnostics.CodeAnalysis;
+ using Microsoft.Extensions.DependencyInjection;
+ using Microsoft.Extensions.DependencyInjection.Extensions;
+ using Microsoft.Maui.Controls.Diagnostics;
++#if GNOME
+ using Microsoft.Maui.Controls.Handlers;
+-using Microsoft.Maui.Controls.Handlers.Items;
++#endif
++//using Microsoft.Maui.Controls.Handlers.Items;
+ using Microsoft.Maui.Controls.Shapes;
+ using Microsoft.Maui.Dispatching;
+ using Microsoft.Maui.Handlers;
+@@ -67,57 +69,58 @@ public static partial class AppHostBuilderExtensions
+ 		handlersCollection.AddHandler<CollectionView, CollectionViewHandler2>();
+ 		handlersCollection.AddHandler<CarouselView, CarouselViewHandler2>();
+ #else
+-		handlersCollection.AddHandler<CollectionView, CollectionViewHandler>();
+-		handlersCollection.AddHandler<CarouselView, CarouselViewHandler>();
++		// handlersCollection.AddHandler<CollectionView, CollectionViewHandler>();
++		// handlersCollection.AddHandler<CarouselView, CarouselViewHandler>();
+ #endif
+ 		handlersCollection.AddHandler<Application, ApplicationHandler>();
+-		handlersCollection.AddHandler<ActivityIndicator, ActivityIndicatorHandler>();
+-		handlersCollection.AddHandler<BoxView, BoxViewHandler>();
++		// handlersCollection.AddHandler<ActivityIndicator, ActivityIndicatorHandler>();
++		// handlersCollection.AddHandler<BoxView, BoxViewHandler>();
+ 		handlersCollection.AddHandler<Button, ButtonHandler>();
+-		handlersCollection.AddHandler<DatePicker, DatePickerHandler>();
+-		handlersCollection.AddHandler<Editor, EditorHandler>();
+-		handlersCollection.AddHandler<Entry, EntryHandler>();
+-		handlersCollection.AddHandler<GraphicsView, GraphicsViewHandler>();
++		handlersCollection.AddHandler<Label, LabelHandler>();
++		// handlersCollection.AddHandler<DatePicker, DatePickerHandler>();
++		// handlersCollection.AddHandler<Editor, EditorHandler>();
++		// handlersCollection.AddHandler<Entry, EntryHandler>();
++		// handlersCollection.AddHandler<GraphicsView, GraphicsViewHandler>();
+ 		handlersCollection.AddHandler<Image, ImageHandler>();
+ 		handlersCollection.AddHandler<Layout, LayoutHandler>();
+-		handlersCollection.AddHandler<Picker, PickerHandler>();
+-		handlersCollection.AddHandler<ProgressBar, ProgressBarHandler>();
+-		handlersCollection.AddHandler<ScrollView, ScrollViewHandler>();
+-		handlersCollection.AddHandler<SearchBar, SearchBarHandler>();
+-		handlersCollection.AddHandler<Slider, SliderHandler>();
+-		handlersCollection.AddHandler<Stepper, StepperHandler>();
+-		handlersCollection.AddHandler<Switch, SwitchHandler>();
+-		handlersCollection.AddHandler<TimePicker, TimePickerHandler>();
++		// handlersCollection.AddHandler<Picker, PickerHandler>();
++		// handlersCollection.AddHandler<ProgressBar, ProgressBarHandler>();
++		// handlersCollection.AddHandler<ScrollView, ScrollViewHandler>();
++		// handlersCollection.AddHandler<SearchBar, SearchBarHandler>();
++		// handlersCollection.AddHandler<Slider, SliderHandler>();
++		// handlersCollection.AddHandler<Stepper, StepperHandler>();
++		// handlersCollection.AddHandler<Switch, SwitchHandler>();
++		// handlersCollection.AddHandler<TimePicker, TimePickerHandler>();
+ 		handlersCollection.AddHandler<Page, PageHandler>();
+-		handlersCollection.AddHandler<WebView, WebViewHandler>();
++		// handlersCollection.AddHandler<WebView, WebViewHandler>();
+ 		if (RuntimeFeature.IsHybridWebViewSupported)
+ 		{
+ 			// NOTE: not registered under NativeAOT or TrimMode=Full scenarios
+-			handlersCollection.AddHandler<HybridWebView, HybridWebViewHandler>();
++			//handlersCollection.AddHandler<HybridWebView, HybridWebViewHandler>();
+ 		}
+-		handlersCollection.AddHandler<Border, BorderHandler>();
++		// handlersCollection.AddHandler<Border, BorderHandler>();
+ 		handlersCollection.AddHandler<IContentView, ContentViewHandler>();
+ 		handlersCollection.AddHandler<ContentView, ContentViewHandler>();
+-		handlersCollection.AddHandler<Shapes.Ellipse, ShapeViewHandler>();
+-		handlersCollection.AddHandler<Shapes.Line, LineHandler>();
+-		handlersCollection.AddHandler<Shapes.Path, PathHandler>();
+-		handlersCollection.AddHandler<Shapes.Polygon, PolygonHandler>();
+-		handlersCollection.AddHandler<Shapes.Polyline, PolylineHandler>();
+-		handlersCollection.AddHandler<Shapes.Rectangle, RectangleHandler>();
+-		handlersCollection.AddHandler<Shapes.RoundRectangle, RoundRectangleHandler>();
++		// handlersCollection.AddHandler<Shapes.Ellipse, ShapeViewHandler>();
++		// handlersCollection.AddHandler<Shapes.Line, LineHandler>();
++		// handlersCollection.AddHandler<Shapes.Path, PathHandler>();
++		// handlersCollection.AddHandler<Shapes.Polygon, PolygonHandler>();
++		// handlersCollection.AddHandler<Shapes.Polyline, PolylineHandler>();
++		// handlersCollection.AddHandler<Shapes.Rectangle, RectangleHandler>();
++		// handlersCollection.AddHandler<Shapes.RoundRectangle, RoundRectangleHandler>();
+ 		handlersCollection.AddHandler<Window, WindowHandler>();
+-		handlersCollection.AddHandler<ImageButton, ImageButtonHandler>();
+-		handlersCollection.AddHandler<IndicatorView, IndicatorViewHandler>();
+-		handlersCollection.AddHandler<RadioButton, RadioButtonHandler>();
+-		handlersCollection.AddHandler<RefreshView, RefreshViewHandler>();
+-		handlersCollection.AddHandler<SwipeItem, SwipeItemMenuItemHandler>();
+-		handlersCollection.AddHandler<SwipeView, SwipeViewHandler>();
++		// handlersCollection.AddHandler<ImageButton, ImageButtonHandler>();
++		// handlersCollection.AddHandler<IndicatorView, IndicatorViewHandler>();
++		// handlersCollection.AddHandler<RadioButton, RadioButtonHandler>();
++		// handlersCollection.AddHandler<RefreshView, RefreshViewHandler>();
++		// handlersCollection.AddHandler<SwipeItem, SwipeItemMenuItemHandler>();
++		// handlersCollection.AddHandler<SwipeView, SwipeViewHandler>();
+ 
+ #pragma warning disable CA1416 //  'MenuBarHandler', MenuFlyoutSubItemHandler, MenuFlyoutSubItemHandler, MenuBarItemHandler is only supported on: 'ios' 13.0 and later
+ 		handlersCollection.AddHandler<MenuBar, MenuBarHandler>();
+-		handlersCollection.AddHandler<MenuFlyoutSubItem, MenuFlyoutSubItemHandler>();
+-		handlersCollection.AddHandler<MenuFlyoutSeparator, MenuFlyoutSeparatorHandler>();
+-		handlersCollection.AddHandler<MenuFlyoutItem, MenuFlyoutItemHandler>();
++		// handlersCollection.AddHandler<MenuFlyoutSubItem, MenuFlyoutSubItemHandler>();
++		// handlersCollection.AddHandler<MenuFlyoutSeparator, MenuFlyoutSeparatorHandler>();
++		// handlersCollection.AddHandler<MenuFlyoutItem, MenuFlyoutItemHandler>();
+ 		handlersCollection.AddHandler<MenuBarItem, MenuBarItemHandler>();
+ #pragma warning restore CA1416
+ 
+@@ -178,9 +181,14 @@ public static partial class AppHostBuilderExtensions
+ 		handlersCollection.AddHandler<Shell, ShellHandler>();
+ 		handlersCollection.AddHandler<ShellItem, ShellItemHandler>();
+ 		handlersCollection.AddHandler<ShellSection, ShellSectionHandler>();
++#elif GNOME
++		handlersCollection.AddHandler<Shell, ShellHandler>();
++		handlersCollection.AddHandler<ShellItem, ShellItemHandler>();
++		handlersCollection.AddHandler<ShellSection, ShellSectionHandler>();
++		handlersCollection.AddHandler<ShellContent, ShellContentHandler>();
+ #endif
+ 
+-#if WINDOWS || ANDROID || TIZEN
++#if WINDOWS || ANDROID || TIZEN || GNOME
+ 		handlersCollection.AddHandler<NavigationPage, NavigationViewHandler>();
+ 		handlersCollection.AddHandler<Toolbar, ToolbarHandler>();
+ 		handlersCollection.AddHandler<FlyoutPage, FlyoutViewHandler>();
+@@ -192,13 +200,13 @@ public static partial class AppHostBuilderExtensions
+ 
+ 	static MauiAppBuilder SetupDefaults(this MauiAppBuilder builder)
+ 	{
+-#if WINDOWS || ANDROID || IOS || MACCATALYST || TIZEN
++#if WINDOWS || ANDROID || IOS || MACCATALYST || TIZEN || GNOME
+ 		// initialize compatibility DependencyService
+ 		DependencyService.SetToInitialized();
+ 
+ #pragma warning disable CS0612, CA1416 // Type or member is obsolete, 'ResourcesProvider' is unsupported on: 'iOS' 14.0 and later
+-		DependencyService.Register<ResourcesProvider>();
+-		DependencyService.Register<FontNamedSizeService>();
++		// DependencyService.Register<ResourcesProvider>();
++		// DependencyService.Register<FontNamedSizeService>();
+ #pragma warning restore CS0612, CA1416 // Type or member is obsolete
+ #endif
+ 		builder.Services.AddScoped(_ => new HideSoftInputOnTappedChangedManager());
+@@ -211,10 +219,10 @@ public static partial class AppHostBuilderExtensions
+ 		});
+ 
+ 		// NOTE: not registered under NativeAOT or TrimMode=Full scenarios
+-		if (RuntimeFeature.IsHybridWebViewSupported)
+-		{
+-			builder.Services.AddScoped<IHybridWebViewTaskManager>(_ => new HybridWebViewTaskManager());
+-		}
++		// if (RuntimeFeature.IsHybridWebViewSupported)
++		// {
++		// 	builder.Services.AddScoped<IHybridWebViewTaskManager>(_ => new HybridWebViewTaskManager());
++		// }
+ 
+ 		builder.ConfigureMauiControlsDiagnostics();
+ 
+@@ -267,7 +275,7 @@ public static partial class AppHostBuilderExtensions
+ 		Element.RemapIfNeeded();
+ 		Application.RemapForControls();
+ 		VisualElement.RemapIfNeeded();
+-		Button.RemapForControls();
++		// Button.RemapForControls();
+ 		DatePicker.RemapForControls();
+ 		RadioButton.RemapForControls();
+ 		FlyoutPage.RemapForControls();
+@@ -275,19 +283,19 @@ public static partial class AppHostBuilderExtensions
+ 		Window.RemapForControls();
+ 		Editor.RemapForControls();
+ 		Entry.RemapForControls();
+-		SwipeView.RemapForControls();
+-		Picker.RemapForControls();
+-		SearchBar.RemapForControls();
+-		Stepper.RemapForControls();
++		// SwipeView.RemapForControls();
++		// Picker.RemapForControls();
++		// SearchBar.RemapForControls();
++		// Stepper.RemapForControls();
+ 		TabbedPage.RemapForControls();
+ 		TimePicker.RemapForControls();
+ 		Layout.RemapForControls();
+ 		ScrollView.RemapForControls();
+-		RefreshView.RemapForControls();
++		// RefreshView.RemapForControls();
+ 		Shape.RemapForControls();
+-		WebView.RemapForControls();
++		// WebView.RemapForControls();
+ 		ContentPage.RemapForControls();
+-		ImageButton.RemapForControls();
++		// ImageButton.RemapForControls();
+ 
+ 		return builder;
+ 	}
+diff --git a/src/Controls/src/Core/InitializationAwareWebView/PlatformWebViewInitializedEventArgs.cs b/src/Controls/src/Core/InitializationAwareWebView/PlatformWebViewInitializedEventArgs.cs
+index f7df72ee..b26d52e2 100644
+--- a/src/Controls/src/Core/InitializationAwareWebView/PlatformWebViewInitializedEventArgs.cs
++++ b/src/Controls/src/Core/InitializationAwareWebView/PlatformWebViewInitializedEventArgs.cs
+@@ -4,6 +4,8 @@ using Microsoft.Web.WebView2.Core;
+ using WebKit;
+ #elif ANDROID
+ using Android.Webkit;
++#elif GNOME
++using WebKit;
+ #endif
+ 
+ namespace Microsoft.Maui.Controls;
+@@ -109,6 +111,38 @@ public class PlatformWebViewInitializedEventArgs
+ 	/// </summary>
+ 	public CoreWebView2Settings Settings { get; }
+ 
++#elif GNOME
++
++	/// <summary>
++	/// Initializes a new instance of the <see cref="WebViewInitializationCompletedEventArgs"/> class.
++	/// </summary>
++	/// <param name="sender">The native view that is being initialized.</param>
++	/// <param name="settings">The settings for the web view, which can be used to configure various aspects of the web view.</param>
++	internal PlatformWebViewInitializedEventArgs(WebView sender, Settings settings)
++	{
++		Sender = sender;
++		Settings = settings;
++	}
++
++	/// <summary>
++	/// Initializes a new instance of the <see cref="PlatformWebViewInitializedEventArgs"/> class.
++	/// </summary>
++	/// <param name="args">The event arguments containing the native view and configuration.</param>
++	internal PlatformWebViewInitializedEventArgs(WebViewInitializationCompletedEventArgs args)
++		: this(args.Sender, args.Settings)
++	{
++	}
++
++	/// <summary>
++	/// Gets the native view attached to the event.
++	/// </summary>
++	public WebView Sender { get; }
++
++	/// <summary>
++	/// Gets or sets the settings attached to the web view.
++	/// </summary>
++	public Settings Settings { get; }
++
+ #else
+ 
+ 	internal PlatformWebViewInitializedEventArgs(WebViewInitializationCompletedEventArgs args)
+diff --git a/src/Controls/src/Core/InitializationAwareWebView/PlatformWebViewInitializingEventArgs.cs b/src/Controls/src/Core/InitializationAwareWebView/PlatformWebViewInitializingEventArgs.cs
+index 2db07461..c3e50b64 100644
+--- a/src/Controls/src/Core/InitializationAwareWebView/PlatformWebViewInitializingEventArgs.cs
++++ b/src/Controls/src/Core/InitializationAwareWebView/PlatformWebViewInitializingEventArgs.cs
+@@ -4,6 +4,8 @@ using WebKit;
+ using Android.Webkit;
+ #elif WINDOWS
+ using Microsoft.Web.WebView2.Core;
++#elif GNOME
++using WebKit;
+ #endif
+ 
+ namespace Microsoft.Maui.Controls;
+@@ -125,6 +127,13 @@ public class PlatformWebViewInitializingEventArgs
+ 	/// </summary>
+ 	public WebSettings Settings => _coreArgs.Settings;
+ 
++#elif GNOME
++
++	/// <summary>
++	/// Gets the platform-specific settings for the WebView.
++	/// </summary>
++	public Settings Settings => _coreArgs.Settings;
++
+ #else
+ 
+ #endif
+diff --git a/src/Controls/src/Core/MergedStyle.cs b/src/Controls/src/Core/MergedStyle.cs
+index a4c9180a..ead0f55b 100644
+--- a/src/Controls/src/Core/MergedStyle.cs
++++ b/src/Controls/src/Core/MergedStyle.cs
+@@ -14,7 +14,8 @@ namespace Microsoft.Maui.Controls
+ 		////The last one (typeof(Element)) is a safety guard as we might be creating VisualElement directly in internal code
+ 		static readonly IList<Type> s_stopAtTypes = new List<Type> { typeof(View), 
+ #pragma warning disable CS0618 // Type or member is obsolete
+-		typeof(Compatibility.Layout<>), 
++		null,
++		// typeof(Compatibility.Layout<>), 
+ #pragma warning restore CS0618 // Type or member is obsolete
+ 		typeof(VisualElement), typeof(NavigableElement), typeof(Element) };
+ 
+diff --git a/src/Controls/src/Core/Platform/IElementExtensions.cs b/src/Controls/src/Core/Platform/IElementExtensions.cs
+index 53eb5de7..42659d73 100644
+--- a/src/Controls/src/Core/Platform/IElementExtensions.cs
++++ b/src/Controls/src/Core/Platform/IElementExtensions.cs
+@@ -1,5 +1,5 @@
+ using System;
+-using Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;
++//using Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;
+ 
+ namespace Microsoft.Maui.Controls
+ {
+diff --git a/src/Controls/src/Core/Platform/PlatformEffect.cs b/src/Controls/src/Core/Platform/PlatformEffect.cs
+index bf2b44da..9700f243 100644
+--- a/src/Controls/src/Core/Platform/PlatformEffect.cs
++++ b/src/Controls/src/Core/Platform/PlatformEffect.cs
+@@ -8,6 +8,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #elif (NETSTANDARD || !PLATFORM)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Controls/src/Core/PlatformConfiguration/ExtensionPoints.cs b/src/Controls/src/Core/PlatformConfiguration/ExtensionPoints.cs
+index bb806843..7022a53e 100644
+--- a/src/Controls/src/Core/PlatformConfiguration/ExtensionPoints.cs
++++ b/src/Controls/src/Core/PlatformConfiguration/ExtensionPoints.cs
+@@ -47,4 +47,12 @@ namespace Microsoft.Maui.Controls.PlatformConfiguration
+ 	/// Developers specify the type name of this marker class to the <see cref = "IElementConfiguration{TElement}.On{T}" /> method to specify the underlying GTK control on which to run a platform-specific effect.
+ 	/// </remarks>
+ 	public sealed class GTK : IConfigPlatform { }
++
++	/// <summary>
++	/// Marker class that identifies the GNOME platform.
++	/// </summary>
++	/// <remarks>
++	/// Developers specify the type name of this marker class to the <see cref = "IElementConfiguration{TElement}.On{T}" /> method to specify the underlying GTK4/Adwaita control on which to run a platform-specific effect.
++	/// </remarks>
++	public sealed class GNOME : IConfigPlatform { }
+ }
+diff --git a/src/Controls/src/Core/Properties/AssemblyInfo.cs b/src/Controls/src/Core/Properties/AssemblyInfo.cs
+index 2bff1de7..0a118950 100644
+--- a/src/Controls/src/Core/Properties/AssemblyInfo.cs
++++ b/src/Controls/src/Core/Properties/AssemblyInfo.cs
+@@ -63,6 +63,10 @@ using Compatibility = Microsoft.Maui.Controls.Compatibility;
+ 
+ [assembly: Preserve]
+ 
++// Global namespace aggregation (required by XAML runtime without source generators)
++// This defines that http://schemas.microsoft.com/dotnet/maui/global aggregates http://schemas.microsoft.com/dotnet/2021/maui
++[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "http://schemas.microsoft.com/dotnet/2021/maui")]
++
+ [assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/2021/maui", "Microsoft.Maui.Controls.Shapes")]
+ [assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/2021/maui", "Microsoft.Maui.Controls")]
+ [assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/2021/maui", "Microsoft.Maui", AssemblyName = "Microsoft.Maui")]
+diff --git a/src/Controls/src/Core/TemplatedItemsList.cs b/src/Controls/src/Core/TemplatedItemsList.cs
+index 86f28871..2c97864d 100644
+--- a/src/Controls/src/Core/TemplatedItemsList.cs
++++ b/src/Controls/src/Core/TemplatedItemsList.cs
+@@ -187,19 +187,19 @@ namespace Microsoft.Maui.Controls.Internals
+ 			get { return _shortNames; }
+ 		}
+ 
+-		internal ListViewCachingStrategy CachingStrategy
+-		{
+-			get
+-			{
+-#pragma warning disable CS0618 // Type or member is obsolete
+-				var listView = _itemsView as ListView;
+-#pragma warning restore CS0618 // Type or member is obsolete
+-				if (listView == null)
+-					return ListViewCachingStrategy.RetainElement;
+-
+-				return listView.CachingStrategy;
+-			}
+-		}
++		// 		internal ListViewCachingStrategy CachingStrategy
++		// 		{
++		// 			get
++		// 			{
++		// #pragma warning disable CS0618 // Type or member is obsolete
++		// 				var listView = _itemsView as ListView;
++		// #pragma warning restore CS0618 // Type or member is obsolete
++		// 				if (listView == null)
++		// 					return ListViewCachingStrategy.RetainElement;
++
++		// 				return listView.CachingStrategy;
++		// 			}
++		// 		}
+ 
+ 		internal IListProxy ListProxy
+ 		{
+@@ -556,8 +556,8 @@ namespace Microsoft.Maui.Controls.Internals
+ 		{
+ 			var content = ActivateContent(index, item);
+ 
+-			if ((CachingStrategy & ListViewCachingStrategy.RecycleElement) != 0)
+-				return content;
++			// if ((CachingStrategy & ListViewCachingStrategy.RecycleElement) != 0)
++			// 	return content;
+ 
+ 			for (int i = _templatedObjects.Count; i <= index; i++)
+ 				_templatedObjects.Add(null);
+@@ -765,12 +765,12 @@ namespace Microsoft.Maui.Controls.Internals
+ 				// TODO: the interceptor doesn't support generics at the moment
+ 				// groupProxy.HeaderContent.SetBinding(TextCell.TextProperty, static (TemplatedItemsList<TView, TItem> list) => list.Name);
+ #pragma warning disable CS0618 // Type or member is obsolete
+-				groupProxy.HeaderContent.SetBinding(
+-					TextCell.TextProperty,
+-					TypedBinding.ForSingleNestingLevel(
+-						nameof(TemplatedItemsList<TView, TItem>.Name),
+-						getter: static (TemplatedItemsList<TView, TItem> list) => list.Name,
+-						setter: static (list, val) => list.Name = val));
++				// groupProxy.HeaderContent.SetBinding(
++				// 	TextCell.TextProperty,
++				// 	TypedBinding.ForSingleNestingLevel(
++				// 		nameof(TemplatedItemsList<TView, TItem>.Name),
++				// 		getter: static (TemplatedItemsList<TView, TItem> list) => list.Name,
++				// 		setter: static (list, val) => list.Name = val));
+ #pragma warning restore CS0618 // Type or member is obsolete
+ 			}
+ 
+@@ -927,8 +927,8 @@ namespace Microsoft.Maui.Controls.Internals
+ 
+ 		void OnGroupingEnabledChanged()
+ 		{
+-			if ((CachingStrategy & ListViewCachingStrategy.RecycleElement) != 0)
+-				_templatedObjects.Clear();
++			// if ((CachingStrategy & ListViewCachingStrategy.RecycleElement) != 0)
++			// 	_templatedObjects.Clear();
+ 
+ 			OnItemsSourceChanged(true);
+ 
+@@ -990,11 +990,11 @@ namespace Microsoft.Maui.Controls.Internals
+ 				return;
+ 			}
+ 
+-			if ((CachingStrategy & ListViewCachingStrategy.RecycleElement) != 0)
+-			{
+-				OnCollectionChanged(e);
+-				return;
+-			}
++			// if ((CachingStrategy & ListViewCachingStrategy.RecycleElement) != 0)
++			// {
++			// 	OnCollectionChanged(e);
++			// 	return;
++			// }
+ 
+ 			int count = Count;
+ 			var ex = e as NotifyCollectionChangedEventArgsEx;
+@@ -1224,8 +1224,8 @@ namespace Microsoft.Maui.Controls.Internals
+ 
+ 			//Hack: the cell could still be visible on iOS because the cells are reloaded after this unhook 
+ 			//this causes some visual updates caused by a null datacontext and default values like IsVisible
+-			if (DeviceInfo.Platform == DevicePlatform.iOS && CachingStrategy == ListViewCachingStrategy.RetainElement)
+-				await Task.Delay(100);
++			// if (DeviceInfo.Platform == DevicePlatform.iOS && CachingStrategy == ListViewCachingStrategy.RetainElement)
++			// 	await Task.Delay(100);
+ 			item.BindingContext = null;
+ 		}
+ 
+diff --git a/src/Controls/src/Core/VisualElement/VisualElement.Platform.cs b/src/Controls/src/Core/VisualElement/VisualElement.Platform.cs
+index 4d51fe8f..d00e29ac 100644
+--- a/src/Controls/src/Core/VisualElement/VisualElement.Platform.cs
++++ b/src/Controls/src/Core/VisualElement/VisualElement.Platform.cs
+@@ -9,6 +9,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #endif
+ 
+ namespace Microsoft.Maui.Controls
+diff --git a/src/Controls/src/Core/WeakCommandSubscription.cs b/src/Controls/src/Core/WeakCommandSubscription.cs
+index ffa1be4c..4b608e5c 100644
+--- a/src/Controls/src/Core/WeakCommandSubscription.cs
++++ b/src/Controls/src/Core/WeakCommandSubscription.cs
+@@ -55,11 +55,13 @@ namespace Microsoft.Maui.Controls
+ 
+ 				_disposed = true;
+ 
++#pragma warning disable IDE0031 // Use null propagation
+ 				if (_command is not null)
+ 				{
+ 					_command.CanExecuteChanged -= CanExecuteChanged;
+ 					_command = null;
+ 				}
++#pragma warning restore IDE0031 // Use null propagation
+ 				_dependentHandle.Dispose();
+ 				_disposed = true;
+ 			}
+diff --git a/src/Controls/src/Core/WebRequestInterceptingWebView/PlatformWebViewWebResourceRequestedEventArgs.cs b/src/Controls/src/Core/WebRequestInterceptingWebView/PlatformWebViewWebResourceRequestedEventArgs.cs
+index 954b5645..e0c9a354 100644
+--- a/src/Controls/src/Core/WebRequestInterceptingWebView/PlatformWebViewWebResourceRequestedEventArgs.cs
++++ b/src/Controls/src/Core/WebRequestInterceptingWebView/PlatformWebViewWebResourceRequestedEventArgs.cs
+@@ -345,6 +345,88 @@ public class PlatformWebViewWebResourceRequestedEventArgs
+ 		return Task.CompletedTask;
+ 	}
+ 
++#elif GNOME
++
++	IReadOnlyDictionary<string, string>? _headers;
++
++	internal PlatformWebViewWebResourceRequestedEventArgs(
++		global::WebKit.WebView sender,
++		global::WebKit.URISchemeRequest request)
++	{
++		Sender = sender;
++		Request = request;
++	}
++
++	internal PlatformWebViewWebResourceRequestedEventArgs(WebResourceRequestedEventArgs args)
++		: this(args.Sender, args.Request)
++	{
++	}
++
++	/// <summary>
++	/// Gets the native view attached to the event.
++	/// </summary>
++	/// <remarks>
++	/// This is only available on GNOME.
++	/// </remarks>
++	public global::WebKit.WebView Sender { get; }
++
++	/// <summary>
++	/// Gets the native event args attached to the event.
++	/// </summary>
++	/// <remarks>
++	/// This is only available on GNOME.
++	/// </remarks>
++	public global::WebKit.URISchemeRequest Request { get; }
++
++	internal string? GetRequestUri() => Request.GetUri();
++
++	internal string? GetRequestMethod() => "GET";
++
++	internal IReadOnlyDictionary<string, string> GetRequestHeaders() =>
++		_headers ??= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
++
++	internal void SetResponse(int code, string reason, IReadOnlyDictionary<string, string>? headers, Stream? content)
++	{
++		// Build content bytes
++		byte[] bytes;
++		if (content is null)
++		{
++			bytes = Array.Empty<byte>();
++		}
++		else
++		{
++			using var ms = new MemoryStream();
++			content.CopyTo(ms);
++			bytes = ms.ToArray();
++		}
++
++		var gBytes = GLib.Bytes.New(bytes);
++		var inputStream = Gio.MemoryInputStream.NewFromBytes(gBytes);
++
++		// Determine content type
++		var contentType = "application/octet-stream";
++		if (headers is not null)
++		{
++			foreach (var header in headers)
++			{
++				if ("Content-Type".Equals(header.Key, StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(header.Value))
++				{
++					contentType = header.Value;
++					break;
++				}
++			}
++		}
++
++		// Finish the request (GNOME/WebKit doesn't use code/reason here)
++		Request.Finish(inputStream, bytes.LongLength, contentType);
++	}
++
++	internal async Task SetResponseAsync(int code, string reason, IReadOnlyDictionary<string, string>? headers, Task<Stream?> contentTask)
++	{
++		var content = await contentTask;
++		SetResponse(code, reason, headers, content);
++	}
++
+ #else
+ 
+ 	internal PlatformWebViewWebResourceRequestedEventArgs(WebResourceRequestedEventArgs args)
+diff --git a/src/Controls/src/SourceGen/GeneratorHelpers.cs b/src/Controls/src/SourceGen/GeneratorHelpers.cs
+index 8825def0..6babe3a6 100644
+--- a/src/Controls/src/SourceGen/GeneratorHelpers.cs
++++ b/src/Controls/src/SourceGen/GeneratorHelpers.cs
+@@ -45,7 +45,7 @@ static class GeneratorHelpers
+ 		return projectItem.Kind == "None" ? null : projectItem;
+ 	}
+ 
+-    public static XamlProjectItemForIC? ComputeXamlProjectItemForIC((ProjectItem?, AssemblyAttributes) itemAndCaches, CancellationToken cancellationToken)
++	public static XamlProjectItemForIC? ComputeXamlProjectItemForIC((ProjectItem?, AssemblyAttributes) itemAndCaches, CancellationToken cancellationToken)
+ 	{
+ 		var (projectItem, assemblyCaches) = itemAndCaches;
+ 		var text = projectItem?.AdditionalText.GetText(cancellationToken);
+@@ -191,22 +191,22 @@ static class GeneratorHelpers
+ 	{
+ 		// [assembly: XmlnsDefinition]
+ 		INamedTypeSymbol? xmlnsDefinitonAttribute = compilation.GetTypesByMetadataName(typeof(XmlnsDefinitionAttribute).FullName)
+-			.FirstOrDefault(t => t.ContainingAssembly.Identity.Name == "Microsoft.Maui.Controls");
++			.FirstOrDefault(t => t.ContainingAssembly.Identity.Name == "GnomeMaui.Controls");
+ 
+ 		// [assembly: InternalsVisibleTo]
+ 		INamedTypeSymbol? internalsVisibleToAttribute = compilation.GetTypeByMetadataName(typeof(InternalsVisibleToAttribute).FullName);
+ 
+ 		// [assembly: XmlnsPrefix]
+ 		INamedTypeSymbol? xmlnsPrefixAttribute = compilation.GetTypesByMetadataName(typeof(XmlnsPrefixAttribute).FullName)
+-			.FirstOrDefault(t => t.ContainingAssembly.Identity.Name == "Microsoft.Maui.Controls");
++			.FirstOrDefault(t => t.ContainingAssembly.Identity.Name == "GnomeMaui.Controls");
+ 
+ 		// [assembly: AllowImplicitXmlnsDeclaration]
+ 		INamedTypeSymbol? allowImplicitXmlnsAttribute = compilation.GetTypesByMetadataName(typeof(Xaml.Internals.AllowImplicitXmlnsDeclarationAttribute).FullName)
+-			.FirstOrDefault(t => t.ContainingAssembly.Identity.Name == "Microsoft.Maui.Controls");
++			.FirstOrDefault(t => t.ContainingAssembly.Identity.Name == "GnomeMaui.Controls");
+ 
+-		if (xmlnsDefinitonAttribute is null || internalsVisibleToAttribute is null)		
++		if (xmlnsDefinitonAttribute is null || internalsVisibleToAttribute is null)
+ 			return AssemblyAttributes.Empty;
+-		
++
+ 
+ 		var xmlnsDefinitions = new List<XmlnsDefinitionAttribute>();
+ 		var internalsVisible = new List<IAssemblySymbol>();
+@@ -332,6 +332,11 @@ static class GeneratorHelpers
+ 			target = "MacCatalyst";
+ 		}
+ 
++		if (targetFramework.IndexOf("-gnome", StringComparison.OrdinalIgnoreCase) != -1)
++		{
++			target = "GNOME";
++		}
++
+ 		if (target == null)
+ 		{
+ 			return;
+@@ -389,7 +394,7 @@ static class GeneratorHelpers
+ 			reportDiagnostic(Diagnostic.Create(Descriptors.XamlParserError, location, e.Message));
+ 		}
+ 		return (code, xamlItem, diagnostics);
+-    }
++	}
+ 
+ 	/// <summary>
+ 	/// Formats a value as a culture-independent C# literal for source generation.
+diff --git a/src/Controls/src/SourceGen/XamlGenerator.cs b/src/Controls/src/SourceGen/XamlGenerator.cs
+index 2a1866d4..83732ee2 100644
+--- a/src/Controls/src/SourceGen/XamlGenerator.cs
++++ b/src/Controls/src/SourceGen/XamlGenerator.cs
+@@ -336,6 +336,11 @@ $"""
+ 			target = "MacCatalyst";
+ 		}
+ 
++		if (targetFramework.IndexOf("-gnome", StringComparison.OrdinalIgnoreCase) != -1)
++		{
++			target = "GNOME";
++		}
++
+ 		if (target == null)
+ 		{
+ 			return;
+diff --git a/src/Controls/src/Xaml/Hosting/AppHostBuilderExtensions.cs b/src/Controls/src/Xaml/Hosting/AppHostBuilderExtensions.cs
+index 37d545a5..7e87cc30 100644
+--- a/src/Controls/src/Xaml/Hosting/AppHostBuilderExtensions.cs
++++ b/src/Controls/src/Xaml/Hosting/AppHostBuilderExtensions.cs
+@@ -40,7 +40,7 @@ public static partial class AppHostBuilderExtensions
+ 
+ 	static MauiAppBuilder SetupXamlDefaults(this MauiAppBuilder builder)
+ 	{
+-#if WINDOWS || ANDROID || IOS || MACCATALYST || TIZEN
++#if WINDOWS || ANDROID || IOS || MACCATALYST || TIZEN || GNOME
+ 		DependencyService.Register<Xaml.ValueConverterProvider>();
+ #endif
+ 		return builder;
+diff --git a/src/Controls/src/Xaml/SimplifyOnPlatformVisitor.cs b/src/Controls/src/Xaml/SimplifyOnPlatformVisitor.cs
+index 471a7730..79bebe5f 100644
+--- a/src/Controls/src/Xaml/SimplifyOnPlatformVisitor.cs
++++ b/src/Controls/src/Xaml/SimplifyOnPlatformVisitor.cs
+@@ -6,7 +6,8 @@ using System.Linq;
+ namespace Microsoft.Maui.Controls.Xaml;
+ 
+ class SimplifyOnPlatformVisitor : IXamlNodeVisitor
+-{	public SimplifyOnPlatformVisitor(string targetFramework)
++{
++	public SimplifyOnPlatformVisitor(string targetFramework)
+ 	{
+ 
+ 		if (string.IsNullOrEmpty(targetFramework))
+@@ -20,6 +21,8 @@ class SimplifyOnPlatformVisitor : IXamlNodeVisitor
+ 			Target = "macOS";
+ 		if (targetFramework.IndexOf("-maccatalyst", StringComparison.OrdinalIgnoreCase) != -1)
+ 			Target = "MacCatalyst";
++		if (targetFramework.IndexOf("-gnome", StringComparison.OrdinalIgnoreCase) != -1)
++			Target = "GNOME";
+ 	}
+ 
+ 	public string Target { get; }
+@@ -48,7 +51,7 @@ class SimplifyOnPlatformVisitor : IXamlNodeVisitor
+ 		//`{OnPlatform}` markup extension
+ 		if (node.XmlType.IsOfAnyType("OnPlatformExtension"))
+ 		{
+-			if (   node.Properties.TryGetValue(new XmlName("", Target), out INode targetNode)
++			if (node.Properties.TryGetValue(new XmlName("", Target), out INode targetNode)
+ 				|| node.Properties.TryGetValue(new XmlName(null, Target), out targetNode)
+ 				|| node.Properties.TryGetValue(new XmlName("", "Default"), out targetNode)
+ 				|| node.Properties.TryGetValue(new XmlName(null, "Default"), out targetNode))
+diff --git a/src/Core/src/Animations/Ticker.cs b/src/Core/src/Animations/Ticker.cs
+index 075a443a..7ca3cb0e 100644
+--- a/src/Core/src/Animations/Ticker.cs
++++ b/src/Core/src/Animations/Ticker.cs
+@@ -6,7 +6,7 @@ namespace Microsoft.Maui.Animations
+ 	/// <inheritdoc/>
+ 	public class Ticker : ITicker
+ 	{
+-		Timer? _timer;
++		System.Timers.Timer? _timer;
+ 		bool _systemEnabled = true;
+ 
+ 		/// <inheritdoc/>
+@@ -41,7 +41,7 @@ namespace Microsoft.Maui.Animations
+ 			if (_timer != null)
+ 				return;
+ 
+-			_timer = new Timer
++			_timer = new System.Timers.Timer
+ 			{
+ 				AutoReset = true,
+ 				Interval = 1000 / MaxFps,
+diff --git a/src/Core/src/Core/Extensions/VisualTreeElementExtensions.cs b/src/Core/src/Core/Extensions/VisualTreeElementExtensions.cs
+index 0e042480..0203308e 100644
+--- a/src/Core/src/Core/Extensions/VisualTreeElementExtensions.cs
++++ b/src/Core/src/Core/Extensions/VisualTreeElementExtensions.cs
+@@ -26,6 +26,9 @@ using ParentView = Microsoft.UI.Xaml.DependencyObject;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
+ using ParentView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
++using ParentView = Gtk.Widget;
+ #else
+ using PlatformView = System.Object;
+ using ParentView = System.Object;
+diff --git a/src/Core/src/Handlers/Application/ApplicationHandler.cs b/src/Core/src/Handlers/Application/ApplicationHandler.cs
+index 7a2c60fc..54636cf8 100644
+--- a/src/Core/src/Handlers/Application/ApplicationHandler.cs
++++ b/src/Core/src/Handlers/Application/ApplicationHandler.cs
+@@ -10,6 +10,8 @@ using PlatformView = Android.App.Application;
+ using PlatformView = Microsoft.UI.Xaml.Application;
+ #elif TIZEN
+ using PlatformView = Tizen.Applications.CoreApplication;
++#elif GNOME
++using PlatformView = Adw.Application;
+ #endif
+ 
+ namespace Microsoft.Maui.Handlers
+diff --git a/src/Core/src/Handlers/Button/ButtonHandler.cs b/src/Core/src/Handlers/Button/ButtonHandler.cs
+index 89e0ce92..110b25f8 100644
+--- a/src/Core/src/Handlers/Button/ButtonHandler.cs
++++ b/src/Core/src/Handlers/Button/ButtonHandler.cs
+@@ -7,7 +7,9 @@ using PlatformView = Google.Android.Material.Button.MaterialButton;
+ using PlatformView = Microsoft.UI.Xaml.Controls.Button;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Button;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Button;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Button/IButtonHandler.cs b/src/Core/src/Handlers/Button/IButtonHandler.cs
+index e68f7e6d..c2a90093 100644
+--- a/src/Core/src/Handlers/Button/IButtonHandler.cs
++++ b/src/Core/src/Handlers/Button/IButtonHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Google.Android.Material.Button.MaterialButton;
+ using PlatformView = Microsoft.UI.Xaml.Controls.Button;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Button;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Button;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/ContentView/ContentViewHandler.cs b/src/Core/src/Handlers/ContentView/ContentViewHandler.cs
+index 3b8482f9..cf426b40 100644
+--- a/src/Core/src/Handlers/ContentView/ContentViewHandler.cs
++++ b/src/Core/src/Handlers/ContentView/ContentViewHandler.cs
+@@ -7,7 +7,9 @@ using PlatformView = Microsoft.Maui.Platform.ContentViewGroup;
+ using PlatformView = Microsoft.Maui.Platform.ContentPanel;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.ContentViewGroup;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Microsoft.Maui.Platform.ContentPanel;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/ContentView/IContentViewHandler.cs b/src/Core/src/Handlers/ContentView/IContentViewHandler.cs
+index 1f5d1bb1..80a0e1d9 100644
+--- a/src/Core/src/Handlers/ContentView/IContentViewHandler.cs
++++ b/src/Core/src/Handlers/ContentView/IContentViewHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Microsoft.Maui.Platform.ContentViewGroup;
+ using PlatformView = Microsoft.Maui.Platform.ContentPanel;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.ContentViewGroup;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Microsoft.Maui.Platform.ContentPanel;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Editor/EditorHandler.cs b/src/Core/src/Handlers/Editor/EditorHandler.cs
+index 632bcb5b..c045f148 100644
+--- a/src/Core/src/Handlers/Editor/EditorHandler.cs
++++ b/src/Core/src/Handlers/Editor/EditorHandler.cs
+@@ -7,7 +7,9 @@ using PlatformView = AndroidX.AppCompat.Widget.AppCompatEditText;
+ using PlatformView = Microsoft.UI.Xaml.Controls.TextBox;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Editor;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.TextView;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Editor/IEditorHandler.cs b/src/Core/src/Handlers/Editor/IEditorHandler.cs
+index 9c6e2721..53a3bc50 100644
+--- a/src/Core/src/Handlers/Editor/IEditorHandler.cs
++++ b/src/Core/src/Handlers/Editor/IEditorHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = AndroidX.AppCompat.Widget.AppCompatEditText;
+ using PlatformView = Microsoft.UI.Xaml.Controls.TextBox;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Editor;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.TextView;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/ElementHandlerExtensions.cs b/src/Core/src/Handlers/ElementHandlerExtensions.cs
+index 75a020a8..46d9d8c3 100644
+--- a/src/Core/src/Handlers/ElementHandlerExtensions.cs
++++ b/src/Core/src/Handlers/ElementHandlerExtensions.cs
+@@ -6,6 +6,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #elif (NETSTANDARD || !PLATFORM)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/Handlers/Entry/EntryHandler.cs b/src/Core/src/Handlers/Entry/EntryHandler.cs
+index 3d4d666a..32f8a3e0 100644
+--- a/src/Core/src/Handlers/Entry/EntryHandler.cs
++++ b/src/Core/src/Handlers/Entry/EntryHandler.cs
+@@ -7,7 +7,9 @@ using PlatformView = AndroidX.AppCompat.Widget.AppCompatEditText;
+ using PlatformView = Microsoft.UI.Xaml.Controls.TextBox;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Entry;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Entry;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Entry/IEntryHandler.cs b/src/Core/src/Handlers/Entry/IEntryHandler.cs
+index 67e8e98f..01494171 100644
+--- a/src/Core/src/Handlers/Entry/IEntryHandler.cs
++++ b/src/Core/src/Handlers/Entry/IEntryHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = AndroidX.AppCompat.Widget.AppCompatEditText;
+ using PlatformView = Microsoft.UI.Xaml.Controls.TextBox;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Entry;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Entry;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/FlyoutView/FlyoutViewHandler.cs b/src/Core/src/Handlers/FlyoutView/FlyoutViewHandler.cs
+index ec3b4294..121b5811 100644
+--- a/src/Core/src/Handlers/FlyoutView/FlyoutViewHandler.cs
++++ b/src/Core/src/Handlers/FlyoutView/FlyoutViewHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.Maui.Platform.RootNavigationView;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.DrawerView;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID)
++#elif GNOME
++using PlatformView = Gtk.Widget;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/FlyoutView/IFlyoutViewHandler.cs b/src/Core/src/Handlers/FlyoutView/IFlyoutViewHandler.cs
+index c6e97138..6afec198 100644
+--- a/src/Core/src/Handlers/FlyoutView/IFlyoutViewHandler.cs
++++ b/src/Core/src/Handlers/FlyoutView/IFlyoutViewHandler.cs
+@@ -6,6 +6,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.Maui.Platform.RootNavigationView;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.DrawerView;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/Handlers/Image/IImageHandler.cs b/src/Core/src/Handlers/Image/IImageHandler.cs
+index c04b241b..91474bfd 100644
+--- a/src/Core/src/Handlers/Image/IImageHandler.cs
++++ b/src/Core/src/Handlers/Image/IImageHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Android.Widget.ImageView;
+ using PlatformView = Microsoft.UI.Xaml.Controls.Image;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Image;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Picture;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Image/ImageHandler.cs b/src/Core/src/Handlers/Image/ImageHandler.cs
+index cfcc20d8..869e9aef 100644
+--- a/src/Core/src/Handlers/Image/ImageHandler.cs
++++ b/src/Core/src/Handlers/Image/ImageHandler.cs
+@@ -8,7 +8,9 @@ using PlatformView = Android.Widget.ImageView;
+ using PlatformView = Microsoft.UI.Xaml.Controls.Image;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Image;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Picture;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Label/ILabelHandler.cs b/src/Core/src/Handlers/Label/ILabelHandler.cs
+index e6cd8a72..5a61fc98 100644
+--- a/src/Core/src/Handlers/Label/ILabelHandler.cs
++++ b/src/Core/src/Handlers/Label/ILabelHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = AndroidX.AppCompat.Widget.AppCompatTextView;
+ using PlatformView = Microsoft.UI.Xaml.Controls.TextBlock;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Label;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Label;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Label/LabelHandler.cs b/src/Core/src/Handlers/Label/LabelHandler.cs
+index 4f56985c..ebdb304a 100644
+--- a/src/Core/src/Handlers/Label/LabelHandler.cs
++++ b/src/Core/src/Handlers/Label/LabelHandler.cs
+@@ -7,7 +7,9 @@ using PlatformView = AndroidX.AppCompat.Widget.AppCompatTextView;
+ using PlatformView = Microsoft.UI.Xaml.Controls.TextBlock;
+ #elif TIZEN
+ using PlatformView = Tizen.UIExtensions.NUI.Label;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Label;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Layout/ILayoutHandler.cs b/src/Core/src/Handlers/Layout/ILayoutHandler.cs
+index 1951c845..b5a0d5ef 100644
+--- a/src/Core/src/Handlers/Layout/ILayoutHandler.cs
++++ b/src/Core/src/Handlers/Layout/ILayoutHandler.cs
+@@ -6,6 +6,8 @@ using PlatformView = Microsoft.Maui.Platform.LayoutViewGroup;
+ using PlatformView = Microsoft.Maui.Platform.LayoutPanel;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.LayoutViewGroup;
++#elif GNOME
++using PlatformView = Microsoft.Maui.Platform.LayoutWidget;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/Handlers/Layout/LayoutHandler.cs b/src/Core/src/Handlers/Layout/LayoutHandler.cs
+index d3fa92de..46e75b55 100644
+--- a/src/Core/src/Handlers/Layout/LayoutHandler.cs
++++ b/src/Core/src/Handlers/Layout/LayoutHandler.cs
+@@ -7,6 +7,8 @@ using PlatformView = Microsoft.Maui.Platform.LayoutViewGroup;
+ using PlatformView = Microsoft.Maui.Platform.LayoutPanel;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.LayoutViewGroup;
++#elif GNOME
++using PlatformView = Microsoft.Maui.Platform.LayoutWidget;
+ #elif (NETSTANDARD || !PLATFORM)
+ using PlatformView = System.Object;
+ #endif
+@@ -59,7 +61,7 @@ namespace Microsoft.Maui.Handlers
+ 		/// <param name="layout">The associated <see cref="ILayout"/> instance.</param>
+ 		public static partial void MapBackground(ILayoutHandler handler, ILayout layout);
+ 
+-#if ANDROID || WINDOWS
++#if ANDROID || WINDOWS || GNOME
+ 		/// <summary>
+ 		/// Maps the abstract <see cref="IView.InputTransparent"/> property to the platform-specific implementations.
+ 		/// </summary>
+diff --git a/src/Core/src/Handlers/MenuBar/IMenuBarHandler.cs b/src/Core/src/Handlers/MenuBar/IMenuBarHandler.cs
+index ddeb1ade..163b600f 100644
+--- a/src/Core/src/Handlers/MenuBar/IMenuBarHandler.cs
++++ b/src/Core/src/Handlers/MenuBar/IMenuBarHandler.cs
+@@ -6,6 +6,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.Controls.MenuBar;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gio.Menu;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/Handlers/MenuBar/MenuBarHandler.cs b/src/Core/src/Handlers/MenuBar/MenuBarHandler.cs
+index 6f863134..bb8e1feb 100644
+--- a/src/Core/src/Handlers/MenuBar/MenuBarHandler.cs
++++ b/src/Core/src/Handlers/MenuBar/MenuBarHandler.cs
+@@ -9,7 +9,9 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.Controls.MenuBar;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gio.Menu;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/MenuBarItem/IMenuBarItemHandler.cs b/src/Core/src/Handlers/MenuBarItem/IMenuBarItemHandler.cs
+index e9bb53f7..cd8e59f1 100644
+--- a/src/Core/src/Handlers/MenuBarItem/IMenuBarItemHandler.cs
++++ b/src/Core/src/Handlers/MenuBarItem/IMenuBarItemHandler.cs
+@@ -6,6 +6,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.Controls.MenuBarItem;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.MenuButton;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/Handlers/MenuBarItem/MenuBarItemHandler.cs b/src/Core/src/Handlers/MenuBarItem/MenuBarItemHandler.cs
+index 6763b13d..1d6c7777 100644
+--- a/src/Core/src/Handlers/MenuBarItem/MenuBarItemHandler.cs
++++ b/src/Core/src/Handlers/MenuBarItem/MenuBarItemHandler.cs
+@@ -9,6 +9,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.Controls.MenuBarItem;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.MenuButton;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/Handlers/NavigationPage/INavigationViewHandler.cs b/src/Core/src/Handlers/NavigationPage/INavigationViewHandler.cs
+index 7a69fc55..b7e768cb 100644
+--- a/src/Core/src/Handlers/NavigationPage/INavigationViewHandler.cs
++++ b/src/Core/src/Handlers/NavigationPage/INavigationViewHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.Controls.Frame;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.StackNavigationManager;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Microsoft.Maui.Platform.StackNavigationManager;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/NavigationPage/NavigationViewHandler.cs b/src/Core/src/Handlers/NavigationPage/NavigationViewHandler.cs
+index c08e0d03..fc6d2788 100644
+--- a/src/Core/src/Handlers/NavigationPage/NavigationViewHandler.cs
++++ b/src/Core/src/Handlers/NavigationPage/NavigationViewHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.Controls.Frame;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.StackNavigationManager;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Microsoft.Maui.Platform.StackNavigationManager;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/TabbedView/TabbedViewHandler.cs b/src/Core/src/Handlers/TabbedView/TabbedViewHandler.cs
+index 81c6c3ab..6985b3ad 100644
+--- a/src/Core/src/Handlers/TabbedView/TabbedViewHandler.cs
++++ b/src/Core/src/Handlers/TabbedView/TabbedViewHandler.cs
+@@ -9,7 +9,9 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Widget;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Toolbar/IToolbarHandler.cs b/src/Core/src/Handlers/Toolbar/IToolbarHandler.cs
+index 341dcf43..2b1c0c4a 100644
+--- a/src/Core/src/Handlers/Toolbar/IToolbarHandler.cs
++++ b/src/Core/src/Handlers/Toolbar/IToolbarHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Google.Android.Material.AppBar.MaterialToolbar;
+ using PlatformView = Microsoft.Maui.Platform.MauiToolbar;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.MauiToolbar;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Microsoft.Maui.Platform.MauiToolbar;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Toolbar/ToolbarHandler.cs b/src/Core/src/Handlers/Toolbar/ToolbarHandler.cs
+index 2b944aad..c1c8ae67 100644
+--- a/src/Core/src/Handlers/Toolbar/ToolbarHandler.cs
++++ b/src/Core/src/Handlers/Toolbar/ToolbarHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Google.Android.Material.AppBar.MaterialToolbar;
+ using PlatformView = Microsoft.Maui.Platform.MauiToolbar;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.MauiToolbar;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Microsoft.Maui.Platform.MauiToolbar;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/View/DataFlowDirection.cs b/src/Core/src/Handlers/View/DataFlowDirection.cs
+index 84b14604..b45b2182 100644
+--- a/src/Core/src/Handlers/View/DataFlowDirection.cs
++++ b/src/Core/src/Handlers/View/DataFlowDirection.cs
+@@ -6,6 +6,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #elif (NETSTANDARD || !PLATFORM)
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/View/ViewHandler.cs b/src/Core/src/Handlers/View/ViewHandler.cs
+index 204b3d96..5d57f8b6 100644
+--- a/src/Core/src/Handlers/View/ViewHandler.cs
++++ b/src/Core/src/Handlers/View/ViewHandler.cs
+@@ -8,6 +8,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #elif (NETSTANDARD || !PLATFORM)
+ using PlatformView = System.Object;
+ #endif
+@@ -67,7 +69,7 @@ namespace Microsoft.Maui.Handlers
+ 				[nameof(IView.AnchorX)] = MapAnchorX,
+ 				[nameof(IView.AnchorY)] = MapAnchorY,
+ #pragma warning disable CS0618 // Type or member is obsolete
+-				[nameof(IBorder.Border)] = MapBorderView,
++				//[nameof(IBorder.Border)] = MapBorderView,
+ #pragma warning restore CS0618 // Type or member is obsolete
+ #if ANDROID || WINDOWS || TIZEN
+ 				[nameof(IToolbarElement.Toolbar)] = MapToolbar,
+@@ -540,17 +542,17 @@ namespace Microsoft.Maui.Handlers
+ 		}
+ 
+ #pragma warning disable CS0618 // Type or member is obsolete
+-		/// <summary>
+-		/// Maps the abstract <see cref="IBorder.Border"/> property to the platform-specific implementations.
+-		/// </summary>
+-		/// <param name="handler">The associated handler.</param>
+-		/// <param name="view">The associated <see cref="IView"/> instance.</param>
+-		public static void MapBorderView(IViewHandler handler, IView view)
+-		{
+-			handler.UpdateValue(nameof(IViewHandler.ContainerView));
+-
+-			((PlatformView?)handler.ContainerView)?.UpdateBorder(view);
+-		}
++		// /// <summary>
++		// /// Maps the abstract <see cref="IBorder.Border"/> property to the platform-specific implementations.
++		// /// </summary>
++		// /// <param name="handler">The associated handler.</param>
++		// /// <param name="view">The associated <see cref="IView"/> instance.</param>
++		// public static void MapBorderView(IViewHandler handler, IView view)
++		// {
++		// 	handler.UpdateValue(nameof(IViewHandler.ContainerView));
++
++		// 	((PlatformView?)handler.ContainerView)?.UpdateBorder(view);
++		// }
+ #pragma warning restore CS0618 // Type or member is obsolete
+ 
+ 		static partial void MappingFrame(IViewHandler handler, IView view);
+diff --git a/src/Core/src/Handlers/View/ViewHandlerOfT.cs b/src/Core/src/Handlers/View/ViewHandlerOfT.cs
+index 53040f66..9738a92e 100644
+--- a/src/Core/src/Handlers/View/ViewHandlerOfT.cs
++++ b/src/Core/src/Handlers/View/ViewHandlerOfT.cs
+@@ -7,6 +7,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
+ using PlatformView = System.Object;
+ #endif
+@@ -15,7 +17,7 @@ namespace Microsoft.Maui.Handlers
+ {
+ 	public abstract partial class ViewHandler<TVirtualView, TPlatformView> : ViewHandler, IViewHandler
+ 		where TVirtualView : class, IView
+-#if !(NETSTANDARD || !PLATFORM) || IOS || ANDROID || WINDOWS || TIZEN
++#if !(NETSTANDARD || !PLATFORM) || IOS || ANDROID || WINDOWS || TIZEN || GNOME
+ 		where TPlatformView : PlatformView
+ #else
+ 		where TPlatformView : class
+diff --git a/src/Core/src/Handlers/Window/IWindowHandler.cs b/src/Core/src/Handlers/Window/IWindowHandler.cs
+index a961a5fd..52c5ff4d 100644
+--- a/src/Core/src/Handlers/Window/IWindowHandler.cs
++++ b/src/Core/src/Handlers/Window/IWindowHandler.cs
+@@ -6,7 +6,9 @@ using PlatformView = Android.App.Activity;
+ using PlatformView = Microsoft.UI.Xaml.Window;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.Window;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Adw.ApplicationWindow;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ #endif
+ 
+diff --git a/src/Core/src/Handlers/Window/WindowHandler.cs b/src/Core/src/Handlers/Window/WindowHandler.cs
+index 74eab6c5..06022da1 100644
+--- a/src/Core/src/Handlers/Window/WindowHandler.cs
++++ b/src/Core/src/Handlers/Window/WindowHandler.cs
+@@ -8,6 +8,8 @@ using PlatformView = Android.App.Activity;
+ using PlatformView = Microsoft.UI.Xaml.Window;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.Window;
++#elif GNOME
++using PlatformView = Adw.ApplicationWindow;
+ #endif
+ 
+ namespace Microsoft.Maui.Handlers
+diff --git a/src/Core/src/ImageSources/IImageSourceService.cs b/src/Core/src/ImageSources/IImageSourceService.cs
+index 89926bc4..ab7c1118 100644
+--- a/src/Core/src/ImageSources/IImageSourceService.cs
++++ b/src/Core/src/ImageSources/IImageSourceService.cs
+@@ -29,6 +29,10 @@ namespace Microsoft.Maui
+ 		Task<IImageSourceServiceResult<MauiImageSource>?> GetImageAsync(
+ 			IImageSource imageSource,
+ 			CancellationToken cancellationToken = default);
++#elif GNOME
++		Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(
++			IImageSource imageSource,
++			CancellationToken cancellationToken = default);
+ #elif WINDOWS
+ 		Task<IImageSourceServiceResult<UI.Xaml.Media.ImageSource>?> GetImageSourceAsync(
+ 			IImageSource imageSource,
+diff --git a/src/Core/src/ImageSources/ImageSourceService.cs b/src/Core/src/ImageSources/ImageSourceService.cs
+index 42b52d33..2ccf9f8c 100644
+--- a/src/Core/src/ImageSources/ImageSourceService.cs
++++ b/src/Core/src/ImageSources/ImageSourceService.cs
+@@ -56,6 +56,10 @@ namespace Microsoft.Maui
+ 		public abstract Task<IImageSourceServiceResult<MauiImageSource>?> GetImageAsync(
+ 			IImageSource imageSource,
+ 			CancellationToken cancellationToken = default);
++#elif GNOME
++		public abstract Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(
++			IImageSource imageSource,
++			CancellationToken cancellationToken = default);
+ #elif WINDOWS
+ 		public abstract Task<IImageSourceServiceResult<UI.Xaml.Media.ImageSource>?> GetImageSourceAsync(
+ 			IImageSource imageSource,
+diff --git a/src/Core/src/ImageSources/ImageSourceServiceResult.cs b/src/Core/src/ImageSources/ImageSourceServiceResult.cs
+index 1891b031..3272d883 100644
+--- a/src/Core/src/ImageSources/ImageSourceServiceResult.cs
++++ b/src/Core/src/ImageSources/ImageSourceServiceResult.cs
+@@ -8,6 +8,8 @@ using PlatformView = Android.Graphics.Drawables.Drawable;
+ using PlatformView = Microsoft.UI.Xaml.Media.ImageSource;
+ #elif TIZEN
+ using PlatformView = Microsoft.Maui.Platform.MauiImageSource;
++#elif GNOME
++using PlatformView = Gtk.Picture;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/ImageSources/ImageSourceServiceResultManager.cs b/src/Core/src/ImageSources/ImageSourceServiceResultManager.cs
+index fc3c2139..d63f1ad1 100644
+--- a/src/Core/src/ImageSources/ImageSourceServiceResultManager.cs
++++ b/src/Core/src/ImageSources/ImageSourceServiceResultManager.cs
+@@ -14,7 +14,10 @@ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformImage = Microsoft.Maui.Platform.MauiImageSource;
+ using PlatformView = Tizen.NUI.BaseComponents.View;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformImage = Gtk.Picture;
++using PlatformView = Gtk.Widget;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformImage = System.Object;
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/Layouts/LayoutManager.cs b/src/Core/src/Layouts/LayoutManager.cs
+index 7d20eb96..e44ffbd6 100644
+--- a/src/Core/src/Layouts/LayoutManager.cs
++++ b/src/Core/src/Layouts/LayoutManager.cs
+@@ -8,6 +8,7 @@ namespace Microsoft.Maui.Layouts
+ 	{
+ 		public LayoutManager(ILayout layout)
+ 		{
++			Console.WriteLine("LayoutManager created");
+ 			Layout = layout;
+ 		}
+ 
+diff --git a/src/Core/src/Layouts/VerticalStackLayoutManager.cs b/src/Core/src/Layouts/VerticalStackLayoutManager.cs
+index 5c1b6b52..755eb6e1 100644
+--- a/src/Core/src/Layouts/VerticalStackLayoutManager.cs
++++ b/src/Core/src/Layouts/VerticalStackLayoutManager.cs
+@@ -7,10 +7,12 @@ namespace Microsoft.Maui.Layouts
+ 	{
+ 		public VerticalStackLayoutManager(IStackLayout stackLayout) : base(stackLayout)
+ 		{
++			Console.WriteLine("VerticalStackLayoutManager created");
+ 		}
+ 
+ 		public override Size Measure(double widthConstraint, double heightConstraint)
+ 		{
++			Console.WriteLine("VerticalStackLayoutManager Measure called");
+ 			var padding = Stack.Padding;
+ 
+ 			double measuredHeight = 0;
+@@ -18,6 +20,8 @@ namespace Microsoft.Maui.Layouts
+ 			double childWidthConstraint = widthConstraint - padding.HorizontalThickness;
+ 			int spacingCount = 0;
+ 
++			Console.WriteLine($"Width Constraint: {widthConstraint}, Height Constraint: {heightConstraint}");
++			Console.WriteLine($"Stack count: {Stack.Count}, Spacing: {Stack.Spacing}");
+ 			for (int n = 0; n < Stack.Count; n++)
+ 			{
+ 				var child = Stack[n];
+diff --git a/src/Core/src/MauiContextExtensions.cs b/src/Core/src/MauiContextExtensions.cs
+index ab841cfd..339b549d 100644
+--- a/src/Core/src/MauiContextExtensions.cs
++++ b/src/Core/src/MauiContextExtensions.cs
+@@ -17,6 +17,9 @@ using NativeWindow = Android.App.Activity;
+ #elif TIZEN
+ using NativeApplication = Tizen.Applications.CoreApplication;
+ using NativeWindow = Tizen.NUI.Window;
++#elif GNOME
++using NativeApplication = Adw.Application;
++using NativeWindow = Adw.ApplicationWindow;
+ #else
+ using NativeApplication = System.Object;
+ using NativeWindow = System.Object;
+@@ -66,6 +69,9 @@ namespace Microsoft.Maui
+ #if WINDOWS
+ 			scopedContext.AddSpecific(new NavigationRootManager(platformWindow));
+ #endif
++#if GNOME
++			scopedContext.AddSpecific(new NavigationRootManager(platformWindow));
++#endif
+ 
+ 			// Initialize any window-scoped services, for example the window dispatchers and animation tickers
+ 			scopedContext.InitializeScopedServices();
+diff --git a/src/Core/src/Platform/ElementExtensions.cs b/src/Core/src/Platform/ElementExtensions.cs
+index a76988c5..408ffa2f 100644
+--- a/src/Core/src/Platform/ElementExtensions.cs
++++ b/src/Core/src/Platform/ElementExtensions.cs
+@@ -20,7 +20,12 @@ using PlatformView = Tizen.NUI.BaseComponents.View;
+ using BasePlatformType = System.Object;
+ using PlatformWindow = Tizen.NUI.Window;
+ using PlatformApplication = Tizen.Applications.CoreApplication;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformView = Gtk.Widget;
++using BasePlatformType = System.Object;
++using PlatformWindow = Adw.ApplicationWindow;
++using PlatformApplication = Adw.Application;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformView = System.Object;
+ using BasePlatformType = System.Object;
+ using IPlatformViewHandler = Microsoft.Maui.IViewHandler;
+@@ -165,7 +170,7 @@ namespace Microsoft.Maui.Platform
+ 		public static void SetWindowHandler(this PlatformWindow platformWindow, IWindow window, IMauiContext context) =>
+ 			SetHandler(platformWindow, window, context);
+ 
+-#if WINDOWS || IOS || ANDROID || TIZEN
++#if WINDOWS || IOS || ANDROID || TIZEN || GNOME
+ 		internal static IWindow GetWindow(this IElement element) =>
+ 			element.Handler?.MauiContext?.GetPlatformWindow()?.GetWindow() ??
+ 			throw new InvalidOperationException("IWindow not found");
+diff --git a/src/Core/src/Platform/IImageSourcePartSetter.cs b/src/Core/src/Platform/IImageSourcePartSetter.cs
+index 5f239f70..9ec4430e 100644
+--- a/src/Core/src/Platform/IImageSourcePartSetter.cs
++++ b/src/Core/src/Platform/IImageSourcePartSetter.cs
+@@ -6,7 +6,9 @@ using PlatformImage = Android.Graphics.Drawables.Drawable;
+ using PlatformImage = Microsoft.UI.Xaml.Media.ImageSource;
+ #elif TIZEN
+ using PlatformImage = Microsoft.Maui.Platform.MauiImageSource;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformImage = Gtk.Picture;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using System;
+ using PlatformImage = System.Object;
+ #endif
+diff --git a/src/Core/src/Platform/ImageSourcePartLoader.cs b/src/Core/src/Platform/ImageSourcePartLoader.cs
+index c43cbbe7..c914f76a 100644
+--- a/src/Core/src/Platform/ImageSourcePartLoader.cs
++++ b/src/Core/src/Platform/ImageSourcePartLoader.cs
+@@ -15,7 +15,10 @@ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformImage = Microsoft.Maui.Platform.MauiImageSource;
+ using PlatformView = Tizen.NUI.BaseComponents.View;
+-#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
++#elif GNOME
++using PlatformImage = Gtk.Picture;
++using PlatformView = Gtk.Widget;
++#elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN && !GNOME)
+ using PlatformImage = System.Object;
+ using PlatformView = System.Object;
+ #endif
+@@ -24,7 +27,7 @@ namespace Microsoft.Maui.Platform
+ {
+ 	public partial class ImageSourcePartLoader
+ 	{
+-#if IOS || ANDROID || WINDOWS || TIZEN
++#if IOS || ANDROID || WINDOWS || TIZEN || GNOME
+ 		IImageSourceServiceProvider? _imageSourceServiceProvider;
+ #endif
+ 
+@@ -67,7 +70,7 @@ namespace Microsoft.Maui.Platform
+ 
+ 			if (imageSource?.Source is not null)
+ 			{
+-#if IOS || ANDROID || WINDOWS || TIZEN
++#if IOS || ANDROID || WINDOWS || TIZEN || GNOME
+ 				_imageSourceServiceProvider ??= handler.GetRequiredService<IImageSourceServiceProvider>();
+ #endif
+ 
+@@ -77,7 +80,7 @@ namespace Microsoft.Maui.Platform
+ 					.ConfigureAwait(false);
+ 
+ 				SourceManager.CompleteLoad(result);
+-#elif ANDROID || TIZEN
++#elif ANDROID || TIZEN || GNOME
+ 				var result = await imageSource.UpdateSourceAsync(platformView, _imageSourceServiceProvider, Setter.SetImageSource, token)
+ 					.ConfigureAwait(false);
+ 
+diff --git a/src/Core/src/Platform/ImageSourcePartSetter.cs b/src/Core/src/Platform/ImageSourcePartSetter.cs
+index 6afcd0d7..6fb65991 100644
+--- a/src/Core/src/Platform/ImageSourcePartSetter.cs
++++ b/src/Core/src/Platform/ImageSourcePartSetter.cs
+@@ -7,6 +7,8 @@ using PlatformImage = Android.Graphics.Drawables.Drawable;
+ using PlatformImage = Microsoft.UI.Xaml.Media.ImageSource;
+ #elif TIZEN
+ using PlatformImage = Microsoft.Maui.Platform.MauiImageSource;
++#elif GNOME
++using PlatformImage = Gtk.Picture;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID && !TIZEN)
+ using PlatformImage = System.Object;
+ #endif
+diff --git a/src/Core/src/Platform/ViewExtensions.cs b/src/Core/src/Platform/ViewExtensions.cs
+index dbdabc54..e9c5a39b 100644
+--- a/src/Core/src/Platform/ViewExtensions.cs
++++ b/src/Core/src/Platform/ViewExtensions.cs
+@@ -21,6 +21,9 @@ using ParentView = Microsoft.UI.Xaml.DependencyObject;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
+ using ParentView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
++using ParentView = Gtk.Widget;
+ #else
+ using PlatformView = System.Object;
+ using ParentView = System.Object;
+diff --git a/src/Core/src/Primitives/WebResourceRequestedEventArgs.cs b/src/Core/src/Primitives/WebResourceRequestedEventArgs.cs
+index e9498efe..d2068211 100644
+--- a/src/Core/src/Primitives/WebResourceRequestedEventArgs.cs
++++ b/src/Core/src/Primitives/WebResourceRequestedEventArgs.cs
+@@ -91,6 +91,40 @@ public class WebResourceRequestedEventArgs
+ 	/// </remarks>
+ 	public global::Android.Webkit.WebResourceResponse? Response { get; set; }
+ 
++#elif GNOME
++
++	internal WebResourceRequestedEventArgs(
++		global::WebKit.WebView sender,
++		global::WebKit.URISchemeRequest request)
++	{
++		Sender = sender;
++		Request = request;
++	}
++
++	/// <summary>
++	/// Gets the native view attached to the event.
++	/// </summary>
++	/// <remarks>
++	/// This is only available on GNOME.
++	/// </remarks>
++	public global::WebKit.WebView Sender { get; }
++
++	/// <summary>
++	/// Gets the native event args attached to the event.
++	/// </summary>
++	/// <remarks>
++	/// This is only available on GNOME.
++	/// </remarks>
++	public global::WebKit.URISchemeRequest Request { get; }
++
++	/// <summary>
++	/// Gets or sets the native response attached to the event.
++	/// </summary>
++	/// <remarks>
++	/// This is only available on GNOME.
++	/// </remarks>
++	public global::WebKit.URISchemeResponse? Response { get; set; }
++
+ #else
+ 
+ 	internal WebResourceRequestedEventArgs()
+diff --git a/src/Core/src/Primitives/WebViewInitializationCompletedEventArgs.cs b/src/Core/src/Primitives/WebViewInitializationCompletedEventArgs.cs
+index c6c2bf72..fc47c1a6 100644
+--- a/src/Core/src/Primitives/WebViewInitializationCompletedEventArgs.cs
++++ b/src/Core/src/Primitives/WebViewInitializationCompletedEventArgs.cs
+@@ -4,6 +4,8 @@ using Microsoft.Web.WebView2.Core;
+ using WebKit;
+ #elif ANDROID
+ using Android.Webkit;
++#elif GNOME
++using WebKit;
+ #endif
+ 
+ namespace Microsoft.Maui;
+@@ -82,6 +84,30 @@ public class WebViewInitializationCompletedEventArgs
+ 	/// </summary>
+ 	public CoreWebView2Settings Settings { get; }
+ 
++
++#elif GNOME
++
++	/// <summary>
++	/// Initializes a new instance of the <see cref="WebViewInitializationCompletedEventArgs"/> class.
++	/// </summary>
++	/// <param name="sender">The native view that is being initialized.</param>
++	/// <param name="settings">The settings for the web view, which can be used to configure various aspects of the web view.</param>
++	internal WebViewInitializationCompletedEventArgs(WebKit.WebView sender, WebKit.Settings settings)
++	{
++		Sender = sender;
++		Settings = settings;
++	}
++
++	/// <summary>
++	/// Gets the native view attached to the event.
++	/// </summary>
++	public WebKit.WebView Sender { get; }
++
++	/// <summary>
++	/// Gets or sets the settings attached to the web view.
++	/// </summary>
++	public WebKit.Settings Settings { get; }
++
+ #else
+ 
+ 	/// <summary>
+diff --git a/src/Core/src/Primitives/WebViewInitializationStartedEventArgs.cs b/src/Core/src/Primitives/WebViewInitializationStartedEventArgs.cs
+index 34316de7..dca97bb8 100644
+--- a/src/Core/src/Primitives/WebViewInitializationStartedEventArgs.cs
++++ b/src/Core/src/Primitives/WebViewInitializationStartedEventArgs.cs
+@@ -4,6 +4,8 @@ using Microsoft.Web.WebView2.Core;
+ using WebKit;
+ #elif ANDROID
+ using Android.Webkit;
++#elif GNOME
++using WebKit;
+ #endif
+ 
+ namespace Microsoft.Maui;
+@@ -119,6 +121,22 @@ public class WebViewInitializationStartedEventArgs
+ 	/// </summary>
+ 	public WebSettings Settings { get; }
+ 
++#elif GNOME
++
++	/// <summary>
++	/// Initializes a new instance of the <see cref="WebViewInitializationStartedEventArgs"/> class.
++	/// </summary>
++	/// <param name="settings">The settings for the WebView.</param>
++	internal WebViewInitializationStartedEventArgs(Settings settings)
++	{
++		Settings = settings;
++	}
++
++	/// <summary>
++	/// Gets the platform-specific settings for the WebView.
++	/// </summary>
++	public Settings Settings { get; }
++
+ #else
+ 
+ 	/// <summary>
+diff --git a/src/Core/src/PropertyMapper.cs b/src/Core/src/PropertyMapper.cs
+index 9d75a599..0233f056 100644
+--- a/src/Core/src/PropertyMapper.cs
++++ b/src/Core/src/PropertyMapper.cs
+@@ -8,6 +8,8 @@ using PlatformView = UIKit.UIView;
+ using PlatformView = Android.Views.View;
+ #elif WINDOWS
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #elif (NETSTANDARD || !PLATFORM) || (NET6_0_OR_GREATER && !IOS && !ANDROID)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Core/src/ViewExtensions.cs b/src/Core/src/ViewExtensions.cs
+index 5f026a87..c6439861 100644
+--- a/src/Core/src/ViewExtensions.cs
++++ b/src/Core/src/ViewExtensions.cs
+@@ -18,6 +18,9 @@ using ParentView = Microsoft.UI.Xaml.DependencyObject;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
+ using ParentView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
++using ParentView = Gtk.Widget;
+ #else
+ using PlatformView = System.Object;
+ using ParentView = System.Object;
+diff --git a/src/Core/src/WindowExtensions.cs b/src/Core/src/WindowExtensions.cs
+index 0c223e6d..b98256d5 100644
+--- a/src/Core/src/WindowExtensions.cs
++++ b/src/Core/src/WindowExtensions.cs
+@@ -9,6 +9,8 @@ using PlatformView = Android.App.Activity;
+ using PlatformView = Microsoft.UI.Xaml.Window;
+ #elif TIZEN
+ using PlatformView =  Tizen.NUI.Window;
++#elif GNOME
++using PlatformView = Adw.ApplicationWindow;
+ #endif
+ 
+ namespace Microsoft.Maui
+diff --git a/src/Core/src/WindowOverlay/WindowOverlay.cs b/src/Core/src/WindowOverlay/WindowOverlay.cs
+index e8533ff2..6732fbe2 100644
+--- a/src/Core/src/WindowOverlay/WindowOverlay.cs
++++ b/src/Core/src/WindowOverlay/WindowOverlay.cs
+@@ -11,6 +11,8 @@ using PlatformView = Android.Views.View;
+ using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
+ #elif TIZEN
+ using PlatformView = Tizen.NUI.BaseComponents.View;
++#elif GNOME
++using PlatformView = Gtk.Widget;
+ #elif (NETSTANDARD || !PLATFORM)
+ using PlatformView = System.Object;
+ #endif
+diff --git a/src/Essentials/src/DeviceDisplay/DeviceDisplay.shared.cs b/src/Essentials/src/DeviceDisplay/DeviceDisplay.shared.cs
+index 8e4d9f42..b29d2fe0 100644
+--- a/src/Essentials/src/DeviceDisplay/DeviceDisplay.shared.cs
++++ b/src/Essentials/src/DeviceDisplay/DeviceDisplay.shared.cs
+@@ -70,7 +70,7 @@ namespace Microsoft.Maui.Devices
+ 			remove => Current.MainDisplayInfoChanged -= value;
+ 		}
+ 
+-#if WINDOWS
++#if WINDOWS || GNOME
+ 		internal const float BaseLogicalDpi = 96.0f;
+ #elif ANDROID || TIZEN
+ 		internal const float BaseLogicalDpi = 160.0f;
+diff --git a/src/Essentials/src/Screenshot/Screenshot.shared.cs b/src/Essentials/src/Screenshot/Screenshot.shared.cs
+index 129cf829..ddd57a2e 100644
+--- a/src/Essentials/src/Screenshot/Screenshot.shared.cs
++++ b/src/Essentials/src/Screenshot/Screenshot.shared.cs
+@@ -97,6 +97,20 @@ namespace Microsoft.Maui.Media
+ 		/// <param name="view">The view to capture.</param>
+ 		/// <returns>An instance of <see cref="IScreenshotResult"/> with information about the captured screenshot.</returns>
+ 		Task<IScreenshotResult?> CaptureAsync(Tizen.NUI.BaseComponents.View view);
++#elif GNOME
++		/// <summary>
++		/// Captures a screenshot of the specified window.
++		/// </summary>
++		/// <param name="window">The window to capture.</param>
++		/// <returns>An instance of <see cref="IScreenshotResult"/> with information about the captured screenshot.</returns>
++		Task<IScreenshotResult> CaptureAsync(Adw.Window window);
++
++		/// <summary>
++		/// Captures a screenshot of the specified view.
++		/// </summary>
++		/// <param name="view">The view to capture.</param>
++		/// <returns>An instance of <see cref="IScreenshotResult"/> with information about the captured screenshot.</returns>
++		Task<IScreenshotResult> CaptureAsync(Gtk.Widget view);
+ #endif
+ 	}
+ 
+@@ -267,6 +281,24 @@ namespace Microsoft.Maui.Media
+ 		/// <returns>An instance of <see cref="IScreenshotResult"/> with information about the captured screenshot.</returns>
+ 		public static Task<IScreenshotResult?> CaptureAsync(this IScreenshot screenshot, Tizen.NUI.BaseComponents.View view) =>
+ 			screenshot.AsPlatform().CaptureAsync(view);
++#elif GNOME
++		/// <summary>
++		/// Captures a screenshot of the specified window.
++		/// </summary>
++		/// <param name="screenshot">The object this method is invoked on.</param>
++		/// <param name="window">The window to capture.</param>
++		/// <returns>An instance of <see cref="IScreenshotResult"/> with information about the captured screenshot.</returns>
++		public static Task<IScreenshotResult> CaptureAsync(this IScreenshot screenshot, Adw.Window window) =>
++			screenshot.AsPlatform().CaptureAsync(window);
++
++		/// <summary>
++		/// Captures a screenshot of the specified view.
++		/// </summary>
++		/// <param name="screenshot">The object this method is invoked on.</param>
++		/// <param name="view">The view to capture.</param>
++		/// <returns>An instance of <see cref="IScreenshotResult"/> with information about the captured screenshot.</returns>
++		public static Task<IScreenshotResult> CaptureAsync(this IScreenshot screenshot, Gtk.Widget view) =>
++			screenshot.AsPlatform().CaptureAsync(view);
+ #endif
+ 	}
+ 
+diff --git a/src/Essentials/src/Types/DevicePlatform.shared.cs b/src/Essentials/src/Types/DevicePlatform.shared.cs
+index 69ce18af..3b9430ac 100644
+--- a/src/Essentials/src/Types/DevicePlatform.shared.cs
++++ b/src/Essentials/src/Types/DevicePlatform.shared.cs
+@@ -14,6 +14,11 @@ namespace Microsoft.Maui.Devices
+ 		/// </summary>
+ 		public static DevicePlatform Android { get; } = new DevicePlatform(nameof(Android));
+ 
++		/// <summary>
++		/// Gets an instance of <see cref="DevicePlatform"/> that represents GNOME.
++		/// </summary>
++		public static DevicePlatform GNOME { get; } = new DevicePlatform(nameof(GNOME));
++
+ 		/// <summary>
+ 		/// Gets an instance of <see cref="DevicePlatform"/> that represents iOS.
+ 		/// </summary>

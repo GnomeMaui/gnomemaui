@@ -1,38 +1,38 @@
-﻿using System.Threading;
+﻿using Microsoft.Maui;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Maui;
 
 namespace SkiaSharp.Views.Maui.Handlers;
 
 public partial class SKImageSourceService
 {
-	public override Task<IImageSourceServiceResult<GdkPixbuf.Pixbuf>?> GetImageSourceAsync(IImageSource imageSource, float scale = 1, CancellationToken cancellationToken = default)
+	public override Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default)
 	{
-		var bitmap = imageSource switch
+		var picture = imageSource switch
 		{
-			ISKImageImageSource img => img.Image?.ToImage(),
-			ISKBitmapImageSource bmp => bmp.Bitmap?.ToImage(),
-			ISKPixmapImageSource pix => pix.Pixmap?.ToImage(),
-			ISKPictureImageSource pic => pic.Picture?.ToImage(pic.Dimensions),
+			ISKImageImageSource img => img.Image?.ToPicture(),
+			ISKBitmapImageSource bmp => bmp.Bitmap?.ToPicture(),
+			ISKPixmapImageSource pix => pix.Pixmap?.ToPicture(),
+			ISKPictureImageSource pic => pic.Picture?.ToPicture(pic.Dimensions),
 			_ => null,
 		};
 
-		return bitmap != null
-			? FromResult(new ImageSourceServiceResult(bitmap))
+		return picture != null
+			? FromResult(new ImageSourceServiceResult(picture))
 			: FromResult(null);
 	}
 
-	static Task<IImageSourceServiceResult<GdkPixbuf.Pixbuf>?> FromResult(ImageSourceServiceResult? result) =>
-		Task.FromResult<IImageSourceServiceResult<GdkPixbuf.Pixbuf>?>(result);
+	static Task<IImageSourceServiceResult<Gtk.Picture>?> FromResult(ImageSourceServiceResult? result) =>
+		Task.FromResult<IImageSourceServiceResult<Gtk.Picture>?>(result);
 }
 
 public static class SKImageSourceExtensions
 {
-	public static GdkPixbuf.Pixbuf ToImage(this SKImage? image)
+	public static Gtk.Picture? ToPicture(this SKImage? image)
 	{
 		if (image == null)
 		{
-			return default!;
+			return null;
 		}
 
 		using var data = image.Encode();
@@ -42,36 +42,41 @@ public static class SKImageSourceExtensions
 		loader.Write(bytes.AsSpan());
 		loader.Close();
 
-		return loader.GetPixbuf()!;
+		var pixbuf = loader.GetPixbuf();
+		if (pixbuf is null)
+			return null;
+
+		var texture = Gdk.Texture.NewForPixbuf(pixbuf);
+		return Gtk.Picture.NewForPaintable(texture);
 	}
 
-	public static GdkPixbuf.Pixbuf ToImage(this SKBitmap? bitmap)
+	public static Gtk.Picture? ToPicture(this SKBitmap? bitmap)
 	{
 		if (bitmap == null)
 		{
-			return default!;
+			return null;
 		}
 
 		using var image = SKImage.FromBitmap(bitmap);
-		return image.ToImage();
+		return image.ToPicture();
 	}
 
-	public static GdkPixbuf.Pixbuf ToImage(this SKPixmap? pixmap)
+	public static Gtk.Picture? ToPicture(this SKPixmap? pixmap)
 	{
 		if (pixmap == null)
 		{
-			return default!;
+			return null;
 		}
 
 		using var image = SKImage.FromPixels(pixmap);
-		return image.ToImage();
+		return image.ToPicture();
 	}
 
-	public static GdkPixbuf.Pixbuf ToImage(this SKPicture? picture, SKSizeI dimensions)
+	public static Gtk.Picture? ToPicture(this SKPicture? picture, SKSizeI dimensions)
 	{
 		if (picture == null)
 		{
-			return default!;
+			return null;
 		}
 
 		using var surface = SKSurface.Create(new SKImageInfo(dimensions.Width, dimensions.Height));
@@ -81,6 +86,6 @@ public static class SKImageSourceExtensions
 		canvas.Flush();
 
 		using var image = surface.Snapshot();
-		return image.ToImage();
+		return image.ToPicture();
 	}
 }

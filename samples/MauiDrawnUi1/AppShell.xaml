@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MauiDrawnUi1.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiDrawnUi1"
+    xmlns:tutorial="clr-namespace:MauiDrawnUi1.Tutorials"
+    Title="Menu">
+
+        <ShellContent
+            Title="First App (XAML)"
+            ContentTemplate="{DataTemplate tutorial:FirstApp.FirstAppPage}"
+            Route="firstapp" />
+
+        <ShellContent
+            Title="First App (Code)"
+            ContentTemplate="{DataTemplate tutorial:FirstApp.FirstAppPageCode}"
+            Route="firstappc" />
+
+        <ShellContent
+            Title="Custom Button"
+            ContentTemplate="{DataTemplate tutorial:CustomButton.ButtonPage}"
+            Route="button" />
+
+        <ShellContent
+            Title="Interactive Cards"
+            ContentTemplate="{DataTemplate tutorial:InteractiveCards.TutorialCards}"
+            Route="cards" />
+
+        <ShellContent
+            Title="News Feed Scroller"
+            ContentTemplate="{DataTemplate tutorial:NewsFeed.NewsFeedPage}"
+            Route="newsfeed" />
+</Shell>

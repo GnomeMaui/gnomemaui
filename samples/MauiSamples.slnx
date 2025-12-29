@@ -10,6 +10,7 @@
         <Project Path="../src/GnomeMaui.Controls.Build.Tasks/GnomeMaui.Controls.Build.Tasks.csproj" />
         <Project Path="../src/GnomeMaui.Controls.SourceGen/GnomeMaui.Controls.SourceGen.csproj" />
     </Folder>
+    <Project Path="../src/GnomeMaui.DrawnUi/GnomeMaui.DrawnUi.csproj" />
 
     <Project Path="../src/GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
     <Project Path="../src/GnomeMaui.Core/GnomeMaui.Core.csproj" />
@@ -21,6 +22,7 @@
     <Project Path="../src/GnomeMaui.Blazor/GnomeMaui.Blazor.csproj" />
     <Project Path="../src/GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
     <Project Path="MauiBlazorApp1/MauiBlazorApp1.csproj" />
+    <Project Path="MauiDrawnUi1/MauiDrawnUi1.csproj" />
 
     <Project Path="MauiTest1/MauiTest1.csproj" />
 </Solution>

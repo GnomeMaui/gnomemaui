@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="$(MSBuildThisFileDirectory)/../Nuget.Common.props" />
+    <Import Project="$(MSBuildThisFileDirectory)/../GnomeMaui.props" />
+
+    <Import Project="Include.DrawnUi.props" />
+    <Import Project="Include.Gestures.props" />
+    <Import Project="Include.Shared.props" />
+    <Import Project="Include.Specials.props" />
+
+    <PropertyGroup>
+        <TargetFrameworks>net$(_GnomeMauiDotNetVersion)</TargetFrameworks>
+        <TargetFrameworks Condition="'$(IsGNOME)' == 'True'">$(TargetFrameworks);$(_GnomeMauiTfm)</TargetFrameworks>
+
+        <AssemblyName>GnomeMaui.DrawnUi</AssemblyName>
+        <RootNamespace>DrawnUi</RootNamespace>
+
+        <Title>MAUI Graphics with SkiaSharp for GNOME</Title>
+        <Description>Microsoft.Maui.Graphics implementation using SkiaSharp for GNOME applications. Provides GirCoreSkiaGraphicsView widget with IDrawable support for cross-platform graphics API in Linux desktop applications with hardware-accelerated rendering.</Description>
+        <PackageTags>maui;graphics;skiasharp;gtk;cross-platform;drawing;shapes;canvas;gircore;linux;desktop;vector-graphics;idrawable;widget;renderer</PackageTags>
+
+        <PackageId>GnomeMaui.DrawnUi</PackageId>
+
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;XLS0505;CS0414;CS0169;CS8600;CS8625;CS8622;CS8602;CS8603;CS8618;CS0618;CS8604;CS0649;CS0067;CS9191;CS0168;CS8767;CS0219;CS8619;CS8601;CS8765;CS1570;CS0111;CS0114;CS4014;CS0109;CS0162;CS8605;CS8321;CS8073;CS0253;CS1591</NoWarn>
+        <WarningsAsErrors>$(WarningsAsErrors);CS0108;XLS0501</WarningsAsErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp" />
+        <PackageReference Include="SkiaSharp.HarfBuzz" />
+        <PackageReference Include="CommonMark.NET" />
+        <PackageReference Include="SkiaSharp.Skottie" />
+        <PackageReference Include="Svg.Skia" />
+        <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="EasyCaching.InMemory" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../GnomeMaui.Core/GnomeMaui.Core.csproj" />
+        <ProjectReference Include="../GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
+        <ProjectReference Include="../GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
+        <ProjectReference Include="../GnomeMaui.SkiaSharp.Controls/GnomeMaui.SkiaSharp.Controls.csproj" />
+    </ItemGroup>
+</Project>

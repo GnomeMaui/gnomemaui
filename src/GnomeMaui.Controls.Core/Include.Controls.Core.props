@@ -311,6 +311,11 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/IButtonController.cs" Link="IButtonController.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/IButtonElement.cs" Link="IButtonElement.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/NameScopeExtensions.cs" Link="NameScopeExtensions.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/StackOrientation.cs" Link="StackOrientation.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PropertyChangingEventArgs.cs" Link="PropertyChangingEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PropertyChangingEventHandler.cs" Link="PropertyChangingEventHandler.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Command.cs" Link="Command.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/GridLengthTypeConverter.cs" Link="GridLengthTypeConverter.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/Application/Application.cs" Link="Application/Application.cs" />
 
@@ -401,6 +406,10 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/Layout/BoundsTypeConverter.cs" Link="Layout/BoundsTypeConverter.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Layout/VerticalStackLayout.cs" Link="Layout/VerticalStackLayout.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Layout/StackBase.cs" Link="Layout/StackBase.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Layout/StackLayout.cs" Link="Layout/StackLayout.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Layout/HorizontalStackLayout.cs" Link="Layout/HorizontalStackLayout.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Layout/StackLayoutManager.cs" Link="Layout/StackLayoutManager.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Layout/AndExpandLayoutManager.cs" Link="Layout/AndExpandLayoutManager.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/LegacyLayouts/Layout.cs" Link="LegacyLayouts/Layout.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/LegacyLayouts/LayoutOfT.cs" Link="LegacyLayouts/LayoutOfT.cs" />

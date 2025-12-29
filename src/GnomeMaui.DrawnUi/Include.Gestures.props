@@ -1,0 +1,19 @@
+<Project>
+    <ItemGroup>
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/IGestureListener.cs" Link="Gestures/IGestureListener.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/MouseButton.cs" Link="Gestures/MouseButton.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/MouseButtons.cs" Link="Gestures/MouseButtons.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/MouseButtonState.cs" Link="Gestures/MouseButtonState.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/MultitouchTracker.cs" Link="Gestures/MultitouchTracker.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/PlatformTouchEffect.cs" Link="Gestures/PlatformTouchEffect.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/PointerDeviceType.cs" Link="Gestures/PointerDeviceType.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/PointFExtensions.cs" Link="Gestures/PointFExtensions.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/TouchActionEventArgs.cs" Link="Gestures/TouchActionEventArgs.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/TouchActionEventHandler.cs" Link="Gestures/TouchActionEventHandler.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/TouchActionResult.cs" Link="Gestures/TouchActionResult.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/TouchActionType.cs" Link="Gestures/TouchActionType.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/TouchEffect.cs" Link="Gestures/TouchEffect.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/TouchHandlingStyle.cs" Link="Gestures/TouchHandlingStyle.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-gestures/src/UseGesturesExtension.cs" Link="Gestures/UseGesturesExtension.cs" />
+    </ItemGroup>
+</Project>

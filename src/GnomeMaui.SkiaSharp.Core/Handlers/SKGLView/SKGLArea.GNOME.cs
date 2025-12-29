@@ -1,5 +1,5 @@
-using System.Runtime.Versioning;
 using Gtk;
+using System.Runtime.Versioning;
 
 namespace SkiaSharp.Views.Maui.Handlers;
 

@@ -12,6 +12,7 @@ Tested on
 - Debian 13
 - Fedora 43
 - Ubuntu 25.10
+- Raspbian 13
 
 ## Installing .NET
 
@@ -20,10 +21,18 @@ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
 
 chmod +x ./dotnet-install.sh
 
+# x86 host
 ./dotnet-install.sh --channel "10.0" --architecture x64 --os linux
 
+# arm64 host
+./dotnet-install.sh --channel "10.0" --architecture arm64 --os linux
+
 # workload fallback
+# x86 host
 ./dotnet-install.sh --channel "9.0" --architecture x64 --runtime dotnet --os linux
+
+# arm64 host
+./dotnet-install.sh --channel "9.0" --architecture arm64 --runtime dotnet --os linux
 ```
 
 ## Setting environment variables
@@ -58,7 +67,7 @@ echo $DOTNET_ROOT
 ## Installing .NET workloads
 
 ```bash
-dotnet workload install maui-android wasm-tools
+dotnet workload install maui-android wasm-tools --temp-dir ~/.cache
 
 # verify
 dotnet workload list
@@ -84,13 +93,15 @@ cd $HOME/gnomemaui
 
 git clone https://github.com/gnomemaui/gnomemaui.git
 
-wget https://github.com/dotnet/maui/archive/refs/tags/10.0.11.tar.gz
+git clone --branch release/10.0.1xx-sr1 --single-branch --depth 1 https://github.com/dotnet/maui.git maui-10.0.1xx-sr1
 
-tar -xvf 10.0.11.tar.gz
+git clone --branch release/3.119.1 --single-branch --depth 1 https://github.com/mono/SkiaSharp.git SkiaSharp-3.119.1
 
-wget https://github.com/mono/SkiaSharp/archive/refs/tags/v3.119.1.tar.gz
+git clone --depth 1 https://github.com/taublast/DrawnUi.git
 
-tar -xvf v3.119.1.tar.gz
+git clone --depth 1 https://github.com/taublast/AppoMobi.Maui.Gestures.git
+
+git clone --depth 1 https://github.com/taublast/AppoMobi.Specials.git
 ```
 
 ### Symlinks
@@ -98,9 +109,19 @@ tar -xvf v3.119.1.tar.gz
 ```bash
 cd $GNOMEMAUI/ext
 
-ln -s $GNOMEMAUI/../maui-10.0.11 maui
+ln -s $GNOMEMAUI/../maui-10.0.1xx-sr1 maui
 
 ln -s $GNOMEMAUI/../SkiaSharp-3.119.1 skiasharp
+
+mkdir $GNOMEMAUI/ext/drawnui
+
+cd $GNOMEMAUI/ext/drawnui
+
+ln -s $GNOMEMAUI/../DrawnUi drawnui
+
+ln -s $GNOMEMAUI/../AppoMobi.Maui.Gestures drawnui-gestures
+
+ln -s $GNOMEMAUI/../AppoMobi.Specials drawnui-specials
 ```
 
 ### Patch MAUI
@@ -108,7 +129,16 @@ ln -s $GNOMEMAUI/../SkiaSharp-3.119.1 skiasharp
 ```bash
 cd $GNOMEMAUI/ext/maui
 
-patch -p1 < $GNOMEMAUI/ext/maui.patch
+git apply $GNOMEMAUI/ext/maui-10.0.1xx-sr1.patch
+
+cd $GNOMEMAUI/ext/drawnui/drawnui
+
+git apply $GNOMEMAUI/ext/drawnui.patch
+
+cd $GNOMEMAUI/ext/drawnui/drawnui-gestures
+
+git apply $GNOMEMAUI/ext/drawnui-gestures.patch
+
 ```
 
 ## Download necessary scripts
@@ -139,7 +169,7 @@ maui-android               10.0.1/10.0.100        SDK 10.0.100
 maui-gnome                 10.0.1/10.0.100        SDK 10.0.100  
 ```
 
-## Build and run a MAUI sample app
+## Build and run a GNOME MAUI sample app
 
 ```bash
 cd $GNOMEMAUI/samples/MauiTest1
@@ -147,10 +177,18 @@ dotnet build -f net10.0-gnome -v:diag
 GSK_RENDERER=opengl dotnet ./bin/Debug/net10.0-gnome/MauiTest1.dll
 ```
 
-## Build and run a MAUI Blazor sample app
+## Build and run a GNOME MAUI Blazor sample app
 
 ```bash
 cd $GNOMEMAUI/samples/MauiBlazorApp1
 dotnet build -f net10.0-gnome -v:diag
 dotnet ./bin/Debug/net10.0-gnome/MauiBlazorApp1.dll
+```
+
+## Build and run a GNOME MAUI DrawnUi sample app
+
+```bash
+cd $GNOMEMAUI/samples/MauiDrawnUi1
+dotnet build -f net10.0-gnome -v:diag
+GSK_RENDERER=opengl dotnet ./bin/Debug/net10.0-gnome/MauiDrawnUi1.dll
 ```

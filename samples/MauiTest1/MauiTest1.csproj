@@ -71,17 +71,24 @@
     </ItemGroup>
 
     <!-- Microsoft MAUI -->
+    <!-- Microsoft MAUI -->
     <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' ">
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
+        <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' ">
+        <PackageReference Include="SkiaSharp.NativeAssets.Android" Version="3.119.1" />
+        <PackageReference Include="HarfBuzzSharp.NativeAssets.Android" Version="8.3.1.2" />
     </ItemGroup>
 
     <!-- GNOME MAUI -->
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
         <!-- Using PackageReference for all packages to ensure proper source generator registration -->
-        <PackageReference Include="GnomeMaui.Controls" Version="$(GnomeMauiVersion)" />
+        <!-- <PackageReference Include="GnomeMaui.Controls" Version="$(GnomeMauiVersion)" />
         <PackageReference Include="GnomeMaui.Essentials" Version="$(GnomeMauiVersion)" />
-        <PackageReference Include="GnomeMaui.SkiaSharp.Controls" Version="$(GnomeMauiVersion)" />
+        <PackageReference Include="GnomeMaui.SkiaSharp.Controls" Version="$(GnomeMauiVersion)" /> -->
         <!-- <PackageReference Include="GnomeMaui.Graphics" Version="$(GnomeMauiVersion)" /> -->
         <!-- <ProjectReference Include="../../src/GnomeMaui.Controls/GnomeMaui.Controls.csproj" />
         <ProjectReference Include="../../src/GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
@@ -90,13 +97,18 @@
         <ProjectReference Include="../../src/GnomeMaui.Controls.Build.Tasks/GnomeMaui.Controls.Build.Tasks.csproj"> -->
 
         <PackageReference Include="GnomeMaui.Controls.Build.Tasks" Version="$(GnomeMauiVersion)" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
+
+        <ProjectReference Include="../../src/GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Core/GnomeMaui.Core.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.SkiaSharp.Controls/GnomeMaui.SkiaSharp.Controls.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
         <PackageReference Include="SkiaSharp" Version="3.119.1" />
         <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
-        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
     </ItemGroup>
 
     <!-- Exclude other platform files when building for GNOME -->
@@ -115,5 +127,17 @@
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'gnome'">
         <Compile Remove="Platforms\GNOME\**\*.cs" />
         <None Include="Platforms\GNOME\**\*.cs" />
+    </ItemGroup>
+
+    <!-- GNOME-specific: Copy Images to output directory -->
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <None Include="Resources\Images\**\*.*">
+            <Link>Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="Resources\Raw\**\*.*">
+            <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>

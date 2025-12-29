@@ -29,6 +29,7 @@
         <Compile Include="../../ext/maui/src/Graphics/src/Graphics/RectF.cs" Link="RectF.cs" />
         <Compile Include="../../ext/maui/src/Graphics/src/Graphics/Size.cs" Link="Size.cs" />
         <Compile Include="../../ext/maui/src/Graphics/src/Graphics/SizeF.cs" Link="SizeF.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Graphics/Font.cs" Link="Font.cs" />
 
         <Compile Include="../../ext/maui/src/Graphics/src/Graphics/ICanvas.cs" Link="ICanvas.cs" />
         <Compile Include="../../ext/maui/src/Graphics/src/Graphics/IDrawable.cs" Link="IDrawable.cs" />

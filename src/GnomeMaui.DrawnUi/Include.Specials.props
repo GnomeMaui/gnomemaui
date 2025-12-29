@@ -1,0 +1,17 @@
+<Project>
+    <ItemGroup>
+        <Compile Include="../../ext/drawnui/drawnui-specials/Helpers/ObservableRangeCollection.cs" Link="Specials/Helpers/ObservableRangeCollection.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-specials/Helpers/Reflection.cs" Link="Specials/Helpers/Reflection.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-specials/Helpers/Tasks.cs" Link="Specials/Helpers/Tasks.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-specials/Helpers/Timer.cs" Link="Specials/Helpers/Timer.cs" />
+
+        <Compile Include="../../ext/drawnui/drawnui-specials/Abstractions/IHasTitleWithId.cs" Link="Specials/Abstractions/IHasTitleWithId.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-specials/Abstractions/IHasStringTitle.cs" Link="Specials/Abstractions/IHasStringTitle.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-specials/Abstractions/IHasStringId.cs" Link="Specials/Abstractions/IHasStringId.cs" />
+
+        <Compile Include="../../ext/drawnui/drawnui-specials/Extensions/String.cs" Link="Specials/Extensions/String.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-specials/Extensions/IEnumerable.cs" Link="Specials/Extensions/IEnumerable.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-specials/Extensions/Attributes.cs" Link="Specials/Extensions/Attributes.cs" />
+        <Compile Include="../../ext/drawnui/drawnui-specials/Extensions/DateTime.cs" Link="Specials/Extensions/DateTime.cs" />
+    </ItemGroup>
+</Project>

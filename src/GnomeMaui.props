@@ -5,6 +5,6 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
-        <DefineConstants>$(DefineConstants);GNOME</DefineConstants>
+        <DefineConstants>$(DefineConstants);GNOME;ONPLATFORM</DefineConstants>
     </PropertyGroup>
 </Project>

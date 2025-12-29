@@ -1,7 +1,7 @@
-using System;
 using Gtk;
 using Microsoft.Maui;
 using SkiaSharp;
+using System;
 
 namespace SkiaSharp.Views.Maui.Platform;
 
@@ -30,11 +30,16 @@ class SKTouchHandler
 		}
 
 		// Detach first to avoid duplicate handlers
-		view.RemoveController(click);
-		view.RemoveController(motion);
-		view.RemoveController(zoom);
-		view.RemoveController(scroll);
-		view.RemoveController(drag);
+		if (click.GetWidget() == view)
+			view.RemoveController(click);
+		if (motion.GetWidget() == view)
+			view.RemoveController(motion);
+		if (zoom.GetWidget() == view)
+			view.RemoveController(zoom);
+		if (scroll.GetWidget() == view)
+			view.RemoveController(scroll);
+		if (drag.GetWidget() == view)
+			view.RemoveController(drag);
 
 		click.OnPressed -= OnPressed;
 		//click.OnUpdate -= OnUpdate;
@@ -81,11 +86,16 @@ class SKTouchHandler
 			return;
 		}
 
-		view.RemoveController(click);
-		view.RemoveController(motion);
-		view.RemoveController(zoom);
-		view.RemoveController(scroll);
-		view.RemoveController(drag);
+		if (click.GetWidget() == view)
+			view.RemoveController(click);
+		if (motion.GetWidget() == view)
+			view.RemoveController(motion);
+		if (zoom.GetWidget() == view)
+			view.RemoveController(zoom);
+		if (scroll.GetWidget() == view)
+			view.RemoveController(scroll);
+		if (drag.GetWidget() == view)
+			view.RemoveController(drag);
 
 		click.OnPressed -= OnPressed;
 		//click.OnUpdate -= OnUpdate;
@@ -100,6 +110,12 @@ class SKTouchHandler
 
 		zoom.OnScaleChanged -= OnScaleChanged;
 		scroll.OnScroll -= OnScroll;
+
+		click.Dispose();
+		drag.Dispose();
+		motion.Dispose();
+		zoom.Dispose();
+		scroll.Dispose();
 
 		onTouchAction = null;
 		scalePixels = null;

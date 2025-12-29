@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using Adw;
 using Gtk;
 using Microsoft.Maui.Controls.Handlers;
 using Microsoft.Maui.Graphics;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
 using GColor = Microsoft.Maui.Graphics.Color;
 
 namespace Microsoft.Maui.Controls.Platform;
@@ -561,9 +561,6 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 			// Ignore row selection during toggle button updates
 			if (_isUpdating)
 			{
-#if DEBUG
-				Console.Out.WriteLine($"---- [Program][OnRowSelected] ignored due to IsUpdating={_isUpdating}");
-#endif
 				return;
 			}
 
@@ -603,26 +600,6 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 					_contentBox?.GrabFocus();
 					// reflect state on the toggle button
 					_flyoutToggleButton.Active = false;
-#if DEBUG
-					Console.Out.WriteLine(new StringBuilder()
-						.AppendLine($"[Program][OnRowSelected][Collapsed]")
-						.AppendLine($" - Selected Index: {index}")
-						.AppendLine($" - Shell ShowSidebar: {ShowSidebar}")
-						.AppendLine($" - Shell Collapsed: {Collapsed}").AppendLine($" - Shell Toggle Button Active: {_flyoutToggleButton.Active}")
-							.ToString());
-#endif
-				}
-				else
-				{
-#if DEBUG
-					Console.Out.WriteLine(new StringBuilder()
-						.AppendLine($"[Program][OnRowSelected][Desktop]")
-						.AppendLine($" - Selected Index: {index}")
-						.AppendLine($" - Shell ShowSidebar: {ShowSidebar}")
-						.AppendLine($" - Shell Collapsed: {Collapsed}")
-						.AppendLine($" - Shell Toggle Button Active: {_flyoutToggleButton.Active}")
-						.ToString());
-#endif
 				}
 			}
 		}

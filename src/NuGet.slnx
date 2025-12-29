@@ -31,6 +31,7 @@
         <Project Path="GnomeMaui.Controls.Build.Tasks/GnomeMaui.Controls.Build.Tasks.csproj" />
         <Project Path="GnomeMaui.Controls.SourceGen/GnomeMaui.Controls.SourceGen.csproj" />
     </Folder>
+    <Project Path="GnomeMaui.DrawnUi/GnomeMaui.DrawnUi.csproj" />
 
     <Project Path="GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
     <Project Path="GnomeMaui.Core/GnomeMaui.Core.csproj" />

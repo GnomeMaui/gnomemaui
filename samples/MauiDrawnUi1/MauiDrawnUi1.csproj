@@ -1,0 +1,141 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net10.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(TargetFrameworks);net10.0-gnome</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(TargetFrameworks);net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
+
+        <!-- Note for MacCatalyst:
+		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
+		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
+		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
+		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
+        <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+
+        <OutputType>Exe</OutputType>
+        <RootNamespace>MauiDrawnUi1</RootNamespace>
+        <UseMaui>true</UseMaui>
+        <SingleProject>true</SingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+
+        <Nullable>enable</Nullable>
+
+        <!-- Display name -->
+        <ApplicationTitle>MauiDrawnUi1</ApplicationTitle>
+
+        <!-- App Identifier -->
+        <ApplicationId>com.companyname.mauidrawnui1</ApplicationId>
+
+        <!-- Versions -->
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+
+        <!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
+        <WindowsPackageType>None</WindowsPackageType>
+
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+
+        <DisableMauiImplicitPackageReferences>false</DisableMauiImplicitPackageReferences>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <OutputType>Exe</OutputType>
+        <SingleProject>true</SingleProject>
+        <DisableMauiImplicitPackageReferences>true</DisableMauiImplicitPackageReferences>
+        <UseGnomeMaui>true</UseGnomeMaui>
+
+        <!-- Use SourceGen for XAML compilation -->
+        <MauiXamlInflator>SourceGen</MauiXamlInflator>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- App Icon -->
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+
+        <!-- Splash Screen -->
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+
+        <!-- Images -->
+        <MauiImage Include="Resources\Images\*" />
+        <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+
+        <!-- Custom Fonts -->
+        <MauiFont Include="Resources\Fonts\*" />
+
+        <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <!-- Microsoft MAUI -->
+    <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' ">
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
+        <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
+        <PackageReference Include="DrawnUi.Maui" Version="1.7.6.5" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' ">
+        <PackageReference Include="SkiaSharp.NativeAssets.Android" Version="3.119.1" />
+        <PackageReference Include="HarfBuzzSharp.NativeAssets.Android" Version="8.3.1.2" />
+    </ItemGroup>
+
+    <!-- GNOME MAUI -->
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <!-- Using PackageReference for all packages to ensure proper source generator registration -->
+        <!-- <PackageReference Include="GnomeMaui.Controls" Version="$(GnomeMauiVersion)" />
+        <PackageReference Include="GnomeMaui.Essentials" Version="$(GnomeMauiVersion)" />
+        <PackageReference Include="GnomeMaui.SkiaSharp.Controls" Version="$(GnomeMauiVersion)" /> -->
+        <!-- <PackageReference Include="GnomeMaui.DrawnUi" Version="$(GnomeMauiVersion)" /> -->
+        <!-- <PackageReference Include="GnomeMaui.Graphics" Version="$(GnomeMauiVersion)" /> -->
+
+        <PackageReference Include="GnomeMaui.Controls.Build.Tasks" Version="$(GnomeMauiVersion)" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
+        <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />
+
+        <ProjectReference Include="../../src/GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Core/GnomeMaui.Core.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.SkiaSharp.Controls/GnomeMaui.SkiaSharp.Controls.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.DrawnUi/GnomeMaui.DrawnUi.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
+        <PackageReference Include="SkiaSharp" Version="3.119.1" />
+        <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
+    </ItemGroup>
+
+    <!-- Exclude other platform files when building for GNOME -->
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <Compile Remove="Platforms\Android\**\*.cs" />
+        <Compile Remove="Platforms\iOS\**\*.cs" />
+        <Compile Remove="Platforms\MacCatalyst\**\*.cs" />
+        <Compile Remove="Platforms\Windows\**\*.cs" />
+        <None Include="Platforms\Android\**\*.cs" />
+        <None Include="Platforms\iOS\**\*.cs" />
+        <None Include="Platforms\MacCatalyst\**\*.cs" />
+        <None Include="Platforms\Windows\**\*.cs" />
+    </ItemGroup>
+
+    <!-- Exclude GNOME platform files when building for other platforms -->
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'gnome'">
+        <Compile Remove="Platforms\GNOME\**\*.cs" />
+        <None Include="Platforms\GNOME\**\*.cs" />
+    </ItemGroup>
+
+    <!-- GNOME-specific: Copy Images to output directory -->
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <None Include="Resources\Images\**\*.*">
+            <Link>Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="Resources\Raw\**\*.*">
+            <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+</Project>

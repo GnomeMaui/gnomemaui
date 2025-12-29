@@ -1,5 +1,5 @@
-using System;
 using Microsoft.Maui.ApplicationModel;
+using System;
 
 namespace Microsoft.Maui.Devices;
 
@@ -22,6 +22,6 @@ class DeviceInfoImplementation : IDeviceInfo
 
 	public DeviceIdiom Idiom => DeviceIdiom.Desktop;
 
-	public DeviceType DeviceType => DeviceType.Unknown;
+	public DeviceType DeviceType => DeviceType.Physical;
 
 }

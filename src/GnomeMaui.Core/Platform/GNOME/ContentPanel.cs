@@ -1,6 +1,6 @@
-using System;
 using Gtk;
 using Microsoft.Maui.Graphics;
+using System;
 
 namespace Microsoft.Maui.Platform;
 

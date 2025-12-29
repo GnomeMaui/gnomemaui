@@ -1,0 +1,18 @@
+diff --git a/src/UseGesturesExtension.cs b/src/UseGesturesExtension.cs
+index 521a27f..32530ba 100644
+--- a/src/UseGesturesExtension.cs
++++ b/src/UseGesturesExtension.cs
+@@ -35,6 +35,13 @@ public static class UseGesturesExtension
+                 effects.Add<TouchEffect, PlatformTouchEffect>();
+             });
+ 
++#elif GNOME
++
++            builder.ConfigureEffects(effects =>
++            {
++                effects.Add<TouchEffect, PlatformTouchEffect>();
++            });
++
+ #endif
+ 
+         return builder;

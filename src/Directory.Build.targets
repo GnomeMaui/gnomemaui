@@ -5,12 +5,14 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
-        <DefineConstants>$(DefineConstants);GNOME;PLATFORM</DefineConstants>
+        <DefineConstants>$(DefineConstants);GNOME;PLATFORM;ONPLATFORM</DefineConstants>
     </PropertyGroup>
 
     <Target Name="PrintDetect" BeforeTargets="Build">
         <Message Text="DEBUG:" Importance="high" />
         <Message Text="IsGNOME                    = $(IsGNOME)" Importance="high" />
+        <Message Text="PLATFORM                   = $(PLATFORM)" Importance="high" />
+        <Message Text="ONPLATFORM                 = $(ONPLATFORM)" Importance="high" />
         <Message Text="GnomeMauiVersion           = $(GnomeMauiVersion)" Importance="high" />
         <Message Text="GnomeMauiSdkVersion        = $(GnomeMauiSdkVersion)" Importance="high" />
         <Message Text="_GnomeMauiTfm              = $(_GnomeMauiTfm)" Importance="high" />

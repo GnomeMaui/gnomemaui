@@ -59,6 +59,8 @@ One of the strongest features of GNOME MAUI .NET is its Skia-based rendering eco
 | - | - |
 | DrawnUi | 🧩 Almost Ready ~97% |
 
+https://github.com/user-attachments/assets/bf07a511-9988-4fd6-8e7e-c80eef08c233
+
 Sample available at: [samples/MauiDrawnUi1](/samples/MauiDrawnUi1)
 
 **DrawnUi** is a Skia-based, fully drawn UI approach with its own layout and animation pipeline. Instead of managing thousands of native controls, everything is rendered onto a unified surface, resulting in precise control, smooth animations, and high performance. On Linux, this model truly shines: write the code once, and execute it directly on the GPU.

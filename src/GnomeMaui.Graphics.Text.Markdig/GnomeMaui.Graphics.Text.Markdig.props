@@ -1,0 +1,23 @@
+<Project>
+    <ItemGroup>
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/MarkdownAttributedTextReader.cs" Link="MarkdownAttributedTextReader.cs" />
+
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/AttributedTextObjectRenderer.cs" Link="Renderer/AttributedTextObjectRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/AttributedTextRenderer.cs" Link="Renderer/AttributedTextRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/EmphasisInlineRenderer.cs" Link="Renderer/EmphasisInlineRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/HtmlBlockRenderer.cs" Link="Renderer/HtmlBlockRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/HtmlInlineRenderer.cs" Link="Renderer/HtmlInlineRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/LineBreakInlineRenderer.cs" Link="Renderer/LineBreakInlineRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/ListRenderer.cs" Link="Renderer/ListRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/LiteralInlineRenderer.cs" Link="Renderer/LiteralInlineRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/ParagraphRenderer.cs" Link="Renderer/ParagraphRenderer.cs" />
+        <Compile Include="../../ext/maui/src/Graphics/src/Text.Markdig/Renderer/SimpleCssParser.cs" Link="Renderer/SimpleCssParser.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'gnome'">
+        <Compile Remove="**/*.GNOME.cs" />
+        <Compile Remove="**/GNOME/*.cs" />
+        <None Include="**/*.GNOME.cs" />
+        <None Include="**/GNOME/*.cs" />
+    </ItemGroup>
+</Project>

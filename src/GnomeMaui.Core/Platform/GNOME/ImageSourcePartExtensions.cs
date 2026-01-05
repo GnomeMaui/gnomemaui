@@ -7,11 +7,11 @@ namespace Microsoft.Maui.Platform
 {
 	public static class ImageSourcePartExtensions
 	{
-		public static async Task<IImageSourceServiceResult<Gtk.Picture>?> UpdateSourceAsync(
+		public static async Task<IImageSourceServiceResult<SKImageView>?> UpdateSourceAsync(
 			this IImageSourcePart image,
 			Gtk.Widget destinationContext,
 			IImageSourceServiceProvider services,
-			Action<Gtk.Picture?> setImage,
+			Action<SKImageView?> setImage,
 			CancellationToken cancellationToken = default)
 		{
 #if DEBUG
@@ -44,7 +44,7 @@ namespace Microsoft.Maui.Platform
 
 				// Use dynamic dispatch to call the appropriate GetImageAsync method
 				dynamic dynamicService = service;
-				var result = await dynamicService.GetImageAsync(imageSource, cancellationToken) as IImageSourceServiceResult<Gtk.Picture>;
+				var result = await dynamicService.GetImageAsync(imageSource, cancellationToken) as IImageSourceServiceResult<SKImageView>;
 
 				var picture = result?.Value;
 
@@ -57,6 +57,7 @@ namespace Microsoft.Maui.Platform
 				if (applied)
 				{
 					setImage.Invoke(picture);
+					picture?.Invalidate();
 #if DEBUG
 					Console.Out.WriteLine($"[ImageSourcePartExtensions][UpdateSourceAsync] Image set successfully");
 #endif

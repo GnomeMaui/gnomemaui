@@ -52,10 +52,4 @@
     <ItemGroup>
         <ProjectReference Include="../GnomeMaui.Core/GnomeMaui.Core.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="HybridWebView/" />
-        <Folder Include="InitializationAwareWebView/" />
-        <Folder Include="WebRequestInterceptingWebView/" />
-    </ItemGroup>
 </Project>

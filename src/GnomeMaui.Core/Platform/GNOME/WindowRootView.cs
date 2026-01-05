@@ -91,7 +91,6 @@ public class WindowRootView : Gtk.Box
 					cw.SetHexpand(true);
 					cw.SetVexpand(true);
 					cw.Show();
-					cw.QueueResize();
 				}
 
 				if (_content is RootNavigationView navView)

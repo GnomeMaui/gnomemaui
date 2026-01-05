@@ -129,7 +129,7 @@ ln -s $GNOMEMAUI/../AppoMobi.Specials drawnui-specials
 ```bash
 cd $GNOMEMAUI/ext/maui
 
-git apply $GNOMEMAUI/ext/maui-10.0.1xx-sr1.patch
+git apply $GNOMEMAUI/ext/maui-10.0.1xx-sr1.1.patch
 
 cd $GNOMEMAUI/ext/drawnui/drawnui
 

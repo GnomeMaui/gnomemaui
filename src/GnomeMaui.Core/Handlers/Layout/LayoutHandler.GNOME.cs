@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using Microsoft.Maui.Platform;
-
 namespace Microsoft.Maui.Handlers;
 
 public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
@@ -32,7 +28,7 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 		foreach (var child in VirtualView.OrderByZIndex())
 		{
 			// Prefer an already-created handler/platform view if possible to avoid recreating native widgets
-			Gtk.Widget? platformChild = null;
+			Gtk.Widget? platformChild;
 			if (child.Handler?.PlatformView is Gtk.Widget existing)
 			{
 				platformChild = existing;
@@ -57,7 +53,7 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 		}
 
 		// Do not parent native children here; parenting is deferred to the platform container's map/realize handlers.
-		PlatformView.Show();
+		//PlatformView.Show();
 	}
 
 	protected override LayoutWidget CreatePlatformView()
@@ -135,7 +131,7 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 		}
 
 		var children = PlatformView.CachedChildren;
-		var currentIndex = children.IndexOf((Gtk.Widget)child.ToPlatform(MauiContext!));
+		var currentIndex = children.IndexOf(child.ToPlatform(MauiContext!));
 
 		if (currentIndex == -1)
 		{

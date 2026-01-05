@@ -12,8 +12,8 @@ User interfaces are described using the familiar MAUI XAML dialect, which is map
 
 GNOME MAUI .NET is a Linux-first MAUI backend that follows GNOME design and technology guidelines while remaining a fully standards-compliant .NET and MAUI stack.
 
-> [!WARNING]
-> This project is in an early development stage. Many MAUI features are not yet implemented, but the goal is full MAUI compatibility, even where adaptations are required.
+> [!NOTE]
+> The project is now functional with core MAUI features implemented: all layouts, most views, XAML, Blazor, and Skia rendering are ready. Some areas like Shell navigation and MAUI Essentials are still under active development. The goal remains full MAUI compatibility.
 
 ## Samples
 
@@ -39,15 +39,43 @@ https://github.com/user-attachments/assets/5790be5e-f9af-4da7-bc6d-2de14340341b
 | Skia CPU rendering | ✅ Ready |
 | Skia GPU rendering | ✅ Ready |
 
-And minimal support for the following MAUI features:
+### Layouts
 
 | Area | Status |
 | - | - |
-| Alert manager | ✅ Ready |
+| Stack layout | ✅ Ready |
+| Absolute layout | ✅ Ready |
+| Grid layout | ✅ Ready |
+| Flex layout | ✅ Ready |
+| Custom layout | ✅ Ready |
+
+### Views
+
+| Area | Status |
+| - | - |
+| Activity indicator | ✅ Ready |
+| Blazor WebView | ✅ Ready |
+| Border | 🚧 Basic |
+| Box view | ✅ Ready |
+| Button | ✅ Ready |
+| Editor | ✅ Ready |
+| Entry | ✅ Ready |
+| Graphics view | ✅ Ready |
+| Image | ✅ Ready |
+| Label | ✅ Ready |
+| Picker | ✅ Ready |
+| Progress bar | ✅ Ready |
+| Scroll view | ✅ Ready |
+| Shapes | 🚧 Basic |
+| Slider | ✅ Ready |
+| Switch | ✅ Ready |
+
+### Under development
+
+| Area | Status |
+| - | - |
 | Shell navigation | 🚧 Basic |
-| Label | 🚧 Basic |
-| Button | 🚧 Basic |
-| Image | 🚧 Basic |
+| MAUI Essentials | 🚧 Partial |
 
 ## Skia-based integrations
 

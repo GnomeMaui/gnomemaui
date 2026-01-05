@@ -1,13 +1,15 @@
+using GnomeMaui.CSS;
+using SkiaSharp;
 using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.Maui.Handlers;
 
-public partial class ImageHandler : ViewHandler<IImage, Gtk.Picture>
+public partial class ImageHandler : ViewHandler<IImage, SKImageView>
 {
-	protected override Gtk.Picture CreatePlatformView() => Gtk.Picture.New();
+	protected override SKImageView CreatePlatformView() => this.Create();
 
-	protected override void DisconnectHandler(Gtk.Picture platformView)
+	protected override void DisconnectHandler(SKImageView platformView)
 	{
 		base.DisconnectHandler(platformView);
 		SourceLoader.Reset();
@@ -26,8 +28,38 @@ public partial class ImageHandler : ViewHandler<IImage, Gtk.Picture>
 	public static void MapAspect(IImageHandler handler, IImage image) =>
 		handler.PlatformView?.UpdateAspect(image);
 
-	public static void MapIsAnimationPlaying(IImageHandler handler, IImage image) =>
-		handler.PlatformView?.UpdateIsAnimationPlaying(image);
+	public static void MapWidth(IImageHandler handler, IImage view)
+	{
+		if (handler.ContainerView is Gtk.Widget container)
+		{
+			container.WidthRequest = Primitives.Dimension.IsExplicitSet(view.Width) ? (int)view.Width : -1;
+		}
+		else
+		{
+			ViewHandler.MapWidth(handler, view);
+		}
+
+		handler.PlatformView?.UpdateWidth(view);
+	}
+
+	public static void MapHeight(IImageHandler handler, IImage view)
+	{
+		if (handler.ContainerView is Gtk.Widget container)
+		{
+			container.HeightRequest = Primitives.Dimension.IsExplicitSet(view.Height) ? (int)view.Height : -1;
+		}
+		else
+		{
+			ViewHandler.MapHeight(handler, view);
+		}
+
+		handler.PlatformView?.UpdateHeight(view);
+	}
+
+	public static void MapIsAnimationPlaying(IImageHandler handler, IImage image)
+	{ }
+	//  =>
+	// 	handler.PlatformView?.UpdateIsAnimationPlaying(image);
 
 	public static void MapSource(IImageHandler handler, IImage image) =>
 		MapSourceAsync(handler, image).FireAndForget(handler);
@@ -37,22 +69,20 @@ public partial class ImageHandler : ViewHandler<IImage, Gtk.Picture>
 
 	partial class ImageImageSourcePartSetter
 	{
-		public override void SetImageSource(Gtk.Picture? platformImage)
+		public override void SetImageSource(Microsoft.Maui.Platform.SKImageView? platformImage)
 		{
-#if DEBUG
-			Console.Out.WriteLine($"[ImageHandler][SetImageSource] platformImage: {platformImage}");
-#endif
-			if (Handler?.PlatformView is not Gtk.Picture picture)
+			if (Handler?.PlatformView is not SKImageView view)
+			{
 				return;
+			}
 
-			if (platformImage is not null && platformImage.Paintable is not null)
+			if (platformImage is not null)
 			{
-				picture.Paintable = platformImage.Paintable;
+				view.Image = platformImage.Image;
 			}
-			else
-			{
-				picture.Clear();
-			}
+
+			if (Handler?.VirtualView is IImage image && image.Source is IStreamImageSource)
+				view.InvalidateMeasure(image);
 		}
 	}
 }

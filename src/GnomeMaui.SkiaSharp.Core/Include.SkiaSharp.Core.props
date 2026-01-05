@@ -4,8 +4,6 @@
         <Compile Include="../../ext/skiasharp/source/SkiaSharp.Views.Maui/SkiaSharp.Views.Maui.Core/ISKCanvasView.cs" Link="ISKCanvasView.cs" />
         <Compile Include="../../ext/skiasharp/source/SkiaSharp.Views.Maui/SkiaSharp.Views.Maui.Core/ISKGLView.cs" Link="ISKGLView.cs" />
         <Compile Include="../../ext/skiasharp/source/SkiaSharp.Views.Maui/SkiaSharp.Views.Maui.Core/ISKImageSource.cs" Link="ISKImageSource.cs" />
-        <Compile Include="../../ext/skiasharp/source/SkiaSharp.Views.Maui/SkiaSharp.Views.Maui.Core/SKPaintGLSurfaceEventArgs.cs" Link="SKPaintGLSurfaceEventArgs.cs" />
-        <Compile Include="../../ext/skiasharp/source/SkiaSharp.Views.Maui/SkiaSharp.Views.Maui.Core/SKPaintSurfaceEventArgs.cs" Link="SKPaintSurfaceEventArgs.cs" />
         <Compile Include="../../ext/skiasharp/source/SkiaSharp.Views.Maui/SkiaSharp.Views.Maui.Core/SKTouchEventArgs.cs" Link="SKTouchEventArgs.cs" />
 
         <Compile Include="../../ext/skiasharp/source/SkiaSharp.Views.Maui/SkiaSharp.Views.Maui.Core/Handlers/SKCanvasView/SKCanvasViewHandler.cs" Link="Handlers/SKCanvasView/SKCanvasViewHandler.cs" />

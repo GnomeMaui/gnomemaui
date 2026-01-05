@@ -21,9 +21,19 @@ public partial class Button
 	public static void MapLineBreakMode(ButtonHandler handler, Button button) { }
 
 	public static void MapText(IButtonHandler handler, Button button)
-	{
-		handler.PlatformView?.UpdateText(button);
-	}
+		=> handler.PlatformView?.UpdateText(button);
 
 	public static void MapLineBreakMode(IButtonHandler handler, Button button) { }
+
+	public static void MapTextColor(IButtonHandler handler, Button button)
+		=> handler.PlatformView?.UpdateTextColor(button);
+
+	public static void MapCharacterSpacing(IButtonHandler handler, Button button)
+		=> handler.PlatformView?.UpdateCharacterSpacing(button);
+
+	public static void MapFont(IButtonHandler handler, Button button)
+		=> handler.PlatformView?.UpdateFont(button);
+
+	public static void MapPadding(IButtonHandler handler, Button button)
+		=> handler.PlatformView?.UpdatePadding(button);
 }

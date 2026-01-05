@@ -14,6 +14,13 @@ public partial class Element
 	/// <param name="element">The associated <see cref="Element"/> instance</param>
 	public static void MapAutomationPropertiesIsInAccessibleTree(IElementHandler handler, Element element)
 	{
+		if (handler.IsConnectingHandler() && element.GetValue(AutomationProperties.IsInAccessibleTreeProperty) is null)
+			return;
+
+		if (handler.PlatformView is not Gtk.Accessible accessible)
+			return;
+
+		Platform.AccessibilityExtensions.SetAccessibilityProperties(accessible, element);
 	}
 
 	/// <summary>
@@ -23,6 +30,10 @@ public partial class Element
 	/// <param name="element">The associated <see cref="Element"/> instance.</param>
 	public static void MapAutomationPropertiesExcludedWithChildren(IElementHandler handler, Element element)
 	{
+		if (handler.PlatformView is not Gtk.Accessible accessible)
+			return;
+
+		Platform.AccessibilityExtensions.SetAccessibilityProperties(accessible, element);
 	}
 
 	static void MapAutomationPropertiesIsInAccessibleTree(IElementHandler handler, IElement element)

@@ -7,7 +7,7 @@ namespace Microsoft.Maui.ApplicationModel;
 
 class AppInfoImplementation : IAppInfo
 {
-	static readonly Assembly _launchingAssembly = Assembly.GetEntryAssembly();
+	// static readonly Assembly _launchingAssembly = Assembly.GetEntryAssembly();
 
 	public string PackageName => throw new NotImplementedException();
 
@@ -27,16 +27,22 @@ class AppInfoImplementation : IAppInfo
 			{
 				var styleManager = Adw.StyleManager.GetDefault();
 				bool isDark = styleManager.GetDark();
+#if DEBUG
+				Console.WriteLine($"Current theme is {(isDark ? "Dark" : "Light")}");
+#endif
 				return isDark ? AppTheme.Dark : AppTheme.Light;
 			}
 			catch
 			{
+#if DEBUG
+				Console.WriteLine("Could not determine current theme");
+#endif
 				return AppTheme.Unspecified;
 			}
 		}
 	}
 
-	public AppPackagingModel PackagingModel => throw new NotImplementedException();
+	public AppPackagingModel PackagingModel => AppPackagingModel.Unpackaged;
 
 	public LayoutDirection RequestedLayoutDirection
 	{

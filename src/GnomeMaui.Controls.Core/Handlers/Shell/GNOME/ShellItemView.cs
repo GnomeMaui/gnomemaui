@@ -1,9 +1,9 @@
+using Gtk;
+using Microsoft.Maui.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using Gtk;
-using Microsoft.Maui.Graphics;
 
 namespace Microsoft.Maui.Controls.Platform
 {

@@ -51,6 +51,7 @@
         <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
 
         <PackageVersion Include="CommonMark.NET" Version="0.15.1" />
+        <PackageVersion Include="Markdig" Version="0.31.0" />
         <PackageVersion Include="SkiaSharp.Skottie" Version="3.119.1" />
         <PackageVersion Include="Svg.Skia" Version="3.2.1" />
         <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />

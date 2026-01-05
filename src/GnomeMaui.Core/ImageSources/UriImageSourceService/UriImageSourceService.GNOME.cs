@@ -7,13 +7,13 @@ namespace Microsoft.Maui;
 
 public partial class UriImageSourceService
 {
-	public override Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
+	public override Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
 		GetImageAsync((IUriImageSource)imageSource, cancellationToken);
 
-	public Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(IUriImageSource imageSource, CancellationToken cancellationToken = default)
+	public async Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IUriImageSource imageSource, CancellationToken cancellationToken = default)
 	{
 		if (imageSource.IsEmpty)
-			return FromResult(null);
+			return null;
 
 		var uri = imageSource.Uri;
 #if DEBUG
@@ -23,17 +23,55 @@ public partial class UriImageSourceService
 		if (uri is null)
 		{
 			Logger?.LogWarning("Unable to load image URI: uri is null.");
-			return FromResult(null);
+			return null;
 		}
 
-		var picture = uri.IsFile
-			? Gtk.Picture.NewForFilename(uri.LocalPath)
-			: Gtk.Picture.NewForFilename(uri.AbsoluteUri);
+		try
+		{
+			// Cast to IStreamImageSource and use GetStreamAsync like Windows/iOS platforms
+			if (imageSource is not IStreamImageSource streamImageSource)
+			{
+				Logger?.LogWarning($"Unable to load image as stream from URI: {uri}");
+				return null;
+			}
 
-		var result = new ImageSourceServiceResult(picture);
-		return FromResult(result);
+			var stream = await streamImageSource.GetStreamAsync(cancellationToken);
+			if (stream is null)
+			{
+				Logger?.LogWarning($"Unable to load image stream from URI: {uri}");
+				return null;
+			}
+
+			using var memoryStream = new System.IO.MemoryStream();
+			await stream.CopyToAsync(memoryStream, cancellationToken);
+			memoryStream.Position = 0;
+
+			// Directly create SKImage from stream
+			var skImage = SkiaSharp.SKImage.FromEncodedData(memoryStream);
+			if (skImage is null)
+			{
+				Logger?.LogWarning($"Unable to create SKImage from URI: {uri}");
+				return null;
+			}
+
+#if DEBUG
+			Console.Out.WriteLine($"[UriImageSourceService][GetImageAsync] SKImage created: {skImage.Width}x{skImage.Height}");
+#endif
+
+			// Create SKImageView and set the image
+			var picture = new SKImageView();
+			picture.Image = skImage;
+
+#if DEBUG
+			Console.Out.WriteLine($"[UriImageSourceService][GetImageAsync] SKImageView created");
+#endif
+
+			return new ImageSourceServiceResult(picture);
+		}
+		catch (Exception ex)
+		{
+			Logger?.LogWarning(ex, $"Unable to load image from URI: {uri}");
+			return null;
+		}
 	}
-
-	static Task<IImageSourceServiceResult<Gtk.Picture>?> FromResult(IImageSourceServiceResult<Gtk.Picture>? result) =>
-		Task.FromResult(result);
 }

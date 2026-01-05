@@ -1,29 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-    x:Class="MauiTest1.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MauiTest1"
-    Title="Menu">
+	x:Class="MauiTest1.AppShell"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:local="clr-namespace:MauiTest1"
+	Title="Menu"
+>
+	<ShellContent Title="Home" ContentTemplate="{DataTemplate local:Home}" Route="home" />
 
-        <ShellContent
-            Title="Home"
-            ContentTemplate="{DataTemplate local:Home}"
-            Route="home" />
+	<ShellContent
+		Title="Picker Demo"
+		ContentTemplate="{DataTemplate local:Layouts.PickerDemoPage}"
+		Route="pickerdemo"
+	/>
 
-        <ShellContent
-            Title="Counter"
-            ContentTemplate="{DataTemplate local:Counter}"
-            Route="counter" />
+	<ShellContent
+		Title="ProgressBar Demo"
+		ContentTemplate="{DataTemplate local:Layouts.ProgressBarDemoPage}"
+		Route="progressbardemo"
+	/>
 
-        <ShellContent
-            Title="Christmas tree"
-            ContentTemplate="{DataTemplate local:Christmas}"
-            Route="christmas" />
+	<ShellContent
+		Title="Stack Layout 1"
+		ContentTemplate="{DataTemplate local:Layouts.StackLayoutTest1}"
+		Route="stacklayout1"
+	/>
+	<ShellContent
+		Title="Stack Layout 2"
+		ContentTemplate="{DataTemplate local:Layouts.StackLayoutTest2}"
+		Route="stacklayout2"
+	/>
+	<ShellContent
+		Title="Absolute Layout 1"
+		ContentTemplate="{DataTemplate local:Layouts.AbsoluteLayoutTest1}"
+		Route="absolutelayout1"
+	/>
+	<ShellContent
+		Title="Absolute Layout 2"
+		ContentTemplate="{DataTemplate local:Layouts.AbsoluteLayoutTest2}"
+		Route="absolutelayout2"
+	/>
+	<ShellContent Title="Grid Layout 1" ContentTemplate="{DataTemplate local:Layouts.GridTest1}" Route="grid1" />
+	<ShellContent Title="Grid Layout 2" ContentTemplate="{DataTemplate local:Layouts.GridTest2}" Route="grid2" />
+	<ShellContent Title="Grid Layout 3" ContentTemplate="{DataTemplate local:Layouts.GridTest3}" Route="grid3" />
 
-        <ShellContent
-            Title="Julia Fractal GPU"
-            ContentTemplate="{DataTemplate local:JuliaFractal}"
-            Route="juliafractal" />
+	<!-- <ShellContent Title="Flex Layout 1" ContentTemplate="{DataTemplate local:Layouts.FlexLayoutTest1}" Route="flex1" /> -->
 
+	<!-- <ShellContent
+		Title="Photo Wrapping"
+		ContentTemplate="{DataTemplate local:Layouts.PhotoWrappingPage}"
+		Route="photowrapping"
+	/> -->
+
+	<ShellContent Title="Counter" ContentTemplate="{DataTemplate local:Counter}" Route="counter" />
+
+	<ShellContent Title="Christmas tree" ContentTemplate="{DataTemplate local:Christmas}" Route="christmas" />
+
+	<ShellContent Title="Julia Fractal GPU" ContentTemplate="{DataTemplate local:JuliaFractal}" Route="juliafractal" />
 </Shell>

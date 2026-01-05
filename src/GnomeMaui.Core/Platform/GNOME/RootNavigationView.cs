@@ -47,7 +47,6 @@ public class RootNavigationView : Gtk.Box
 					page.SetHexpand(true);
 					page.SetVexpand(true);
 					page.Show();
-					page.QueueResize();
 					_navigationView.Push(page);
 				}
 				else
@@ -56,7 +55,6 @@ public class RootNavigationView : Gtk.Box
 					_content.SetHexpand(true);
 					_content.SetVexpand(true);
 					_content.Show();
-					_content.QueueResize();
 				}
 			}
 		}

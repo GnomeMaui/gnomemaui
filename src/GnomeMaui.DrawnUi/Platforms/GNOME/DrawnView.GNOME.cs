@@ -158,7 +158,7 @@ public partial class DrawnView
 	{
 		// Get the actual SKDrawingArea/SKGLArea from ContentPanel.Child
 		Widget? actualPlatformView = null;
-		if (Handler?.PlatformView is Microsoft.Maui.Platform.ContentPanel contentPanel)
+		if (Handler?.PlatformView is Microsoft.Maui.Platform.ContentWidget contentPanel)
 		{
 			actualPlatformView = contentPanel.Child;
 		}

@@ -83,6 +83,10 @@
         <PackageReference Include="HarfBuzzSharp.NativeAssets.Android" Version="8.3.1.2" />
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    </ItemGroup>
+
     <!-- GNOME MAUI -->
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
         <!-- Using PackageReference for all packages to ensure proper source generator registration -->
@@ -117,10 +121,12 @@
         <Compile Remove="Platforms\iOS\**\*.cs" />
         <Compile Remove="Platforms\MacCatalyst\**\*.cs" />
         <Compile Remove="Platforms\Windows\**\*.cs" />
+        <Compile Remove="Platforms\Windows\**\*.xaml" />
         <None Include="Platforms\Android\**\*.cs" />
         <None Include="Platforms\iOS\**\*.cs" />
         <None Include="Platforms\MacCatalyst\**\*.cs" />
         <None Include="Platforms\Windows\**\*.cs" />
+        <None Include="Platforms\Windows\**\*.xaml" />
     </ItemGroup>
 
     <!-- Exclude GNOME platform files when building for other platforms -->
@@ -139,5 +145,8 @@
             <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <EmbeddedResource Include="Platforms\GNOME\reset.css">
+            <LogicalName>GNOME.reset.css</LogicalName>
+        </EmbeddedResource>
     </ItemGroup>
 </Project>

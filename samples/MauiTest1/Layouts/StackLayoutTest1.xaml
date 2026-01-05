@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="MauiTest1.Layouts.StackLayoutTest1"
+	Title="StackLayoutTest1"
+>
+	<!-- <ScrollView> -->
+	<StackLayout Margin="20">
+		<Label Text="Primary colors" HorizontalTextAlignment="Center" />
+		<BoxView Color="Red" HeightRequest="40" />
+		<BoxView Color="Yellow" HeightRequest="40" />
+		<BoxView Color="Blue" HeightRequest="40" />
+		<Label Text="Secondary colors" HorizontalTextAlignment="Center" />
+		<BoxView Color="Green" HeightRequest="40" />
+		<BoxView Color="Orange" HeightRequest="40" />
+		<BoxView Color="Purple" HeightRequest="40" />
+	</StackLayout>
+	<!-- </ScrollView> -->
+</ContentPage>

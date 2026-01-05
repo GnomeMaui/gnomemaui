@@ -1,3 +1,4 @@
+using Microsoft.Maui.Graphics.Platform;
 using Microsoft.Maui.Handlers;
 using SkiaSharp.Views.Maui.Platform;
 using System;

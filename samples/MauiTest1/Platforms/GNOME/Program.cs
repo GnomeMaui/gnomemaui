@@ -1,5 +1,5 @@
-using System.Runtime.Versioning;
 using MauiTest1;
+using System.Runtime.Versioning;
 
 MauiProgram.StartTime = Environment.TickCount64;
 
@@ -10,4 +10,5 @@ Console.WriteLine($"After GirCore Module Initialize: {Environment.TickCount64 - 
 
 var app = new AdwApplication();
 Console.WriteLine($"Before app.Run: {Environment.TickCount64 - MauiProgram.StartTime} ms");
+
 app.Run(args);

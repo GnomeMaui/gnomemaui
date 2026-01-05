@@ -2,16 +2,16 @@
 
 namespace Microsoft.Maui.Handlers;
 
-public partial class ContentViewHandler : ViewHandler<IContentView, ContentPanel>
+public partial class ContentViewHandler : ViewHandler<IContentView, ContentWidget>
 {
-	protected override ContentPanel CreatePlatformView()
+	protected override ContentWidget CreatePlatformView()
 	{
 		if (VirtualView == null)
 		{
 			throw new InvalidOperationException($"{nameof(VirtualView)} must be set to create a ContentPanel");
 		}
 
-		var view = new ContentPanel
+		var view = new ContentWidget
 		{
 			CrossPlatformLayout = VirtualView
 		};
@@ -40,7 +40,11 @@ public partial class ContentViewHandler : ViewHandler<IContentView, ContentPanel
 		// Add new content if exists
 		if (handler.VirtualView.PresentedContent is IView view)
 		{
-			handler.PlatformView.Content = view.ToPlatform(handler.MauiContext);
+			var platformContent = view.ToPlatform(handler.MauiContext);
+			handler.PlatformView.Content = platformContent;
+
+			// Apply padding via CSS
+			handler.PlatformView.UpdatePadding(handler.VirtualView.Padding);
 		}
 	}
 
@@ -49,7 +53,12 @@ public partial class ContentViewHandler : ViewHandler<IContentView, ContentPanel
 		UpdateContent(handler);
 	}
 
-	protected override void DisconnectHandler(ContentPanel platformView)
+	public static partial void MapPadding(IContentViewHandler handler, IContentView page)
+	{
+		handler.PlatformView?.UpdatePadding(handler.VirtualView.Padding);
+	}
+
+	protected override void DisconnectHandler(ContentWidget platformView)
 	{
 		platformView.Content = null;
 		base.DisconnectHandler(platformView);

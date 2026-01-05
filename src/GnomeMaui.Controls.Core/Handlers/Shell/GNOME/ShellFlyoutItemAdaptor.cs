@@ -1,6 +1,6 @@
-using System.Collections;
 using Gtk;
 using Microsoft.Maui.Controls.Internals;
+using System.Collections;
 
 namespace Microsoft.Maui.Controls.Platform
 {

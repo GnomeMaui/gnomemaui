@@ -16,10 +16,22 @@
         <PackageTags>maui;graphics;skiasharp;gtk;cross-platform;drawing;shapes;canvas;gircore;linux;desktop;vector-graphics;idrawable;widget;renderer</PackageTags>
 
         <PackageId>GnomeMaui.Graphics</PackageId>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     </PropertyGroup>
+
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <PackageReference Include="GirCore.Cairo-1.0" />
+        <PackageReference Include="GirCore.Gdk-4.0" />
+        <PackageReference Include="GirCore.Gtk-4.0" />
+        <PackageReference Include="GirCore.GdkPixbuf-2.0" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="System.Memory" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
         <PackageReference Include="System.Numerics.Vectors" Condition="$(TargetFramework.StartsWith('netstandard'))" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp" />
     </ItemGroup>
 </Project>

@@ -15,8 +15,6 @@
         <Description>SkiaSharp rendering support for GTK4 applications using GirCore bindings. Provides SKDrawingArea widget for hardware-accelerated 2D graphics and custom drawing in Linux desktop applications with seamless Cairo integration.</Description>
         <PackageTags>skiasharp;gtk;cairo;graphics;rendering;2d;gircore;linux;desktop;drawing;canvas;hardware-acceleration;widget;drawingarea;custom-controls</PackageTags>
         <PackageId>GnomeMaui.SkiaSharp.Core</PackageId>
-
-        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
@@ -28,7 +26,6 @@
 
     <ItemGroup>
         <ProjectReference Include="../GnomeMaui.Core/GnomeMaui.Core.csproj" />
-        <ProjectReference Include="../GnomeMaui.Graphics/GnomeMaui.Graphics.csproj" />
     </ItemGroup>
 
     <ItemGroup>

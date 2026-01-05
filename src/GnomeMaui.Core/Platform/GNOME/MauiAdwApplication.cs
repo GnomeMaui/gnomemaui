@@ -13,6 +13,11 @@ namespace Microsoft.Maui;
 public abstract class MauiAdwApplication : Adw.Application, IPlatformApplication
 {
 	/// <summary>
+	/// The application assembly containing embedded resources (e.g., reset.css).
+	/// </summary>
+	public static System.Reflection.Assembly? ApplicationAssembly { get; private set; }
+
+	/// <summary>
 	/// When overridden in a derived class, creates the <see cref="MauiApp"/> to be used in this application.
 	/// Typically a <see cref="MauiApp"/> is created by calling <see cref="MauiApp.CreateBuilder(bool)"/>, configuring
 	/// the returned <see cref="MauiAppBuilder"/>, and returning the built app by calling <see cref="MauiAppBuilder.Build"/>.
@@ -20,9 +25,10 @@ public abstract class MauiAdwApplication : Adw.Application, IPlatformApplication
 	/// <returns>The built <see cref="MauiApp"/>.</returns>
 	protected abstract MauiApp CreateMauiApp();
 
-	protected MauiAdwApplication(string applicationId)
+	protected MauiAdwApplication(string applicationId, System.Reflection.Assembly applicationAssembly)
 	{
 		ApplicationId = applicationId;
+		ApplicationAssembly = applicationAssembly;
 		Current = this;
 		IPlatformApplication.Current = this;
 

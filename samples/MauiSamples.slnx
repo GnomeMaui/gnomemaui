@@ -9,20 +9,25 @@
         <Project Path="../src/GnomeMaui.Controls.BindingSourceGen/GnomeMaui.Controls.BindingSourceGen.csproj" />
         <Project Path="../src/GnomeMaui.Controls.Build.Tasks/GnomeMaui.Controls.Build.Tasks.csproj" />
         <Project Path="../src/GnomeMaui.Controls.SourceGen/GnomeMaui.Controls.SourceGen.csproj" />
+        <Project Path="../src/GnomeMaui.Controls.Xaml/GnomeMaui.Controls.Xaml.csproj" />
     </Folder>
-    <Project Path="../src/GnomeMaui.DrawnUi/GnomeMaui.DrawnUi.csproj" />
+    <Folder Name="/MauiGraphics1/">
+        <Project Path="MauiGraphics1/GraphicsTester.Portable/GraphicsTester.Portable.csproj" />
+        <Project Path="MauiGraphics1/GraphicsTesterApp/GraphicsTesterApp.csproj" />
+    </Folder>
 
-    <Project Path="../src/GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
-    <Project Path="../src/GnomeMaui.Core/GnomeMaui.Core.csproj" />
-    <Project Path="../src/GnomeMaui.Graphics/GnomeMaui.Graphics.csproj" />
-    <Project Path="../src/GnomeMaui.SkiaSharp.Core/GnomeMaui.SkiaSharp.Core.csproj" />
-    <Project Path="../src/GnomeMaui.SkiaSharp.Controls/GnomeMaui.SkiaSharp.Controls.csproj" />
-    <Project Path="../src/GnomeMaui.Controls.Xaml/GnomeMaui.Controls.Xaml.csproj" />
-    <Project Path="../src/GnomeMaui.Controls/GnomeMaui.Controls.csproj" />
     <Project Path="../src/GnomeMaui.Blazor/GnomeMaui.Blazor.csproj" />
+    <Project Path="../src/GnomeMaui.Controls/GnomeMaui.Controls.csproj" />
     <Project Path="../src/GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
+    <Project Path="../src/GnomeMaui.Core/GnomeMaui.Core.csproj" />
+    <Project Path="../src/GnomeMaui.DrawnUi/GnomeMaui.DrawnUi.csproj" />
+    <Project Path="../src/GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
+    <Project Path="../src/GnomeMaui.Graphics/GnomeMaui.Graphics.csproj" />
+    <Project Path="../src/GnomeMaui.Graphics.Text.Markdig/GnomeMaui.Graphics.Text.Markdig.csproj" />
+    <Project Path="../src/GnomeMaui.SkiaSharp.Controls/GnomeMaui.SkiaSharp.Controls.csproj" />
+    <Project Path="../src/GnomeMaui.SkiaSharp.Core/GnomeMaui.SkiaSharp.Core.csproj" />
+
     <Project Path="MauiBlazorApp1/MauiBlazorApp1.csproj" />
     <Project Path="MauiDrawnUi1/MauiDrawnUi1.csproj" />
-
     <Project Path="MauiTest1/MauiTest1.csproj" />
 </Solution>

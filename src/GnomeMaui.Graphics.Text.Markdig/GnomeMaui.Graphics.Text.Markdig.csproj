@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="$(MSBuildThisFileDirectory)/../Nuget.Common.props" />
+    <Import Project="$(MSBuildThisFileDirectory)/../GnomeMaui.props" />
+
+    <Import Project="GnomeMaui.Graphics.Text.Markdig.props" />
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+
+        <AssemblyName>GnomeMaui.Graphics.Text.Markdig</AssemblyName>
+        <RootNamespace>Microsoft.Maui.Graphics.Text</RootNamespace>
+
+        <Title>MAUI Graphics with SkiaSharp for GNOME</Title>
+        <Description>Microsoft.Maui.Graphics implementation using SkiaSharp for GNOME applications. Provides GirCoreSkiaGraphicsView widget with IDrawable support for cross-platform graphics API in Linux desktop applications with hardware-accelerated rendering.</Description>
+        <PackageTags>maui;graphics;skiasharp;gtk;cross-platform;drawing;shapes;canvas;gircore;linux;desktop;vector-graphics;idrawable;widget;renderer</PackageTags>
+
+        <PackageId>GnomeMaui.Graphics.Text.Markdig</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Markdig" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../GnomeMaui.Graphics/GnomeMaui.Graphics.csproj" />
+    </ItemGroup>
+</Project>

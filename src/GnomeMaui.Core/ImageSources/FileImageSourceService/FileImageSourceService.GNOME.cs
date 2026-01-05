@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using SkiaSharp;
 using System;
 using System.IO;
 using System.Threading;
@@ -8,10 +9,10 @@ namespace Microsoft.Maui;
 
 public partial class FileImageSourceService
 {
-	public override Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
+	public override Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
 		GetImageAsync((IFileImageSource)imageSource, cancellationToken);
 
-	public Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(IFileImageSource imageSource, CancellationToken cancellationToken = default)
+	public Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IFileImageSource imageSource, CancellationToken cancellationToken = default)
 	{
 		Console.WriteLine($"[FileImageSourceService][GetImageAsync] called");
 		if (imageSource.IsEmpty)
@@ -38,12 +39,18 @@ public partial class FileImageSourceService
 			return FromResult(null);
 		}
 
-		var picture = Gtk.Picture.NewForFilename(fullPath);
-		var result = new ImageSourceServiceResult(picture);
+		var skImage = SKImage.FromEncodedData(fullPath);
+		if (skImage == null)
+			return FromResult(null);
+
+		var view = new SKImageView();
+		view.Image = skImage;
+
+		var result = new ImageSourceServiceResult(view);
 		return FromResult(result);
 	}
 
-	static Task<IImageSourceServiceResult<Gtk.Picture>?> FromResult(IImageSourceServiceResult<Gtk.Picture>? result) =>
+	static Task<IImageSourceServiceResult<SKImageView>?> FromResult(IImageSourceServiceResult<SKImageView>? result) =>
 		Task.FromResult(result);
 
 	static string GetFullPath(string filename)

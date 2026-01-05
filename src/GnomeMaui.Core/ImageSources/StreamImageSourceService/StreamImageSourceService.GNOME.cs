@@ -8,10 +8,10 @@ namespace Microsoft.Maui;
 
 public partial class StreamImageSourceService
 {
-	public override Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
+	public override Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
 		GetImageAsync((IStreamImageSource)imageSource, cancellationToken);
 
-	public async Task<IImageSourceServiceResult<Gtk.Picture>?> GetImageAsync(IStreamImageSource imageSource, CancellationToken cancellationToken = default)
+	public async Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IStreamImageSource imageSource, CancellationToken cancellationToken = default)
 	{
 		if (imageSource.IsEmpty)
 			return null;
@@ -27,22 +27,28 @@ public partial class StreamImageSourceService
 
 			using var memoryStream = new MemoryStream();
 			await stream.CopyToAsync(memoryStream, cancellationToken);
-			var bytes = memoryStream.ToArray();
+			memoryStream.Position = 0;
 
-			var gBytes = GLib.Bytes.New(bytes);
-			var inputStream = Gio.MemoryInputStream.NewFromBytes(gBytes);
-			var pixbuf = GdkPixbuf.Pixbuf.NewFromStream(inputStream, null);
-
-			if (pixbuf is null)
+			// Directly create SKImage from stream
+			var skImage = SkiaSharp.SKImage.FromEncodedData(memoryStream);
+			if (skImage is null)
 			{
-				Logger?.LogWarning("Unable to load image stream: pixbuf is null.");
+				Logger?.LogWarning("Unable to load image stream: SKImage creation failed.");
 				return null;
 			}
 
-			var texture = Gdk.Texture.NewForPixbuf(pixbuf);
-			var picture = Gtk.Picture.NewForPaintable(texture);
+#if DEBUG
+			Console.Out.WriteLine($"[StreamImageSourceService][GetImageAsync] SKImage created: {skImage.Width}x{skImage.Height}");
+#endif
 
-			return new ImageSourceServiceResult(picture);
+			var view = new SKImageView();
+			view.Image = skImage;
+
+#if DEBUG
+			Console.Out.WriteLine($"[StreamImageSourceService][GetImageAsync] SKImageView created, Image property set");
+#endif
+
+			return new ImageSourceServiceResult(view);
 		}
 		catch (Exception ex)
 		{

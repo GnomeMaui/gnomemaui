@@ -1,19 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage 
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MauiTest1"
-    x:Class="MauiTest1.Home"
-    Title="Home">
+<ContentPage
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:local="clr-namespace:MauiTest1"
+	xmlns:models="clr-namespace:MauiTest1.Models"
+	xmlns:controls="clr-namespace:MauiTest1.Controls"
+	x:Name="Self"
+	x:Class="MauiTest1.Home"
+	Title="Home"
+>
+	<BindableObject.BindingContext>
+		<x:Reference Name="Self" />
+	</BindableObject.BindingContext>
 
-    <VerticalStackLayout>
-        <Label Text="GNOME MAUI .NET" />
+	<ScrollView>
+		<VerticalStackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="10">
+			<Label Text="Test Headline Style" Style="{StaticResource Headline}" Margin="0,10" />
+			<Label Text="Test SubHeadline Style" Style="{StaticResource SubHeadline}" Margin="0,10" />
+			<Label Text="Default Label (implicit style)" Margin="0,10" />
 
-        <Image 
-            Source="Images/dotnet_bot.png" 
-            HorizontalOptions="Center" 
-            VerticalOptions="Center" />
+			<Image Source="Images/dotnet_bot.png" WidthRequest="200" HeightRequest="200" />
+			<ActivityIndicator x:Name="activityIndicator" IsRunning="True" VerticalOptions="Center" />
+			<Entry Placeholder="Email" Margin="0,10" IsPassword="False" />
+			<Entry Placeholder="Password" Margin="0,10" IsPassword="True" />
+			<Editor Placeholder="Enter your comments here..." HeightRequest="100" Margin="0,10" />
 
-    </VerticalStackLayout>
+			<Picker Title="Select a monkey">
+				<Picker.Items>
+					<x:String>Baboon</x:String>
+					<x:String>Capuchin Monkey</x:String>
+					<x:String>Blue Monkey</x:String>
+					<x:String>Squirrel Monkey</x:String>
+					<x:String>Golden Lion Tamarin</x:String>
+					<x:String>Howler Monkey</x:String>
+					<x:String>Japanese Macaque</x:String>
+				</Picker.Items>
+			</Picker>
 
+			<ProgressBar Progress="0.5" ProgressColor="Orange" />
+		</VerticalStackLayout>
+	</ScrollView>
 </ContentPage>

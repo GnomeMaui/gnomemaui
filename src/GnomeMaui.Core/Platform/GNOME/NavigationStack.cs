@@ -1,7 +1,7 @@
+using Gtk;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Gtk;
 
 namespace Microsoft.Maui.Platform;
 
@@ -28,7 +28,6 @@ public class NavigationStack
 		page.SetVexpand(true);
 		_container.Append(page);
 		page.Show();
-		page.QueueResize();
 
 		// TODO: Add animation support if required
 		return Task.CompletedTask;
@@ -51,7 +50,6 @@ public class NavigationStack
 			previous.SetHexpand(true);
 			previous.SetVexpand(true);
 			previous.Show();
-			previous.QueueResize();
 		}
 
 		// TODO: Add animation support

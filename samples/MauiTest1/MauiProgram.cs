@@ -37,8 +37,8 @@ public static class MauiProgram
 
 					if (args.Window is Adw.ApplicationWindow adwWindow)
 					{
-						adwWindow.DefaultWidth = 800;
-						adwWindow.DefaultHeight = 600;
+						adwWindow.DefaultWidth = 1280;
+						adwWindow.DefaultHeight = 800;
 					}
 				});
 			});

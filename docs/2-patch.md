@@ -1,31 +1,32 @@
-# Microsoft MAUI and SkiaSharp Patch
+# Patch
 
 > [!NOTE]
-> This documentation depends on the [Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md) documentation.
+> This documentation depends on the [# Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md) documentation.
 
-## Start GNOME MAUI shell
+## Start GNOME MAUI ptyxis terminal
 
-You can start the environment in two ways:
+You can start the ptyxis terminal in two ways:
 
 **Option 1 - From the desktop launcher**:
 The setup script installs a launcher named **GNOME MAUI** with its own icon (`gnomemaui.desktop`). You can start it directly from your GNOME application menu.
-
-![Open GNOME MAUI terminal](/assets/GnomeMauiIcon.png)
 
 **Option 2 - From Ptyxis**:
 Open **Ptyxis** and select the **GNOME MAUI** profile.
 This profile is also created automatically by the setup scripts.
 
-Now type `h`. this is an internal function that navigates back to the `$GNOMEMAUI` directory:
+### NodeJS installation
+
+Say yes to install the required NodeJS version:
 
 ```bash
-h
+Can't find an installed Node version matching v24.12.0.
+Do you want to install it? answer [y/N]: y
 ```
 
-Move one directory up:
+Navigate to the GNOME MAUI root directory:
 
 ```bash
-cd ..
+cd $GNOMEMAUIROOT
 ```
 
 ## MAUI
@@ -33,56 +34,68 @@ cd ..
 The current patch requires this exact version, do not change it:
 
 ```bash
-wget https://github.com/dotnet/maui/archive/refs/tags/10.0.11.tar.gz
+git init maui-10.0.20.sr2
+cd maui-10.0.20.sr2
+git remote add origin https://github.com/dotnet/maui.git
+git fetch --depth=1 origin 0d1705adc4a6b4ec531e316ec956755abbe059c5
+git checkout FETCH_HEAD
+# verify
+git rev-parse HEAD
+# 0d1705adc4a6b4ec531e316ec956755abbe059c5
 ```
 
 ```bash
-tar -xvf 10.0.11.tar.gz
-```
-
-## SkiaSharp
-
-```bash
-wget https://github.com/mono/SkiaSharp/archive/refs/tags/v3.119.1.tar.gz
+cd $GNOMEMAUIROOT
 ```
 
 ```bash
-tar -xvf v3.119.1.tar.gz
+git clone --branch release/3.119.1 --single-branch --depth 1 https://github.com/mono/SkiaSharp.git SkiaSharp-3.119.1
+
+git clone --depth 1 https://github.com/taublast/DrawnUi.git
+
+git clone --depth 1 https://github.com/taublast/AppoMobi.Maui.Gestures.git
+
+git clone --depth 1 https://github.com/taublast/AppoMobi.Specials.git
 ```
 
-## Back to the GNOME MAUI home
+### Symlinks
 
 ```bash
-h
-```
+cd $GNOMEMAUI/ext
 
-## Symlinks
+ln -s $GNOMEMAUI/../maui-10.0.20.sr2 maui
 
-```bash
-cd ext
-```
-
-```bash
-ln -s $GNOMEMAUI/../maui-10.0.11 maui
-```
-
-```bash
 ln -s $GNOMEMAUI/../SkiaSharp-3.119.1 skiasharp
+
+mkdir $GNOMEMAUI/ext/drawnui
+
+cd $GNOMEMAUI/ext/drawnui
+
+ln -s $GNOMEMAUI/../DrawnUi drawnui
+
+ln -s $GNOMEMAUI/../AppoMobi.Maui.Gestures drawnui-gestures
+
+ln -s $GNOMEMAUI/../AppoMobi.Specials drawnui-specials
 ```
 
-## Patch MAUI
+### Patch MAUI
 
 ```bash
-cd maui
+cd $GNOMEMAUI/ext/maui
+
+# git apply --check $GNOMEMAUI/ext/maui-10.0.20.sr2.patch
+
+git apply $GNOMEMAUI/ext/maui-10.0.20.sr2.patch
+
+cd $GNOMEMAUI/ext/drawnui/drawnui
+
+git apply $GNOMEMAUI/ext/drawnui.patch
+
+cd $GNOMEMAUI/ext/drawnui/drawnui-gestures
+
+git apply $GNOMEMAUI/ext/drawnui-gestures.patch
+
 ```
-
-```bash
-patch -p1 < $GNOMEMAUI/ext/maui.patch
-```
-
-## Patch SkiaSharp
-
-SkiaSharp currently does not require a patch, but this may be necessary in the future.
 
 ## Next step
 

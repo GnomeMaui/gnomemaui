@@ -13,11 +13,6 @@
         <AssemblyName>GnomeMaui.Blazor</AssemblyName>
         <RootNamespace>Microsoft.AspNetCore.Components.WebView.Maui</RootNamespace>
 
-        <Title>GnomeMaui UI Framework for Linux</Title>
-
-        <Description>GnomeMaui is a framework for creating native Linux desktop apps with C# and XAML. Using GnomeMaui, you can develop apps that run on GNOME-based distributions from a single shared codebase.</Description>
-        <PackageTags>maui;gnome;gtk;adw;adwaita;gircore;linux;graphics;skiasharp;cross-platform;drawing;shapes;canvas;desktop;vector-graphics;idrawable;renderer</PackageTags>
-
         <PackageId>GnomeMaui.Blazor</PackageId>
     </PropertyGroup>
 

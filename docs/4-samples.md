@@ -1,11 +1,12 @@
 # Build and run sample applications
 
-> [!NOTE]
-> This documentation depends on the [Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md), the [Microsoft MAUI and SkiaSharp Patch](/docs/2-patch.md), and the [Chicken-egg scenario. Dependency paradox neutralization…](/docs/3-chicken-egg.md) documentation.
+This documentation depends on
 
-Open Ptyxis and select the GNOME MAUI profile from the profile list.
+- [Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md)
+- [Patch](/docs/2-patch.md)
+- [Chicken-egg scenario. Dependency paradox neutralization…](/docs/3-chicken-egg.md)
 
-![Open GNOME MAUI terminal](/assets/GnomeMauiIcon.png)
+Open GNOME MAUI ptyxis terminal.
 
 ## Build and run MAUI sample app
 
@@ -22,8 +23,6 @@ GSK_RENDERER=opengl dotnet ./bin/Debug/net10.0-gnome/MauiTest1.dll
 ```
 
 ## Build and run MAUI Blazor sample app
-
-The Blazor application does not include an Adwaita header because it is not yet implemented in MAUI. By pressing `Alt`+`Space`, the window menu can be opened, where close, resize, and move actions are available.
 
 ```bash
 cd $GNOMEMAUI/samples/MauiBlazorApp1

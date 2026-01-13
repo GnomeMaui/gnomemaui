@@ -23,6 +23,16 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 		PlatformView.CrossPlatformLayout = VirtualView;
 
 		var children = PlatformView.CachedChildren;
+
+		// KRITIKUS: Először Unparent MINDEN régi gyereket, mielőtt a listát töröljük
+		foreach (var oldChild in children)
+		{
+			if (oldChild.GetParent() != null)
+			{
+				oldChild.Unparent();
+			}
+		}
+
 		children.Clear();
 
 		foreach (var child in VirtualView.OrderByZIndex())
@@ -49,6 +59,12 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 				continue;
 			}
 
+			// Ha a widget-nek már van parent-je, leválasztjuk (RÉGI widget újrahasználat esetén)
+			if (platformChild.GetParent() != null)
+			{
+				platformChild.Unparent();
+			}
+
 			children.Add(platformChild);
 		}
 
@@ -73,6 +89,15 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 
 	protected override void DisconnectHandler(LayoutWidget platformView)
 	{
+		// KRITIKUS: Unparent MINDEN gyereket mielőtt a handler disconnect-olódik
+		foreach (var child in platformView.CachedChildren)
+		{
+			if (child.GetParent() != null)
+			{
+				child.Unparent();
+			}
+		}
+
 		// If we're being disconnected from the xplat element, then we should no longer be managing its children
 		platformView.CachedChildren.Clear();
 		base.DisconnectHandler(platformView);
@@ -83,15 +108,26 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 		_ = PlatformView ?? throw new InvalidOperationException($"{nameof(PlatformView)} should have been set by base class.");
 		_ = VirtualView ?? throw new InvalidOperationException($"{nameof(VirtualView)} should have been set by base class.");
 
-		if (child?.ToPlatform() is Gtk.Widget view)
+		if (child?.Handler?.PlatformView is Gtk.Widget view)
 		{
+			// Unparent the widget to prevent GTK warnings about "has a parent during dispose"
+			view.Unparent();
 			PlatformView.CachedChildren.Remove(view);
 		}
 	}
 
 	public void Clear()
 	{
-		PlatformView?.CachedChildren.Clear();
+		if (PlatformView == null)
+			return;
+
+		// Unparent all children before clearing the list
+		foreach (var child in PlatformView.CachedChildren)
+		{
+			child.Unparent();
+		}
+
+		PlatformView.CachedChildren.Clear();
 	}
 
 	public void Insert(int index, IView child)
@@ -101,7 +137,15 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 		_ = MauiContext ?? throw new InvalidOperationException($"{nameof(MauiContext)} should have been set by base class.");
 
 		var targetIndex = VirtualView.GetLayoutHandlerIndex(child);
-		PlatformView.CachedChildren.Insert(targetIndex, (Gtk.Widget)child.ToPlatform(MauiContext));
+		var platformChild = (Gtk.Widget)child.ToPlatform(MauiContext);
+
+		// Ha a widget-nek már van parent-je, leválasztjuk (RÉGI widget újrahasználat esetén)
+		if (platformChild.GetParent() != null)
+		{
+			platformChild.Unparent();
+		}
+
+		PlatformView.CachedChildren.Insert(targetIndex, platformChild);
 	}
 
 	public void Update(int index, IView child)
@@ -110,7 +154,15 @@ public partial class LayoutHandler : ViewHandler<ILayout, LayoutWidget>
 		_ = VirtualView ?? throw new InvalidOperationException($"{nameof(VirtualView)} should have been set by base class.");
 		_ = MauiContext ?? throw new InvalidOperationException($"{nameof(MauiContext)} should have been set by base class.");
 
-		PlatformView.CachedChildren[index] = (Gtk.Widget)child.ToPlatform(MauiContext);
+		var platformChild = (Gtk.Widget)child.ToPlatform(MauiContext);
+
+		// Ha a widget-nek már van parent-je, leválasztjuk (RÉGI widget újrahasználat esetén)
+		if (platformChild.GetParent() != null)
+		{
+			platformChild.Unparent();
+		}
+
+		PlatformView.CachedChildren[index] = platformChild;
 		EnsureZIndexOrder(child);
 	}
 

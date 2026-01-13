@@ -66,8 +66,7 @@ public partial class SKCanvasViewHandler : ViewHandler<ISKCanvasView, SKDrawingA
 	{
 		if (VirtualView?.IgnorePixelScaling == false && PlatformView != null)
 		{
-			var scale = 1.0f; // TODO: get actual scale from GTK
-
+			var scale = (float)Microsoft.Maui.Devices.DeviceDisplay.MainDisplayInfo.Density;
 			x *= scale;
 			y *= scale;
 		}

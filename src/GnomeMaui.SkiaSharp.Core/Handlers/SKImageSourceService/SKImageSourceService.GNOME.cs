@@ -7,7 +7,7 @@ namespace SkiaSharp.Views.Maui.Handlers;
 
 public partial class SKImageSourceService
 {
-	public override Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default)
+	public override Task<IImageSourceServiceResult<SKImage>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default)
 	{
 		var picture = imageSource switch
 		{
@@ -23,23 +23,18 @@ public partial class SKImageSourceService
 			: FromResult(null);
 	}
 
-	static Task<IImageSourceServiceResult<SKImageView>?> FromResult(ImageSourceServiceResult? result) =>
-		Task.FromResult<IImageSourceServiceResult<SKImageView>?>(result);
+	static Task<IImageSourceServiceResult<SKImage>?> FromResult(ImageSourceServiceResult? result) =>
+		Task.FromResult<IImageSourceServiceResult<SKImage>?>(result);
 }
 
 public static class SKImageSourceExtensions
 {
-	public static SKImageView? ToPicture(this SKImage? image)
+	public static SKImage? ToPicture(this SKImage? image)
 	{
-		if (image == null)
-			return null;
-
-		var view = new SKImageView();
-		view.Image = image;
-		return view;
+		return image;
 	}
 
-	public static SKImageView? ToPicture(this SKBitmap? bitmap)
+	public static SKImage? ToPicture(this SKBitmap? bitmap)
 	{
 		if (bitmap == null)
 			return null;
@@ -48,12 +43,10 @@ public static class SKImageSourceExtensions
 		if (image == null)
 			return null;
 
-		var view = new SKImageView();
-		view.Image = image;
-		return view;
+		return image;
 	}
 
-	public static SKImageView? ToPicture(this SKPixmap? pixmap)
+	public static SKImage? ToPicture(this SKPixmap? pixmap)
 	{
 		if (pixmap == null)
 			return null;
@@ -62,12 +55,10 @@ public static class SKImageSourceExtensions
 		if (image == null)
 			return null;
 
-		var view = new SKImageView();
-		view.Image = image;
-		return view;
+		return image;
 	}
 
-	public static SKImageView? ToPicture(this SKPicture? picture, SKSizeI dimensions)
+	public static SKImage? ToPicture(this SKPicture? picture, SKSizeI dimensions)
 	{
 		if (picture == null)
 			return null;
@@ -82,8 +73,6 @@ public static class SKImageSourceExtensions
 		if (image == null)
 			return null;
 
-		var view = new SKImageView();
-		view.Image = image;
-		return view;
+		return image;
 	}
 }

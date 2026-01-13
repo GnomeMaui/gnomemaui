@@ -76,11 +76,11 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/FontImageSource.cs" Link="FontImageSource.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/FontSizeConverter.cs" Link="FontSizeConverter.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/IConverterOptions.cs" Link="IConverterOptions.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/NamedSize.cs" Link="NamedSize.cs" />
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/NamedSize.cs" Link="NamedSize.cs" /> -->
         <Compile Include="../../ext/maui/src/Controls/src/Core/IProvideValueTarget.cs" Link="IProvideValueTarget.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Device.cs" Link="Device.cs" />
+        <!-- Obsolete <Compile Include="../../ext/maui/src/Controls/src/Core/Device.cs" Link="Device.cs" /> -->
         <Compile Include="../../ext/maui/src/Controls/src/Core/TargetIdiom.cs" Link="TargetIdiom.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/IFontNamedSizeService.cs" Link="IFontNamedSizeService.cs" />
+        <!-- Obsolete <Compile Include="../../ext/maui/src/Controls/src/Core/IFontNamedSizeService.cs" Link="IFontNamedSizeService.cs" /> -->
         <Compile Include="../../ext/maui/src/Controls/src/Core/DependencyService.cs" Link="DependencyService.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/DependencyFetchTarget.cs" Link="DependencyFetchTarget.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/DependencyResolver.cs" Link="DependencyResolver.cs" />
@@ -106,7 +106,6 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/IConfigElement.cs" Link="IConfigElement.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/IConfigPlatform.cs" Link="IConfigPlatform.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Configuration.cs" Link="Configuration.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/ExtensionPoints.cs" Link="PlatformConfiguration/ExtensionPoints.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/IEditorController.cs" Link="IEditorController.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/IViewController.cs" Link="IViewController.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/IVisualElementController.cs" Link="IVisualElementController.cs" />
@@ -322,6 +321,15 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/ValueChangedEventArgs.cs" Link="ValueChangedEventArgs.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/PickerClosedEventArgs.cs" Link="PickerClosedEventArgs.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/PickerOpenedEventArgs.cs" Link="PickerOpenedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/ISwipeItem.cs" Link="ISwipeItem.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/ISwipeViewController.cs" Link="ISwipeViewController.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/ISearchBarController.cs" Link="ISearchBarController.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/UrlWebViewSource.cs" Link="UrlWebViewSource.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/IWebViewController.cs" Link="IWebViewController.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/OnPlatform.cs" Link="OnPlatform.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/OnIdiom.cs" Link="OnIdiom.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/ItemTappedEventArgs.cs" Link="ItemTappedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/HtmlWebViewSource.cs" Link="HtmlWebViewSource.cs" />
 
         <!-- All -->
         <Compile Include="../../ext/maui/src/Controls/src/Core/ActivityIndicator/ActivityIndicator.cs" Link="ActivityIndicator/ActivityIndicator.cs" />
@@ -360,6 +368,22 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/Diagnostics/MauiControlsDiagnosticsExtensions.cs" Link="Diagnostics/MauiControlsDiagnosticsExtensions.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Diagnostics/ControlsViewDiagnosticTagger.cs" Link="Diagnostics/ControlsViewDiagnosticTagger.cs" />
 
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DataPackage.cs" Link="DragAndDrop/DataPackage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DataPackageOperation.cs" Link="DragAndDrop/DataPackageOperation.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DataPackagePropertySet.cs" Link="DragAndDrop/DataPackagePropertySet.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DataPackagePropertySetView.cs" Link="DragAndDrop/DataPackagePropertySetView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DataPackageView.cs" Link="DragAndDrop/DataPackageView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DragEventArgs.cs" Link="DragAndDrop/DragEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DragGestureRecognizer.cs" Link="DragAndDrop/DragGestureRecognizer.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DragStartingEventArgs.cs" Link="DragAndDrop/DragStartingEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DropCompletedEventArgs.cs" Link="DragAndDrop/DropCompletedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DropEventArgs.cs" Link="DragAndDrop/DropEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/DropGestureRecognizer.cs" Link="DragAndDrop/DropGestureRecognizer.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/PlatformDragEventArgs.cs" Link="DragAndDrop/PlatformDragEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/PlatformDragStartingEventArgs.cs" Link="DragAndDrop/PlatformDragStartingEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/PlatformDropCompletedEventArgs.cs" Link="DragAndDrop/PlatformDropCompletedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DragAndDrop/PlatformDropEventArgs.cs" Link="DragAndDrop/PlatformDropEventArgs.cs" />
+
         <Compile Include="../../ext/maui/src/Controls/src/Core/Editor/Editor.cs" Link="Editor/Editor.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/Element/Element.cs" Link="Element/Element.cs" />
@@ -378,6 +402,7 @@
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Shell/ShellHandler.cs" Link="Handlers/Shell/ShellHandler.cs" />
 
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Items/CarouselViewHandler.cs" Link="Handlers/Items/CarouselViewHandler.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Items/CollectionViewHandler.cs" Link="Handlers/Items/CollectionViewHandler.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Items/ReorderableItemsViewHandler.cs" Link="Handlers/Items/ReorderableItemsViewHandler.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Items/GroupableItemsViewHandler.cs" Link="Handlers/Items/GroupableItemsViewHandler.cs" />
@@ -402,6 +427,12 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/Image/ImageSource.cs" Link="Image/ImageSource.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Image/IImageController.cs" Link="Image/IImageController.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Image/IImageElement.cs" Link="Image/IImageElement.cs" />
+
+        <Compile Include="../../ext/maui/src/Controls/src/Core/ImageButton/ImageButton.cs" Link="ImageButton/ImageButton.cs" />
+
+        <Compile Include="../../ext/maui/src/Controls/src/Core/IndicatorView/IndicatorShape.cs" Link="IndicatorView/IndicatorShape.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/IndicatorView/IndicatorStackLayout.cs" Link="IndicatorView/IndicatorStackLayout.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/IndicatorView/IndicatorView.cs" Link="IndicatorView/IndicatorView.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/InputView/InputView.cs" Link="InputView/InputView.cs" />
 
@@ -432,28 +463,35 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/Internals/NotifyCollectionChangedEventArgsEx.cs" Link="Internals/NotifyCollectionChangedEventArgsEx.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Internals/TextTransformUtilities.cs" Link="Internals/TextTransformUtilities.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Internals/ResourceLoader.cs" Link="Internals/ResourceLoader.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Internals/EvalRequested.cs" Link="Internals/EvalRequested.cs" />
 
+        <!-- All -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/CarouselLayoutTypeConverter.cs" Link="Items/CarouselLayoutTypeConverter.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/CarouselView.cs" Link="Items/CarouselView.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Items/CollectionView.cs" Link="Items/CollectionView.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ReorderableItemsView.cs" Link="Items/ReorderableItemsView.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/GroupableItemsView.cs" Link="Items/GroupableItemsView.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SelectableItemsView.cs" Link="Items/SelectableItemsView.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/StructuredItemsView.cs" Link="Items/StructuredItemsView.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsView.cs" Link="Items/ItemsView.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsLayout.cs" Link="Items/ItemsLayout.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/IItemsLayout.cs" Link="Items/IItemsLayout.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsLayoutTypeConverter.cs" Link="Items/ItemsLayoutTypeConverter.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsLayoutOrientation.cs" Link="Items/ItemsLayoutOrientation.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemSizingStrategy.cs" Link="Items/ItemSizingStrategy.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SelectionMode.cs" Link="Items/SelectionMode.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SelectionList.cs" Link="Items/SelectionList.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SelectionChangedEventArgs.cs" Link="Items/SelectionChangedEventArgs.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/LinearItemsLayout.cs" Link="Items/LinearItemsLayout.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SnapPointsType.cs" Link="Items/SnapPointsType.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SnapPointsAlignment.cs" Link="Items/SnapPointsAlignment.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsUpdatingScrollMode.cs" Link="Items/ItemsUpdatingScrollMode.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ScrollToRequestEventArgs.cs" Link="Items/ScrollToRequestEventArgs.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsViewScrolledEventArgs.cs" Link="Items/ItemsViewScrolledEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/CurrentItemChangedEventArgs.cs" Link="Items/CurrentItemChangedEventArgs.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Items/GridItemsLayout.cs" Link="Items/GridItemsLayout.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/GroupableItemsView.cs" Link="Items/GroupableItemsView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/IItemsLayout.cs" Link="Items/IItemsLayout.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemSizingStrategy.cs" Link="Items/ItemSizingStrategy.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsLayout.cs" Link="Items/ItemsLayout.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsLayoutOrientation.cs" Link="Items/ItemsLayoutOrientation.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsLayoutTypeConverter.cs" Link="Items/ItemsLayoutTypeConverter.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsUpdatingScrollMode.cs" Link="Items/ItemsUpdatingScrollMode.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsView.cs" Link="Items/ItemsView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ItemsViewScrolledEventArgs.cs" Link="Items/ItemsViewScrolledEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/LinearItemsLayout.cs" Link="Items/LinearItemsLayout.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/MarshalingObservableCollection.cs" Link="Items/MarshalingObservableCollection.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/PositionChangedEventArgs.cs" Link="Items/PositionChangedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ReorderableItemsView.cs" Link="Items/ReorderableItemsView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/ScrollToRequestEventArgs.cs" Link="Items/ScrollToRequestEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SelectableItemsView.cs" Link="Items/SelectableItemsView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SelectionChangedEventArgs.cs" Link="Items/SelectionChangedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SelectionList.cs" Link="Items/SelectionList.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SelectionMode.cs" Link="Items/SelectionMode.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SnapPointsAlignment.cs" Link="Items/SnapPointsAlignment.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/SnapPointsType.cs" Link="Items/SnapPointsType.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Items/StructuredItemsView.cs" Link="Items/StructuredItemsView.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/Label/Label.cs" Link="Label/Label.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Label/Label.Mapper.cs" Link="Label/Label.Mapper.cs" />
@@ -507,6 +545,14 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/Picker/Picker.cs" Link="Picker/Picker.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Picker/Picker.Mapper.cs" Link="Picker/Picker.Mapper.cs" />
 
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/Windows/CollectionView/GroupedItemTemplateCollection.cs" Link="Platform/GNOME/CollectionView/GroupedItemTemplateCollection.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/Windows/CollectionView/GroupTemplateContext.cs" Link="Platform/GNOME/CollectionView/GroupTemplateContext.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/Windows/CollectionView/ItemTemplateContext.cs" Link="Platform/GNOME/CollectionView/ItemTemplateContext.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/Windows/CollectionView/ItemTemplateContextEnumerable.cs" Link="Platform/GNOME/CollectionView/ItemTemplateContextEnumerable.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/Windows/CollectionView/ItemTemplateContextList.cs" Link="Platform/GNOME/CollectionView/ItemTemplateContextList.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/Windows/CollectionView/ObservableItemTemplateCollection.cs" Link="Platform/GNOME/CollectionView/ObservableItemTemplateCollection.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/Windows/CollectionView/TemplatedItemSourceFactory.cs" Link="Platform/GNOME/CollectionView/TemplatedItemSourceFactory.cs" /> -->
+
         <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/PlatformEffect.cs" Link="Platform/PlatformEffect.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/IElementExtensions.cs" Link="Platform/IElementExtensions.cs" />
 
@@ -515,18 +561,99 @@
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/GestureManager/GestureManager.cs" Link="Platform/GestureManager/GestureManager.cs" />
 
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/ExtensionPoints.cs" Link="PlatformConfiguration/ExtensionPoints.cs" />
+
+        <!-- All -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/AppCompat/Application.cs" Link="PlatformConfiguration/AndroidSpecific/AppCompat/Application.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/AppCompat/NavigationPage.cs" Link="PlatformConfiguration/AndroidSpecific/AppCompat/NavigationPage.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/Page.cs" Link="PlatformConfiguration/WindowsSpecific/Page.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/ToolbarPlacement.cs" Link="PlatformConfiguration/WindowsSpecific/ToolbarPlacement.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/Page.cs" Link="PlatformConfiguration/iOSSpecific/Page.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/StatusBarHiddenMode.cs" Link="PlatformConfiguration/iOSSpecific/StatusBarHiddenMode.cs" />
-        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/UIStatusBarAnimation.cs" Link="PlatformConfiguration/iOSSpecific/UIStatusBarAnimation.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/Application.cs" Link="PlatformConfiguration/AndroidSpecific/Application.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/Button.cs" Link="PlatformConfiguration/AndroidSpecific/Button.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/Entry.cs" Link="PlatformConfiguration/AndroidSpecific/Entry.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/ImageButton.cs" Link="PlatformConfiguration/AndroidSpecific/ImageButton.cs" />
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/ListView.cs" Link="PlatformConfiguration/AndroidSpecific/ListView.cs" /> -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/ShellItem.cs" Link="PlatformConfiguration/AndroidSpecific/ShellItem.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/SwipeView.cs" Link="PlatformConfiguration/AndroidSpecific/SwipeView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/TabbedPage.cs" Link="PlatformConfiguration/AndroidSpecific/TabbedPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/ToolbarPlacement.cs" Link="PlatformConfiguration/AndroidSpecific/ToolbarPlacement.cs" />
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/ViewCell.cs" Link="PlatformConfiguration/AndroidSpecific/ViewCell.cs" /> -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/VisualElement.cs" Link="PlatformConfiguration/AndroidSpecific/VisualElement.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/AndroidSpecific/WebView.cs" Link="PlatformConfiguration/AndroidSpecific/WebView.cs" />
+
+        <!-- All -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/Application.cs" Link="PlatformConfiguration/iOSSpecific/Application.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/BlurEffectStyle.cs" Link="PlatformConfiguration/iOSSpecific/BlurEffectStyle.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/Cell.cs" Link="PlatformConfiguration/iOSSpecific/Cell.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/DatePicker.cs" Link="PlatformConfiguration/iOSSpecific/DatePicker.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/Entry.cs" Link="PlatformConfiguration/iOSSpecific/Entry.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/FlyoutPage.cs" Link="PlatformConfiguration/iOSSpecific/FlyoutPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/GroupHeaderStyle.cs" Link="PlatformConfiguration/iOSSpecific/GroupHeaderStyle.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/LargeTitleDisplayMode.cs" Link="PlatformConfiguration/iOSSpecific/LargeTitleDisplayMode.cs" />
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/ListView.cs" Link="PlatformConfiguration/iOSSpecific/ListView.cs" /> -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/NavigationPage.cs" Link="PlatformConfiguration/iOSSpecific/NavigationPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/Page.cs" Link="PlatformConfiguration/iOSSpecific/Page.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/Picker.cs" Link="PlatformConfiguration/iOSSpecific/Picker.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/ScrollView.cs" Link="PlatformConfiguration/iOSSpecific/ScrollView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/SearchBar.cs" Link="PlatformConfiguration/iOSSpecific/SearchBar.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/SeparatorStyle.cs" Link="PlatformConfiguration/iOSSpecific/SeparatorStyle.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/Slider.cs" Link="PlatformConfiguration/iOSSpecific/Slider.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/StatusBarHiddenMode.cs" Link="PlatformConfiguration/iOSSpecific/StatusBarHiddenMode.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/StatusBarTextColorMode.cs" Link="PlatformConfiguration/iOSSpecific/StatusBarTextColorMode.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/SwipeView.cs" Link="PlatformConfiguration/iOSSpecific/SwipeView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/TabbedPage.cs" Link="PlatformConfiguration/iOSSpecific/TabbedPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/TimePicker.cs" Link="PlatformConfiguration/iOSSpecific/TimePicker.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/TranslucencyMode.cs" Link="PlatformConfiguration/iOSSpecific/TranslucencyMode.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/UIModalPresentationStyle.cs" Link="PlatformConfiguration/iOSSpecific/UIModalPresentationStyle.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/UISearchBarStyle.cs" Link="PlatformConfiguration/iOSSpecific/UISearchBarStyle.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/UIStatusBarAnimation.cs" Link="PlatformConfiguration/iOSSpecific/UIStatusBarAnimation.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/UpdateMode.cs" Link="PlatformConfiguration/iOSSpecific/UpdateMode.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/iOSSpecific/VisualElement.cs" Link="PlatformConfiguration/iOSSpecific/VisualElement.cs" />
+
+        <!-- All -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/macOSSpecific/NavigationPage.cs" Link="PlatformConfiguration/macOSSpecific/NavigationPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/macOSSpecific/NavigationTransitionStyle.cs" Link="PlatformConfiguration/macOSSpecific/NavigationTransitionStyle.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/macOSSpecific/Page.cs" Link="PlatformConfiguration/macOSSpecific/Page.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/macOSSpecific/TabbedPage.cs" Link="PlatformConfiguration/macOSSpecific/TabbedPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/macOSSpecific/TabsStyle.cs" Link="PlatformConfiguration/macOSSpecific/TabsStyle.cs" />
+
+        <!-- All -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/Application.cs" Link="PlatformConfiguration/TizenSpecific/Application.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/Entry.cs" Link="PlatformConfiguration/TizenSpecific/Entry.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/FocusDirection.cs" Link="PlatformConfiguration/TizenSpecific/FocusDirection.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/FontWeight.cs" Link="PlatformConfiguration/TizenSpecific/FontWeight.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/Image.cs" Link="PlatformConfiguration/TizenSpecific/Image.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/ItemsView.cs" Link="PlatformConfiguration/TizenSpecific/ItemsView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/Label.cs" Link="PlatformConfiguration/TizenSpecific/Label.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/NavigationPage.cs" Link="PlatformConfiguration/TizenSpecific/NavigationPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/Page.cs" Link="PlatformConfiguration/TizenSpecific/Page.cs" />
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/ProgressBar.cs" Link="PlatformConfiguration/TizenSpecific/ProgressBar.cs" /> -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/ScrollView.cs" Link="PlatformConfiguration/TizenSpecific/ScrollView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/StyleValues.cs" Link="PlatformConfiguration/TizenSpecific/StyleValues.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/Switch.cs" Link="PlatformConfiguration/TizenSpecific/Switch.cs" />
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/TizenSpecific/VisualElement.cs" Link="PlatformConfiguration/TizenSpecific/VisualElement.cs" /> -->
+
+        <!-- All -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/AccessKeyPlacement.cs" Link="PlatformConfiguration/WindowsSpecific/AccessKeyPlacement.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/Application.cs" Link="PlatformConfiguration/WindowsSpecific/Application.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/CollapseStyle.cs" Link="PlatformConfiguration/WindowsSpecific/CollapseStyle.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/FlyoutPage.cs" Link="PlatformConfiguration/WindowsSpecific/FlyoutPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/InputView.cs" Link="PlatformConfiguration/WindowsSpecific/InputView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/Label.cs" Link="PlatformConfiguration/WindowsSpecific/Label.cs" />
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/ListView.cs" Link="PlatformConfiguration/WindowsSpecific/ListView.cs" /> -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/Page.cs" Link="PlatformConfiguration/WindowsSpecific/Page.cs" />
+        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/RefreshView.cs" Link="PlatformConfiguration/WindowsSpecific/RefreshView.cs" /> -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/SearchBar.cs" Link="PlatformConfiguration/WindowsSpecific/SearchBar.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/TabbedPage.cs" Link="PlatformConfiguration/WindowsSpecific/TabbedPage.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/ToolbarPlacement.cs" Link="PlatformConfiguration/WindowsSpecific/ToolbarPlacement.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/VisualElement.cs" Link="PlatformConfiguration/WindowsSpecific/VisualElement.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/WebView.cs" Link="PlatformConfiguration/WindowsSpecific/WebView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/PlatformConfiguration/WindowsSpecific/WebViewExecutionMode.cs" Link="PlatformConfiguration/WindowsSpecific/WebViewExecutionMode.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/ProgressBar/ProgressBar.cs" Link="ProgressBar/ProgressBar.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/ScrollView/ScrollView.cs" Link="ScrollView/ScrollView.cs" />
+
+        <Compile Include="../../ext/maui/src/Controls/src/Core/SearchBar/SearchBar.cs" Link="SearchBar/SearchBar.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/SearchBar/SearchBar.Mapper.cs" Link="SearchBar/SearchBar.Mapper.cs" />
 
         <!-- All -->
         <Compile Include="../../ext/maui/src/Controls/src/Core/Shapes/ArcSegment.cs" Link="Shapes/ArcSegment.cs" />
@@ -637,15 +764,28 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/StyleSheets/StyleSheetServiceProvider.cs" Link="StyleSheets/StyleSheetServiceProvider.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/StyleSheets/StyleSheetExtensions.cs" Link="StyleSheets/StyleSheetExtensions.cs" />
 
+        <Compile Include="../../ext/maui/src/Controls/src/Core/SwipeView/SwipedEventArgs.cs" Link="SwipeView/SwipedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/SwipeView/SwipeEventArgs.cs" Link="SwipeView/SwipeEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/SwipeView/SwipeItem.cs" Link="SwipeView/SwipeItem.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/SwipeView/SwipeItems.cs" Link="SwipeView/SwipeItems.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/SwipeView/SwipeView.cs" Link="SwipeView/SwipeView.cs" />
+
         <Compile Include="../../ext/maui/src/Controls/src/Core/Switch/Switch.cs" Link="Switch/Switch.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/RadioButton/RadioButton.cs" Link="RadioButton/RadioButton.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/RadioButton/RadioButtonGroup.cs" Link="RadioButton/RadioButtonGroup.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/RadioButton/RadioButtonGroupController.cs" Link="RadioButton/RadioButtonGroupController.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/TimePicker/TimePicker.cs" Link="TimePicker/TimePicker.cs" />
+
         <Compile Include="../../ext/maui/src/Controls/src/Core/DatePicker/DatePicker.cs" Link="DatePicker/DatePicker.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DatePicker/DatePicker.Mapper.cs" Link="DatePicker/DatePicker.Mapper.cs" />
+
         <Compile Include="../../ext/maui/src/Controls/src/Core/CheckBox/CheckedChangedEventArgs.cs" Link="CheckBox/CheckedChangedEventArgs.cs" />
-        <!-- <Compile Include="../../ext/maui/src/Controls/src/Core/CheckBox/CheckBox.cs" Link="CheckBox/CheckBox.cs" /> -->
+        <Compile Include="../../ext/maui/src/Controls/src/Core/CheckBox/CheckBox.cs" Link="CheckBox/CheckBox.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/CheckBox/CheckBox.Mapper.cs" Link="CheckBox/CheckBox.Mapper.cs" />
+
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Stepper/Stepper.cs" Link="Stepper/Stepper.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Stepper/Stepper.Mapper.cs" Link="Stepper/Stepper.Mapper.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/TabbedPage/TabbedPage.cs" Link="TabbedPage/TabbedPage.cs" />
 
@@ -684,6 +824,16 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/InitializationAwareWebView/WebViewInitializedEventArgs.cs" Link="InitializationAwareWebView/WebViewInitializedEventArgs.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/InitializationAwareWebView/WebViewInitializingEventArgs.cs" Link="InitializationAwareWebView/WebViewInitializingEventArgs.cs" />
 
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/PlatformWebViewProcessTerminatedEventArgs.cs" Link="WebView/PlatformWebViewProcessTerminatedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebNavigatedEventArgs.cs" Link="WebView/WebNavigatedEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebNavigatingEventArgs.cs" Link="WebView/WebNavigatingEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebNavigationEventArgs.cs" Link="WebView/WebNavigationEventArgs.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebView.cs" Link="WebView/WebView.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebView.Mapper.cs" Link="WebView/WebView.Mapper.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebViewSource.cs" Link="WebView/WebViewSource.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebViewSourceTypeConverter.cs" Link="WebView/WebViewSourceTypeConverter.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebViewProcessTerminatedEventArgs.cs" Link="WebView/WebViewProcessTerminatedEventArgs.cs" />
+
         <Compile Include="../../ext/maui/src/Controls/src/Core/Xaml/TypeConversionExtensions.cs" Link="Xaml/TypeConversionExtensions.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Xaml/Diagnostics/BindablePropertyDiagnostics.cs" Link="Xaml/Diagnostics/BindablePropertyDiagnostics.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Xaml/Diagnostics/BindingDiagnostics.cs" Link="Xaml/Diagnostics/BindingDiagnostics.cs" />
@@ -696,16 +846,20 @@
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'gnome'">
         <Compile Remove="**/*.GNOME.cs" />
-        <Compile Remove="**/GNOME/*.cs" />
+        <Compile Remove="**/GNOME/**/*.cs" />
         <Compile Remove="**/*.Platform.cs" />
         <None Include="**/*.GNOME.cs" />
-        <None Include="**/GNOME/*.cs" />
+        <None Include="**/GNOME/**/*.cs" />
         <None Include="**/*.Platform.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/Application/Application.Standard.cs" Link="Application/Application.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Element/Element.Standard.cs" Link="Element/Element.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Button/Button.Standard.cs" Link="Button/Button.netruntime.cs" />
+
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/Standard/Extensions/ButtonExtensions.cs" Link="Platform/NETRuntime/Extensions/ButtonExtensions.netruntime.cs" />
+
         <Compile Include="../../ext/maui/src/Controls/src/Core/Label/Label.Standard.cs" Link="Label/Label.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/Core/DatePicker/DatePicker.Standard.cs" Link="DatePicker/DatePicker.netruntime.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/VisualElement/VisualElement.Standard.cs" Link="VisualElement/VisualElement.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/ScrollView/ScrollView.Standard.cs" Link="ScrollView/ScrollView.netruntime.cs" />
@@ -714,6 +868,7 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/ModalNavigationManager/ModalNavigationManager.Standard.cs" Link="Platform/ModalNavigationManager/ModalNavigationManager.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Platform/GestureManager/GesturePlatformManager.Standard.cs" Link="Platform/GestureManager/GesturePlatformManager.netruntime.cs" />
 
+        <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Items/CarouselViewHandler.Standard.cs" Link="Handlers/Items/CarouselViewHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Items/CollectionViewHandler.Standard.cs" Link="Handlers/Items/CollectionViewHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Items/ReorderableItemsViewHandler.Standard.cs" Link="Handlers/Items/ReorderableItemsViewHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Items/GroupableItemsViewHandler.Standard.cs" Link="Handlers/Items/GroupableItemsViewHandler.netruntime.cs" />
@@ -728,13 +883,17 @@
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Shapes/Polyline/PolylineHandler.Standard.cs" Link="Handlers/Shapes/Polyline/PolylineHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Shapes/Rectangle/RectangleHandler.Standard.cs" Link="Handlers/Shapes/Rectangle/RectangleHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/Handlers/Shapes/RoundRectangle/RoundRectangleHandler.Standard.cs" Link="Handlers/Shapes/RoundRectangle/RoundRectangleHandler.netruntime.cs" />
+
+        <Compile Include="../../ext/maui/src/Controls/src/Core/SearchBar/SearchBar.Standard.cs" Link="SearchBar/SearchBar.netruntime.cs" />
+
+        <Compile Include="../../ext/maui/src/Controls/src/Core/WebView/WebView.Standard.cs" Link="WebView/WebView.netruntime.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
         <Compile Remove="**/*.netruntime.cs" />
-        <Compile Remove="**/NETRuntime/*.cs" />
+        <Compile Remove="**/NETRuntime/**/*.cs" />
         <None Include="**/*.netruntime.cs" />
-        <None Include="**/NETRuntime/*.cs" />
+        <None Include="**/NETRuntime/**/*.cs" />
 
         <Compile Include="../../ext/maui/src/Controls/src/Core/VisualElement/VisualElement.Platform.cs" Link="VisualElement/VisualElement.Platform.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/Core/ContentPage/HideSoftInputOnTappedChanged/HideSoftInputOnTappedChangedManager.Platform.cs" Link="ContentPage/HideSoftInputOnTappedChanged/HideSoftInputOnTappedChangedManager.Platform.cs" />

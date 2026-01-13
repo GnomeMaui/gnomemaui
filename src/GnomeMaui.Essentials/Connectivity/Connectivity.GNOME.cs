@@ -27,12 +27,6 @@ partial class ConnectivityImplementation : IConnectivity
 
 	void OnNetworkMonitorChanged(Gio.NetworkMonitor sender, Gio.NetworkMonitor.NetworkChangedSignalArgs args)
 	{
-#if DEBUG
-		Console.Out.WriteLine(new StringBuilder()
-			.AppendLine($"[ConnectivityImplementation][OnNetworkMonitorChanged]")
-			.AppendLine($" - NetworkAvailable: {args.NetworkAvailable}")
-			.ToString());
-#endif
 		OnConnectivityChanged();
 	}
 

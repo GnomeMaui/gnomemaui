@@ -8,9 +8,6 @@
     <PropertyGroup>
         <PackageId>GnomeMaui.Sdk.Manifest</PackageId>
         <PackageVersion>$(GnomeMauiSdkVersion)</PackageVersion>
-
-        <Title>GNOME MAUI .NET workload manifest</Title>
-        <Description>GNOME MAUI workload manifest for .NET MAUI on GNOME.</Description>
     </PropertyGroup>
 
     <ItemGroup>

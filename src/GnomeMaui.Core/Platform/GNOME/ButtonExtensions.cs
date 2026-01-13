@@ -184,14 +184,5 @@ public static class ButtonExtensions
 		//
 		// For text-only buttons (current state), no action needed
 		// as Gtk.Button.Label property is used directly
-
-#if DEBUG
-		Console.Out.WriteLine(new StringBuilder()
-			.AppendLine($"[ButtonExtensions][UpdateContentLayout]")
-			// .AppendLine($" - ContentLayout.Position: {button.ContentLayout.Position}")
-			// .AppendLine($" - ContentLayout.Spacing: {button.ContentLayout.Spacing}")
-			.AppendLine($" - Note: Image support not yet implemented")
-			.ToString());
-#endif
 	}
 }

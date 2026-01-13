@@ -20,13 +20,12 @@ public class WindowRootView : Gtk.Box
 		SetOrientation(Gtk.Orientation.Vertical);
 		SetSpacing(0);
 
-		// _toolbarView = Adw.ToolbarView.New();
-		// Append(_toolbarView);
+		_toolbarView = Adw.ToolbarView.New();
+		Append(_toolbarView);
 
-		// PATCH: Toolbar létrehozás kikommentelve - Shell saját HeaderBar-t használ (Opció B)
 		// Default toolbar for the window
-		// _toolbar = new MauiToolbar();
-		// _toolbarView.AddTopBar(_toolbar);
+		_toolbar = new MauiToolbar();
+		_toolbarView.AddTopBar(_toolbar);
 	}
 
 	// Toolbar handling

@@ -8,7 +8,7 @@ const linters = antfu(
 		jsonc: true,
 		markdown: false,
 		formatters: {
-			css: false,
+			css: true,
 			markdown: false,
 			xml: true,
 		},
@@ -75,6 +75,38 @@ if (antfuFormatterXml) {
 	} as Linter.Config
 	// Add MSBuild config
 	linters.append(msbuildConfig)
+
+	// New MSBuild config creation based on the XML config
+	const xamlConfig = {
+		...antfuFormatterXml,
+		name: 'antfu/formatter/xaml',
+		// Only apply to MSBuild-related files.
+		files: [
+			'**/*.xaml',
+		],
+		rules: {
+			...antfuFormatterXml.rules,
+			'format/prettier': [
+				'error',
+				{
+					...(
+						Array.isArray(antfuFormatterXml.rules?.['format/prettier'])
+						&& antfuFormatterXml.rules?.['format/prettier'].length > 1
+							? antfuFormatterXml.rules?.['format/prettier'][1]
+							: {}
+					),
+					// Extended Prettier config for MSBuild files
+					printWidth: 120,
+					tabWidth: 4,
+					useTabs: true,
+					xmlWhitespaceSensitivity: 'ignore',
+					endOfLine: 'crlf',
+				},
+			],
+		},
+	} as Linter.Config
+	// Add MSBuild config
+	linters.append(xamlConfig)
 }
 
 export default linters

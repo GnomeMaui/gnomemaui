@@ -138,6 +138,15 @@
         <Compile Include="../../ext/maui/src/Core/src/Core/IActivityIndicator.cs" Link="Core/IActivityIndicator.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Core/IButtonStroke.cs" Link="Core/IButtonStroke.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Core/IProgress.cs" Link="Core/IProgress.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/ISwipeItem.cs" Link="Core/ISwipeItem.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/ISwipeItemMenuItem.cs" Link="Core/ISwipeItemMenuItem.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/ISwipeView.cs" Link="Core/ISwipeView.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/ISwipeItems.cs" Link="Core/ISwipeItems.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/ISearchBar.cs" Link="Core/ISearchBar.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/IStepper.cs" Link="Core/IStepper.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/IWebView.cs" Link="Core/IWebView.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/IWebViewSource.cs" Link="Core/IWebViewSource.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Core/IWebViewDelegate.cs" Link="Core/IWebViewDelegate.cs" />
 
         <Compile Include="../../ext/maui/src/Core/src/Debugger/DebuggerDisplayHelpers.cs" Link="Debugger/DebuggerDisplayHelpers.cs" />
 
@@ -253,6 +262,9 @@
         <Compile Include="../../ext/maui/src/Core/src/Handlers/Image/IImageHandler.cs" Link="Handlers/Image/IImageHandler.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/Image/ImageHandler.cs" Link="Handlers/Image/ImageHandler.cs" />
 
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/SearchBar/ISearchBarHandler.cs" Link="Handlers/SearchBar/ISearchBarHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/SearchBar/SearchBarHandler.cs" Link="Handlers/SearchBar/SearchBarHandler.cs" />
+
         <Compile Include="../../ext/maui/src/Core/src/Handlers/ShapeView/IShapeViewHandler.cs" Link="Handlers/ShapeView/IShapeViewHandler.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/ShapeView/ShapeViewHandler.cs" Link="Handlers/ShapeView/ShapeViewHandler.cs" />
 
@@ -273,6 +285,25 @@
 
         <Compile Include="../../ext/maui/src/Core/src/Handlers/ProgressBar/IProgressBarHandler.cs" Link="Handlers/ProgressBar/IProgressBarHandler.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/ProgressBar/ProgressBarHandler.cs" Link="Handlers/ProgressBar/ProgressBarHandler.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/CheckBox/ICheckboxHandler.cs" Link="Handlers/CheckBox/ICheckBoxHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/CheckBox/CheckBoxHandler.cs" Link="Handlers/CheckBox/CheckBoxHandler.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Stepper/IStepperHandler.cs" Link="Handlers/Stepper/IStepperHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Stepper/StepperHandler.cs" Link="Handlers/Stepper/StepperHandler.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/DatePicker/IDatePickerHandler.cs" Link="Handlers/DatePicker/IDatePickerHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/DatePicker/DatePickerHandler.cs" Link="Handlers/DatePicker/DatePickerHandler.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/RadioButton/RadioButtonHandler.cs" Link="Handlers/RadioButton/RadioButtonHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/RadioButton/IRadioButtonHandler.cs" Link="Handlers/RadioButton/IRadioButtonHandler.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/ImageButton/IImageButtonHandler.cs" Link="Handlers/ImageButton/IImageButtonHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/ImageButton/ImageButtonHandler.cs" Link="Handlers/ImageButton/ImageButtonHandler.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/WebView/IWebViewHandler.cs" Link="Handlers/WebView/IWebViewHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/WebView/WebViewHandler.cs" Link="Handlers/WebView/WebViewHandler.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/WebView/WebViewHelper.cs" Link="Handlers/WebView/WebViewHelper.cs" />
 
         <Compile Include="../../ext/maui/src/Core/src/Hosting/IMauiFactory.cs" Link="Hosting/IMauiFactory.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Hosting/IMauiHandlersCollection.cs" Link="Hosting/IMauiHandlersCollection.cs" />
@@ -500,6 +531,16 @@
         <Compile Include="../../ext/maui/src/Core/src/Handlers/ActivityIndicator/ActivityIndicatorHandler.Standard.cs" Link="Handlers/ActivityIndicator/ActivityIndicatorHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/Picker/PickerHandler.Standard.cs" Link="Handlers/Picker/PickerHandler.netruntime.cs" />
         <Compile Include="../../ext/maui/src/Core/src/Handlers/ProgressBar/ProgressBarHandler.Standard.cs" Link="Handlers/ProgressBar/ProgressBarHandler.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/DatePicker/DatePickerHandler.Standard.cs" Link="Handlers/DatePicker/DatePickerHandler.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/RadioButton/RadioButtonHandler.Standard.cs" Link="Handlers/RadioButton/RadioButtonHandler.netruntime.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/SearchBar/SearchBarHandler.Standard.cs" Link="Handlers/SearchBar/SearchBarHandler.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/Stepper/StepperHandler.Standard.cs" Link="Handlers/Stepper/StepperHandler.netruntime.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/CheckBox/CheckBoxHandler.Standard.cs" Link="Handlers/CheckBox/CheckBoxHandler.netruntime.cs" />
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/ImageButton/ImageButtonHandler.Standard.cs" Link="Handlers/ImageButton/ImageButtonHandler.netruntime.cs" />
+
+        <Compile Include="../../ext/maui/src/Core/src/Handlers/WebView/WebViewHandler.Standard.cs" Link="Handlers/WebView/WebViewHandler.netruntime.cs" />
 
         <Compile Include="../../ext/maui/src/Core/src/Dispatching/Dispatcher.Standard.cs" Link="Dispatching/Dispatcher.netruntime.cs" />
 

@@ -42,10 +42,6 @@ public static class CssCache
 				using var reader = new StreamReader(stream);
 				var resetCss = reader.ReadToEnd();
 				_allCss.AppendLine(resetCss);
-#if DEBUG
-				Console.WriteLine("[CssCache] Loaded reset.css:");
-				Console.WriteLine(resetCss);
-#endif
 			}
 		}
 	}
@@ -58,7 +54,6 @@ public static class CssCache
 
 		if (_cache.TryAdd(cssClass, 0))
 		{
-			Console.WriteLine($"Adding CSS:\n{cssClass}");
 			_lock.EnterWriteLock();
 			try
 			{
@@ -79,7 +74,6 @@ public static class CssCache
 
 		if (_cache.TryAdd(css, 0))
 		{
-			Console.WriteLine($"Adding CSS:\n{css}");
 			_lock.EnterWriteLock();
 			try
 			{

@@ -23,8 +23,8 @@ namespace MauiTest1.Layouts
 			else
 			{
 				string colorName = picker.Items[picker.SelectedIndex];
-				FieldInfo colorField = typeof(Colors).GetRuntimeField(colorName);
-				boxView.Color = (Color)(colorField.GetValue(null));
+				FieldInfo? colorField = typeof(Colors).GetRuntimeField(colorName);
+				boxView.Color = colorField?.GetValue(null) as Color ?? Colors.Black;
 			}
 		}
 	}

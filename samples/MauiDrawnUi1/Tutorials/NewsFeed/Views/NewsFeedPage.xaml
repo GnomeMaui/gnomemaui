@@ -1,85 +1,75 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <draw:DrawnUiBasePage
-    x:Class="MauiDrawnUi1.Tutorials.NewsFeed.NewsFeedPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:draw="http://schemas.appomobi.com/drawnUi/2023/draw"
-    xmlns:newsFeed="clr-namespace:MauiDrawnUi1.Tutorials.NewsFeed"
-    xmlns:viewModels="clr-namespace:MauiDrawnUi1.Tutorials.NewsFeed.ViewModels"
-    x:DataType="viewModels:NewsViewModel"
-    Title="Recycled Cells Scroller"
-    x:Name="ThisPage">
+	x:Class="MauiDrawnUi1.Tutorials.NewsFeed.NewsFeedPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:draw="http://schemas.appomobi.com/drawnUi/2023/draw"
+	xmlns:newsFeed="clr-namespace:MauiDrawnUi1.Tutorials.NewsFeed"
+	xmlns:viewModels="clr-namespace:MauiDrawnUi1.Tutorials.NewsFeed.ViewModels"
+	x:DataType="viewModels:NewsViewModel"
+	Title="Recycled Cells Scroller"
+	x:Name="ThisPage"
+>
+	<Grid HorizontalOptions="Fill" VerticalOptions="Fill">
+		<draw:Canvas
+			BackgroundColor="Gainsboro"
+			Gestures="Lock"
+			HorizontalOptions="Fill"
+			RenderingMode="Default"
+			Tag="Main"
+			VerticalOptions="Fill"
+		>
+			<draw:SkiaLayout HorizontalOptions="Fill" Tag="Wrapper" VerticalOptions="Fill">
+				<draw:SkiaScroll
+					x:Name="NewsScroll"
+					Orientation="Vertical"
+					FrictionScrolled="0.5"
+					ChangeVelocityScrolled="1.35"
+					RefreshEnabled="True"
+					RefreshShowDistance="100"
+					RefreshDistanceLimit="120"
+					IsRefreshing="{Binding IsRefreshing}"
+					RefreshCommand="{Binding RefreshCommand}"
+					LoadMoreCommand="{Binding LoadMoreCommand}"
+					LoadMoreOffset="500"
+					HorizontalOptions="Fill"
+					VerticalOptions="Fill"
+				>
+					<draw:SkiaScroll.RefreshIndicator>
+						<newsFeed:AppActivityIndicator UseCache="Operations" />
+					</draw:SkiaScroll.RefreshIndicator>
 
-    <Grid HorizontalOptions="Fill" VerticalOptions="Fill">
+					<draw:SkiaScroll.Header>
+						<draw:SkiaLayer HeightRequest="40" UseCache="Image">
+							<draw:SkiaRichLabel
+								Text="DrawnUI News Feed Tutorial"
+								HorizontalOptions="Center"
+								VerticalOptions="Center"
+							/>
+						</draw:SkiaLayer>
+					</draw:SkiaScroll.Header>
 
-        <draw:Canvas
-            BackgroundColor="Gainsboro"
-            Gestures="Lock"
-            HorizontalOptions="Fill"
-            RenderingMode="Accelerated"
-            Tag="Main"
-            VerticalOptions="Fill">
+					<draw:SkiaScroll.Footer>
+						<draw:SkiaLayer HeightRequest="50" />
+					</draw:SkiaScroll.Footer>
 
-            <draw:SkiaLayout
-                HorizontalOptions="Fill"
-                Tag="Wrapper"
-                VerticalOptions="Fill">
+					<draw:SkiaLayout
+						x:Name="NewsStack"
+						Type="Column"
+						ItemsSource="{Binding NewsItems}"
+						RecyclingTemplate="Enabled"
+						MeasureItemsStrategy="MeasureVisible"
+						ReserveTemplates="10"
+						VirtualisationInflated="200"
+						Spacing="0"
+						ItemTemplateType="{x:Type newsFeed:NewsCell}"
+						HorizontalOptions="Fill"
+					/>
+				</draw:SkiaScroll>
 
-                <draw:SkiaScroll
-                    x:Name="NewsScroll"
-                    Orientation="Vertical"
-                    FrictionScrolled="0.5"
-                    ChangeVelocityScrolled="1.35"
+				<!-- uncomment for debug info -->
 
-                    RefreshEnabled="True"
-                    RefreshShowDistance="100"
-                    RefreshDistanceLimit="120"
-                    IsRefreshing="{Binding IsRefreshing}"
-                    RefreshCommand="{Binding RefreshCommand}"
-
-                    LoadMoreCommand="{Binding LoadMoreCommand}"
-                    LoadMoreOffset="500"
-                    HorizontalOptions="Fill"
-                    VerticalOptions="Fill">
-
-                    <draw:SkiaScroll.RefreshIndicator>
-                        <newsFeed:AppActivityIndicator UseCache="Operations"/>
-                    </draw:SkiaScroll.RefreshIndicator>
-
-                    <draw:SkiaScroll.Header>
-
-                        <draw:SkiaLayer HeightRequest="40" UseCache="Image">
-                            <draw:SkiaRichLabel
-                                Text="DrawnUI News Feed Tutorial"
-                                HorizontalOptions="Center" VerticalOptions="Center" />
-                        </draw:SkiaLayer>
-
-                    </draw:SkiaScroll.Header>
-
-                    <draw:SkiaScroll.Footer>
-
-                        <draw:SkiaLayer HeightRequest="50"/>
-
-                    </draw:SkiaScroll.Footer>
-
-                    <draw:SkiaLayout
-                        x:Name="NewsStack"
-                        Type="Column"
-                        ItemsSource="{Binding NewsItems}"
-                        RecyclingTemplate="Enabled"
-                        MeasureItemsStrategy="MeasureVisible"
-                        ReserveTemplates="10"
-                        VirtualisationInflated="200"
-                        Spacing="0"
-                        ItemTemplateType="{x:Type newsFeed:NewsCell}"
-                        HorizontalOptions="Fill" />
-
-                </draw:SkiaScroll>
-
-                <!-- uncomment for debug info -->
-
-                <!--<draw:SkiaLabel
+				<!--<draw:SkiaLabel
                     UseCache="Operations"
                     Margin="8"
                     Padding="2"
@@ -92,20 +82,18 @@
                     VerticalOptions="End"
                     ZIndex="100" />-->
 
-                <!-- uncomment for FPS info -->
+				<!-- uncomment for FPS info -->
 
-                <draw:SkiaLabelFps
-                    Margin="0,0,4,24"
-                    BackgroundColor="DarkRed"
-                    HorizontalOptions="End"
-                    Rotation="-45"
-                    TextColor="White"
-                    VerticalOptions="End"
-                    ZIndex="100"/>
-
-            </draw:SkiaLayout>
-
-        </draw:Canvas>
-    </Grid>
-
+				<draw:SkiaLabelFps
+					Margin="0,0,4,24"
+					BackgroundColor="DarkRed"
+					HorizontalOptions="End"
+					Rotation="-45"
+					TextColor="White"
+					VerticalOptions="End"
+					ZIndex="100"
+				/>
+			</draw:SkiaLayout>
+		</draw:Canvas>
+	</Grid>
 </draw:DrawnUiBasePage>

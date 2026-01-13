@@ -10,6 +10,12 @@
 		<BoxView Color="Silver" AbsoluteLayout.LayoutBounds="0, 20, 200, 5" />
 		<BoxView Color="Silver" AbsoluteLayout.LayoutBounds="10, 0, 5, 65" />
 		<BoxView Color="Silver" AbsoluteLayout.LayoutBounds="20, 0, 5, 65" />
-		<Label Text="Stylish Header" FontSize="24" AbsoluteLayout.LayoutBounds="30, 25" />
+		<Label
+			Text="Stylish Header"
+			Style="{StaticResource SubHeadline}"
+			AbsoluteLayout.LayoutBounds="30, 25"
+			FontSize="20"
+			LineBreakMode="NoWrap"
+		/>
 	</AbsoluteLayout>
 </ContentPage>

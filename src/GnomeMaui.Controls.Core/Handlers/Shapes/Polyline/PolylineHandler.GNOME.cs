@@ -7,7 +7,7 @@ namespace Microsoft.Maui.Controls.Handlers;
 
 public partial class PolylineHandler
 {
-	protected override void ConnectHandler(SkiaGLGraphicsView platformView)
+	protected override void ConnectHandler(SkiaGraphicsView platformView)
 	{
 		base.ConnectHandler(platformView);
 
@@ -15,7 +15,7 @@ public partial class PolylineHandler
 			polyline.Points.CollectionChanged += OnPointsCollectionChanged;
 	}
 
-	protected override void DisconnectHandler(SkiaGLGraphicsView platformView)
+	protected override void DisconnectHandler(SkiaGraphicsView platformView)
 	{
 		if (VirtualView is Polyline polyline)
 			polyline.Points.CollectionChanged -= OnPointsCollectionChanged;

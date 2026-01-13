@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using SkiaSharp;
 using System;
 using System.IO;
 using System.Threading;
@@ -8,10 +9,10 @@ namespace Microsoft.Maui;
 
 public partial class StreamImageSourceService
 {
-	public override Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
+	public override Task<IImageSourceServiceResult<SKImage>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
 		GetImageAsync((IStreamImageSource)imageSource, cancellationToken);
 
-	public async Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IStreamImageSource imageSource, CancellationToken cancellationToken = default)
+	public async Task<IImageSourceServiceResult<SKImage>?> GetImageAsync(IStreamImageSource imageSource, CancellationToken cancellationToken = default)
 	{
 		if (imageSource.IsEmpty)
 			return null;
@@ -37,18 +38,7 @@ public partial class StreamImageSourceService
 				return null;
 			}
 
-#if DEBUG
-			Console.Out.WriteLine($"[StreamImageSourceService][GetImageAsync] SKImage created: {skImage.Width}x{skImage.Height}");
-#endif
-
-			var view = new SKImageView();
-			view.Image = skImage;
-
-#if DEBUG
-			Console.Out.WriteLine($"[StreamImageSourceService][GetImageAsync] SKImageView created, Image property set");
-#endif
-
-			return new ImageSourceServiceResult(view);
+			return new ImageSourceServiceResult(skImage);
 		}
 		catch (Exception ex)
 		{

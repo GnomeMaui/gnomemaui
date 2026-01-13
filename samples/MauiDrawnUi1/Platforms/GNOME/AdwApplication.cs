@@ -5,7 +5,11 @@ namespace MauiDrawnUi1;
 
 class AdwApplication : MauiAdwApplication
 {
-	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+	protected override MauiApp CreateMauiApp()
+		=> MauiProgram.CreateMauiApp();
 
-	public AdwApplication() : base("com.companyname.MauiDrawnUi1") { }
+	public AdwApplication()
+		: base("com.companyname.MauiDrawnUi1", typeof(AdwApplication).Assembly)
+	{
+	}
 }

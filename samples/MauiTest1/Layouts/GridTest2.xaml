@@ -18,22 +18,56 @@
 		</Grid.ColumnDefinitions>
 
 		<BoxView Color="AliceBlue" />
-		<Label Text="Upper left" HorizontalOptions="Start" VerticalOptions="Start" />
+		<Label Text="Upper left" HorizontalOptions="Start" VerticalOptions="Start" TextColor="Yellow" />
 		<BoxView Grid.Column="1" Color="LightSkyBlue" />
-		<Label Grid.Column="1" Text="Upper center" HorizontalOptions="Center" VerticalOptions="Start" />
+		<Label
+			Grid.Column="1"
+			Text="Upper center"
+			HorizontalOptions="Center"
+			VerticalOptions="Start"
+			TextColor="Yellow"
+		/>
 		<BoxView Grid.Column="2" Color="CadetBlue" />
-		<Label Grid.Column="2" Text="Upper right" HorizontalOptions="End" VerticalOptions="Start" />
+		<Label Grid.Column="2" Text="Upper right" HorizontalOptions="End" VerticalOptions="Start" TextColor="Yellow" />
 		<BoxView Grid.Row="1" Color="CornflowerBlue" />
-		<Label Grid.Row="1" Text="Center left" HorizontalOptions="Start" VerticalOptions="Center" />
+		<Label Grid.Row="1" Text="Center left" HorizontalOptions="Start" VerticalOptions="Center" TextColor="Yellow" />
 		<BoxView Grid.Row="1" Grid.Column="1" Color="DodgerBlue" />
-		<Label Grid.Row="1" Grid.Column="1" Text="Center center" HorizontalOptions="Center" VerticalOptions="Center" />
+		<Label
+			Grid.Row="1"
+			Grid.Column="1"
+			Text="Center center"
+			HorizontalOptions="Center"
+			VerticalOptions="Center"
+			TextColor="Yellow"
+		/>
 		<BoxView Grid.Row="1" Grid.Column="2" Color="DarkSlateBlue" />
-		<Label Grid.Row="1" Grid.Column="2" Text="Center right" HorizontalOptions="End" VerticalOptions="Center" />
+		<Label
+			Grid.Row="1"
+			Grid.Column="2"
+			Text="Center right"
+			HorizontalOptions="End"
+			VerticalOptions="Center"
+			TextColor="Yellow"
+		/>
 		<BoxView Grid.Row="2" Color="SteelBlue" />
-		<Label Grid.Row="2" Text="Lower left" HorizontalOptions="Start" VerticalOptions="End" />
+		<Label Grid.Row="2" Text="Lower left" HorizontalOptions="Start" VerticalOptions="End" TextColor="Yellow" />
 		<BoxView Grid.Row="2" Grid.Column="1" Color="LightBlue" />
-		<Label Grid.Row="2" Grid.Column="1" Text="Lower center" HorizontalOptions="Center" VerticalOptions="End" />
+		<Label
+			Grid.Row="2"
+			Grid.Column="1"
+			Text="Lower center"
+			HorizontalOptions="Center"
+			VerticalOptions="End"
+			TextColor="Yellow"
+		/>
 		<BoxView Grid.Row="2" Grid.Column="2" Color="BlueViolet" />
-		<Label Grid.Row="2" Grid.Column="2" Text="Lower right" HorizontalOptions="End" VerticalOptions="End" />
+		<Label
+			Grid.Row="2"
+			Grid.Column="2"
+			Text="Lower right"
+			HorizontalOptions="End"
+			VerticalOptions="End"
+			TextColor="Yellow"
+		/>
 	</Grid>
 </ContentPage>

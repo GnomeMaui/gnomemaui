@@ -10,10 +10,6 @@
 
         <RootNamespace>SkiaSharp.Views.Maui.Controls</RootNamespace>
         <AssemblyName>GnomeMaui.SkiaSharp.Controls</AssemblyName>
-
-        <Title>SkiaSharp Views for GTK with GirCore</Title>
-        <Description>SkiaSharp rendering support for GTK4 applications using GirCore bindings. Provides SKDrawingArea widget for hardware-accelerated 2D graphics and custom drawing in Linux desktop applications with seamless Cairo integration.</Description>
-        <PackageTags>skiasharp;gtk;cairo;graphics;rendering;2d;gircore;linux;desktop;drawing;canvas;hardware-acceleration;widget;drawingarea;custom-controls</PackageTags>
         <PackageId>GnomeMaui.SkiaSharp.Controls</PackageId>
 
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>

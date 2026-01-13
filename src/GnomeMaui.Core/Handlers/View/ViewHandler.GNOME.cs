@@ -17,7 +17,18 @@ public partial class ViewHandler
 		if (toolbarElement.Toolbar != null)
 		{
 			var toolBar = toolbarElement.Toolbar.ToPlatform(handler.MauiContext);
-			handler.MauiContext.GetNavigationRootManager().SetToolbar((MauiToolbar?)toolBar);
+
+			// First try to set toolbar directly on the platform view if it's an IToolbarContainer
+			if (handler is IPlatformViewHandler platformViewHandler &&
+				platformViewHandler.PlatformView is IToolbarContainer toolbarContainer)
+			{
+				toolbarContainer.SetToolbar((MauiToolbar)toolBar!);
+			}
+			else
+			{
+				// Otherwise set it on the NavigationRootManager
+				handler.MauiContext.GetNavigationRootManager().SetToolbar((MauiToolbar?)toolBar);
+			}
 		}
 	}
 

@@ -44,12 +44,6 @@ namespace Microsoft.Maui.Platform
 		{
 			// TODO: Implement animation support for GNOME
 			// SKImage.AnimatedImageFormat can be used for animated images (GIF, WebP)
-#if DEBUG
-			if (image.IsAnimationPlaying)
-			{
-				Console.Out.WriteLine($"[SkImageViewExtensions][UpdateIsAnimationPlaying] Animation not yet supported");
-			}
-#endif
 		}
 	}
 }

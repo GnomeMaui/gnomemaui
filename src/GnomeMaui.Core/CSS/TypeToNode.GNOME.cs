@@ -12,6 +12,9 @@ public static class TypeToNode
 		["Image"] = ("picture", null),
 		["Switch"] = ("switch", null),
 		["Slider"] = ("scale", null),
+		["Entry"] = ("entry", null),
+		["SearchBar"] = ("entry", "search"),
+		["CheckBox"] = ("checkbutton", null),
 	};
 
 	public static bool TryGetNodeName(string typeName, out (string nodeName, string? autoStyleClass) mapping)

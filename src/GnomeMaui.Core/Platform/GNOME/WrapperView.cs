@@ -7,7 +7,7 @@ namespace Microsoft.Maui.Platform;
 
 public partial class WrapperView : Gtk.Grid
 {
-	SkiaGLGraphicsView _drawableCanvas;
+	SkiaGraphicsView _drawableCanvas;
 	Gtk.Widget? _child;
 	MauiDrawable _mauiDrawable;
 	bool _disposed;
@@ -15,7 +15,7 @@ public partial class WrapperView : Gtk.Grid
 	public WrapperView()
 	{
 		_mauiDrawable = new MauiDrawable();
-		_drawableCanvas = new SkiaGLGraphicsView
+		_drawableCanvas = new SkiaGraphicsView
 		{
 			Drawable = _mauiDrawable,
 			Vexpand = true,

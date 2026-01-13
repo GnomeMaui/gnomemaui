@@ -9,13 +9,12 @@ namespace Microsoft.Maui.Graphics.Platform;
 /// </summary>
 public class SKGLArea : GLArea, IDisposable
 {
-	const int GL_FRAMEBUFFER_BINDING = 0x8CA6;
-	const int GL_STENCIL_BITS = 0x0D57;
-	const int GL_SAMPLES = 0x80A9;
 	const SKColorType ColorType = SKColorType.Rgba8888;
 	const GRSurfaceOrigin SurfaceOrigin = GRSurfaceOrigin.BottomLeft;
+
 	bool ignorePixelScaling;
 	bool enableRenderLoop;
+	uint _lastFramebufferId = 0;
 
 	GRContext? _context;
 	GRBackendRenderTarget? _renderTarget;
@@ -25,6 +24,10 @@ public class SKGLArea : GLArea, IDisposable
 	{
 		Vexpand = true;
 		Hexpand = true;
+
+		// KRITIKUS FIX #1: AutoRender = false
+		// ListView recycling során ez megelőzi a race condition-öket
+		AutoRender = false;
 
 		OnRender += RenderHandler;
 		OnRealize += RealizeHandler;
@@ -44,28 +47,14 @@ public class SKGLArea : GLArea, IDisposable
 		}
 	}
 
-	/// <summary>
-	/// Occurs when the GL area needs to be repainted.
-	/// </summary>
 	public event EventHandler<SKPaintGLSurfaceEventArgs>? PaintSurface;
 
-	/// <summary>
-	/// Gets the size of the canvas.
-	/// </summary>
 	public SKSize CanvasSize => new(GetAllocatedWidth(), GetAllocatedHeight());
 
 	public GRContext GRContext => _context!;
 
-
-	/// <summary>
-	/// Invalidates the GL area, causing it to be redrawn.
-	/// </summary>
 	public void Invalidate() => QueueRender();
 
-	/// <summary>
-	/// Raises the PaintSurface event.
-	/// </summary>
-	/// <param name="e">The <see cref="SKPaintGLSurfaceEventArgs"/> instance containing the event data.</param>
 	protected virtual void OnPaintSurface(SKPaintGLSurfaceEventArgs e) => PaintSurface?.Invoke(this, e);
 
 	void RealizeHandler(object? sender, EventArgs e)
@@ -74,61 +63,62 @@ public class SKGLArea : GLArea, IDisposable
 		_context = GRContext.CreateGl(GRGlInterface.CreateGles(EGL.GetProcAddress));
 		if (_context == null)
 		{
-			Console.Error.WriteLine("[SKGLArea] Failed to create GRContext");
+			return;
 		}
+
+		// KRITIKUS FIX #2: Resource cache limit
+		// Megelőzi a memória túlcsordulást sok kép esetén
+		_context.SetResourceCacheLimit(1024 * 1024 * 64); // 64MB
 	}
 
 	bool RenderHandler(GLArea sender, RenderSignalArgs args)
 	{
+		MakeCurrent();
+
 		if (_context == null)
-		{
 			return false;
-		}
 
 		var width = GetAllocatedWidth();
 		var height = GetAllocatedHeight();
 
 		if (width <= 0 || height <= 0)
-		{
 			return false;
-		}
 
-		if (_surface == null || _surface.Canvas.DeviceClipBounds.Width != width || _surface.Canvas.DeviceClipBounds.Height != height)
+		// KRITIKUS FIX #3: Framebuffer ID tracking
+		// Query current framebuffer ID
+		int[] fbo = new int[1];
+		GL.GetIntegerv(GL.GL_FRAMEBUFFER_BINDING, fbo);
+		uint currentFboId = (uint)fbo[0];
+
+		// Ha az FBO ID megváltozott, újra kell építeni a surface-t
+		// Ez történik ListView recycling során
+		if (_surface == null ||
+			_renderTarget == null ||
+			_surface.Canvas.DeviceClipBounds.Width != width ||
+			_surface.Canvas.DeviceClipBounds.Height != height ||
+			_lastFramebufferId != currentFboId)
 		{
 			_surface?.Dispose();
 			_renderTarget?.Dispose();
 
-			// Query framebuffer ID
-			int[] fbo = new int[1];
-			GL.GetIntegerv(GL_FRAMEBUFFER_BINDING, fbo);
-
-			// Query stencil bits
 			int[] stencil = new int[1];
-			GL.GetIntegerv(GL_STENCIL_BITS, stencil);
+			GL.GetIntegerv(GL.GL_STENCIL_BITS, stencil);
 
-			// Query samples and limit to max supported
 			int[] samples = new int[1];
-			GL.GetIntegerv(GL_SAMPLES, samples);
+			GL.GetIntegerv(GL.GL_SAMPLES, samples);
 
 			var maxSamples = _context.GetMaxSurfaceSampleCount(ColorType);
 			if (samples[0] > maxSamples)
-			{
 				samples[0] = maxSamples;
-			}
 
-			var framebuffer = new GRGlFramebufferInfo((uint)fbo[0], ColorType.ToGlSizedFormat());
+			var framebuffer = new GRGlFramebufferInfo(currentFboId, ColorType.ToGlSizedFormat());
 			_renderTarget = new GRBackendRenderTarget(width, height, samples[0], stencil[0], framebuffer);
 			_surface = SKSurface.Create(_context, _renderTarget, SurfaceOrigin, ColorType);
 
 			if (_surface == null)
-			{
 				return false;
-			}
-		}
 
-		if (_renderTarget == null)
-		{
-			return false;
+			_lastFramebufferId = currentFboId;
 		}
 
 		var canvas = _surface.Canvas;
@@ -142,21 +132,34 @@ public class SKGLArea : GLArea, IDisposable
 
 		canvas.Flush();
 		_context.Flush();
-		_context.PurgeResources();
+
+		// KRITIKUS FIX #4: GL.Finish()
+		// Biztosítja hogy minden GPU parancs végrehajtódjon
+		GL.Finish();
+
+		// KRITIKUS FIX #5: PurgeUnlockedResources(true) vs PurgeResources()
+		// Csak a régi, nem használt erőforrásokat törli, nem az aktív texture-öket
+		_context.PurgeUnlockedResources(true);
 
 		return true;
 	}
 
 	void UnrealizeHandler(object? sender, EventArgs e)
 	{
-		MakeCurrent();
+		if (GetRealized())
+			MakeCurrent();
 
 		_surface?.Dispose();
 		_surface = null;
 		_renderTarget?.Dispose();
 		_renderTarget = null;
-		_context?.Dispose();
-		_context = null;
+
+		// KRITIKUS FIX #6: Context-et NEM dispose-oljuk unrealize-nél
+		// ListView újrahasználhatja ugyanazt a context-et
+		_context?.PurgeResources();
+		_context?.Flush();
+
+		_lastFramebufferId = 0;
 	}
 
 	uint _renderLoopTickId;
@@ -168,7 +171,8 @@ public class SKGLArea : GLArea, IDisposable
 			{
 				_renderLoopTickId = AddTickCallback((widget, frameClock) =>
 				{
-					QueueRender();
+					if (GetVisible() && GetRealized() && GetMapped())
+						QueueRender();
 					return GLib.Constants.SOURCE_CONTINUE;
 				});
 			}
@@ -183,7 +187,6 @@ public class SKGLArea : GLArea, IDisposable
 		}
 	}
 
-	// TODO : implement proper DPI handling
 	public bool IgnorePixelScaling
 	{
 		get => ignorePixelScaling;
@@ -205,8 +208,14 @@ public class SKGLArea : GLArea, IDisposable
 		OnRender -= RenderHandler;
 		OnRealize -= RealizeHandler;
 		OnUnrealize -= UnrealizeHandler;
+
 		UnrealizeHandler(this, EventArgs.Empty);
+
+		// Most már dispose-olhatjuk a context-et
+		_context?.Dispose();
+		_context = null;
+
 		base.Dispose();
-		//GC.SuppressFinalize(this);
+		GC.SuppressFinalize(this);
 	}
 }

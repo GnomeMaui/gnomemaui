@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+	x:Class="MauiTest1.GnomeMauiShip"
+	Title="GNOME MAUI .NET"
+>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="400" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="400" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<Image
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			Grid.Column="0"
+			Grid.ColumnSpan="3"
+			Source="Images/Background3.jpg"
+			Aspect="AspectFill"
+			HorizontalOptions="FillAndExpand"
+			VerticalOptions="FillAndExpand"
+			Opacity="0.6"
+		/>
+
+		<Label
+			Grid.Row="0"
+			Grid.Column="0"
+			Grid.ColumnSpan="3"
+			HorizontalOptions="Center"
+			VerticalOptions="Center"
+			TextColor="Beige"
+			Text="GNOME MAUI .NET"
+			Style="{StaticResource Headline}"
+		/>
+
+		<skia:SKGLView
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			Grid.Column="0"
+			Grid.ColumnSpan="3"
+			PaintSurface="OnStarsPaintSurface"
+			HasRenderLoop="True"
+			IgnorePixelScaling="True"
+		/>
+
+		<Image
+			Grid.Row="1"
+			Grid.Column="1"
+			Source="Images/GnomeMauiShip.png"
+			Aspect="AspectFit"
+			HorizontalOptions="FillAndExpand"
+			VerticalOptions="FillAndExpand"
+		/>
+	</Grid>
+</ContentPage>

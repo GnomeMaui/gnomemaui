@@ -46,6 +46,7 @@
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/GeneratorHelpers.cs" Link="GeneratorHelpers.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/IAssemblySymbolExtensions.cs" Link="IAssemblySymbolExtensions.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/SourceGen/IKnownMarkupValueProvider.cs" Link="IKnownMarkupValueProvider.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/IMethodSymbolExtensions.cs" Link="IMethodSymbolExtensions.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/ISymbolExtensions.cs" Link="ISymbolExtensions.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/ITypeSymbolExtensions.Maui.cs" Link="ITypeSymbolExtensions.Maui.cs" />
@@ -63,6 +64,7 @@
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/SGRootNode.cs" Link="SGRootNode.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/ServiceProviderExtensions.cs" Link="ServiceProviderExtensions.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/SetPropertyHelpers.cs" Link="SetPropertyHelpers.cs" />
+        <Compile Include="../../ext/maui/src/Controls/src/SourceGen/SetterValueProvider.cs" Link="SetterValueProvider.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/SourceGenContext.cs" Link="SourceGenContext.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/SourceGenContextExtensions.cs" Link="SourceGenContextExtensions.cs" />
         <Compile Include="../../ext/maui/src/Controls/src/SourceGen/TrackingNames.cs" Link="TrackingNames.cs" />

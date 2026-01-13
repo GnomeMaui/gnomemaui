@@ -1,37 +1,74 @@
 # Development Environment Setup for GNOME MAUI .NET on Linux
 
+The development environment currently does not support Flatpak, Snap, and similar packages. These are isolated environments. Use native Linux installation. You will find instructions below.
+
+The development environment requires a minimum of GNOME 48.
+
+## Environment Variables
+
+Two mandatory environment variables must be set. The documentation and the project use these variables to determine the location of the development environment:
+
+- GNOMEMAUIROOT - the root directory of GNOME MAUI .NET. This is where the linked projects and source code will be placed. This can be freely changed.
+- GNOMEMAUI - the development environment of GNOME MAUI .NET. This is where we clone the development environment.
+
+Add the following lines to the end of your `.bashrc`:
+
+```bash
+# Freely changeable location
+export GNOMEMAUIROOT=$HOME/gnomemaui
+
+# Mandatory variable, cannot be changed
+export GNOMEMAUI=$GNOMEMAUIROOT/gnomemaui
+```
+
 > [!CAUTION]
-> The development environment can currently only be set up on Linux systems according to the instructions described here. It is very important to follow the steps exactly, step by step; otherwise, the build process will fail.
+> You need to log out and back in for the environment variables to take effect!
 
-![Open Ptyxis terminal](/assets/PtyxisIcon.png)
+## Install the required dependencies
 
-This directory can be located anywhere and can have any name, but for the sake of example we will use `$HOME/gnomemaui` from here on:
+### Supported Operating Systems
+
+- Arch Linux
+- Debian 13
+- Fedora 43
+- OpenSUSE Tumbleweed
+- Ubuntu 25.10
+
+Follow the instructions found here:
+
+[https://github.com/czirok/devenv?tab=readme-ov-file#dependencies](https://github.com/czirok/devenv?tab=readme-ov-file#dependencies)
+
+## Setting up the development environment
+
+Open Ptyxis terminal.
+
+Create the GNOMEMAUIROOT directory:
 
 ```bash
-mkdir $HOME/gnomemaui
+mkdir $GNOMEMAUIROOT
 ```
 
 ```bash
-cd $HOME/gnomemaui
+cd $GNOMEMAUIROOT
 ```
 
-Clone the repository:
+Clone the GNOME MAUI repository:
 
 ```bash
 git clone https://github.com/gnomemaui/gnomemaui.git
 ```
 
 ```bash
-cd gnomemaui
+cd $GNOMEMAUI
 ```
 
 Download devenv
 
 ```bash
-wget https://github.com/czirok/devenv/releases/download/v2025.12.24/devenv.tar.bz2
+wget https://github.com/czirok/devenv/releases/download/v2026.01.13/devenv.tar.bz2
 ```
 
-Safe extraction
+Safe extract the archive:
 
 ```bash
 tar xjfv devenv.tar.bz2 --skip-old-files
@@ -53,7 +90,6 @@ If you see that everything is checked, then everything is fine. (This example wa
 [✓] Visual Studio Code found (version: 1.107.1)
 [✓] Ptyxis found (version: Ptyxis 49.2)
 [✓] All dependencies are installed!
-
 ```
 
 If something is not installed, you can find the documentation required for installation here: [devenv](https://github.com/czirok/devenv?tab=readme-ov-file#dependencies)
@@ -91,7 +127,7 @@ You should see this or something similar:
 ```
 
 > [!CAUTION]
-> **VERY IMPORTANT!** The entire GNOME MAUI development environment is built on the `$GNOMEMAUI` variable. Log out of GNOME now and log back in so that the GNOMEMAUI environment variable takes effect! Then return here.
+> You need to log out again and back in for the environment variables to take effect!
 
 ## Next step
 

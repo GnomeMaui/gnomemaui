@@ -1,9 +1,4 @@
-using Adw;
-using Gtk;
 using Microsoft.Maui.Controls.Handlers;
-using Microsoft.Maui.Graphics;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using GColor = Microsoft.Maui.Graphics.Color;
@@ -12,25 +7,28 @@ namespace Microsoft.Maui.Controls.Platform;
 
 public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 {
-	public readonly GColor DefaultBackgroundColor = new GColor(1f, 1f, 1f, 1f);
+	public readonly GColor DefaultBackgroundColor = new(1f, 1f, 1f, 1f);
 
-	Adw.OverlaySplitView _splitView;
-	Gtk.Box? _sidebarBox;
-	Gtk.Box? _contentBox;
+	readonly Adw.OverlaySplitView _splitView;
+	readonly Gtk.Box _sidebarBox;
+	readonly Gtk.Box _contentBox;
+	readonly Gtk.Box _contentInnerBox;
+	readonly Gtk.ToggleButton _flyoutToggleButton = default!;
 
-	// Navbar/HeaderBar components
-	Adw.ToolbarView? _sidebarToolbarView;
-	Adw.HeaderBar? _sidebarHeaderBar;
-	Adw.ToolbarView? _contentToolbarView;
-	Adw.HeaderBar? _contentHeaderBar;
-	Gtk.Box? _contentInnerBox;
-	Gtk.ToggleButton _flyoutToggleButton = default!;
-	Gtk.Button? _sidebarCloseButton;
+	Adw.Breakpoint? _autoFlyoutBreakpoint;
 
+	MauiToolbar? _contentToolbar;
 	View? _headerView;
+	Gtk.Widget? _headerPlatformView;
+	View? _footerView;
+	Gtk.Widget? _footerPlatformView;
 	FlyoutHeaderBehavior _headerBehavior;
 
+	Gtk.ScrolledWindow? _sidebarScrolledWindow;
+	Gtk.Box? _sidebarScrollableBox;
+
 	IView? _flyoutView;
+	FlyoutBehavior _currentFlyoutBehavior = FlyoutBehavior.Flyout;
 
 	ShellItemHandler? _currentItemHandler;
 	SearchHandler? _currentSearchHandler;
@@ -42,8 +40,8 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 
 	Gtk.ListBox? _flyoutListBox;
 	Element? _currentSelectedItem;
-	List<List<Element>> _cachedGroups = new List<List<Element>>();
-	List<Element> _items = new List<Element>();
+	List<List<Element>> _cachedGroups = [];
+	readonly List<Element> _items = [];
 
 	protected Shell? Element { get; set; }
 
@@ -65,115 +63,67 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 		// Create the overlay split view
 		_splitView = Adw.OverlaySplitView.New();
 
-		// Sidebar setup - directly without NavigationPage wrapper
+		// Sidebar box
 		_sidebarBox = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
+		_sidebarBox.Hexpand = true;
+		_sidebarBox.Vexpand = true;
+		_sidebarBox.Halign = Gtk.Align.Fill;
+		_sidebarBox.Valign = Gtk.Align.Fill;
 
-		// Sidebar setup - with ToolbarView wrapper (like Navbar in TestGnome1)
-		_sidebarBox = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
+		_splitView.SetSidebar(_sidebarBox);
 
-		// Create ToolbarView + HeaderBar for sidebar
-		_sidebarToolbarView = Adw.ToolbarView.New();
-		_sidebarHeaderBar = Adw.HeaderBar.New();
-		_sidebarHeaderBar.SetTitleWidget(Gtk.Label.New("Menu"));
-		_sidebarToolbarView.AddTopBar(_sidebarHeaderBar);
-		_sidebarToolbarView.SetContent(_sidebarBox);
-
-		_splitView.SetSidebar(_sidebarToolbarView);
-
-		// Content setup - with ToolbarView wrapper
+		// Content setup - global toolbar will be added directly (no wrapper)
 		_contentBox = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
-
-		// Create ToolbarView + HeaderBar for content
-		_contentToolbarView = Adw.ToolbarView.New();
-		_contentHeaderBar = Adw.HeaderBar.New();
-		_contentToolbarView.AddTopBar(_contentHeaderBar);
 
 		// Create inner box for actual content
 		_contentInnerBox = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
-		_contentToolbarView.SetContent(_contentInnerBox);
-
-		_contentBox.Append(_contentToolbarView);
 		_splitView.SetContent(_contentBox);
 
 		// Enable gesture support
 		_splitView.SetEnableShowGesture(true);
 		_splitView.SetEnableHideGesture(true);
 
-		// Initial state - sidebar OPEN by default (like TestGnome1 reference)
-		_splitView.SetShowSidebar(true);
-		_splitView.SetCollapsed(false);
-		_isOpen = true; // Sync internal state BEFORE creating toggle button
+		// Initial state - sidebar CLOSED by default (FlyoutIsPresented will control actual state)
+		// collapsed=true means overlay mode (sidebar on top of content, like Windows)
+		_splitView.SetCollapsed(true);
+		_splitView.SetShowSidebar(false);
+		_isOpen = false; // Sync internal state BEFORE creating toggle button
 
-		// Create and add toggle button AFTER split view initialization
+		// Create toggle button (will be added to global toolbar in SetElement)
 		_flyoutToggleButton = CreateFlyoutToggleButton();
-		_contentHeaderBar.PackStart(_flyoutToggleButton);
 
-		// Create sidebar close button (visible only in mobile mode)
-		_sidebarCloseButton = CreateSidebarCloseButton();
-		_sidebarHeaderBar.PackStart(_sidebarCloseButton);
-
-		// Monitor show-sidebar property changes
-		// REF: Program.cs, sor 59-84
-		// shell.Native.OnNotify += (obj, prop) =>
-		// {
-		//     var name = prop.Pspec.GetName();
-		//     if (name == "show-sidebar")
-		//     {
-		//         shellToggleButton.Active = shell.ShowSidebar;
-		//         shell.IsUpdating = false;
-		//     }
-		//     else if (!initialSelected && (name == "root" || name == "parent"))
-		//     {
-		//         flyoutItems.SelectRow(flyoutItems.GetRowAtIndex(0));
-		//         initialSelected = true;
-		//     }
-		// };
-		_splitView.OnNotify += (sender, args) =>
-		{
-			var name = args.Pspec.GetName();
-#if DEBUG
-			Console.Out.WriteLine($"---- [Shell][OnNotify] Property Changed: {name}");
-#endif
-
-			if (name == "show-sidebar")
-			{
-				// keep the toggle button state in sync when the property changes
-				if (_flyoutToggleButton != null)
-				{
-					_flyoutToggleButton.Active = ShowSidebar;
-				}
-#if DEBUG
-				Console.Out.WriteLine($"---- [Shell][OnNotify] IsUpdating before clear: {_isUpdating}");
-#endif
-				// programmatic update finished
-				_isUpdating = false;
-#if DEBUG
-				Console.Out.WriteLine($"---- [Shell][OnNotify] IsUpdating after clear: {_isUpdating}");
-#endif
-#if DEBUG
-				Console.Out.WriteLine(new StringBuilder()
-					.AppendLine($"[Shell][OnNotify][show-sidebar]")
-					.AppendLine($" - Shell ShowSidebar: {ShowSidebar}")
-					.ToString());
-#endif
-			}
-			else if (!_initialSelected && (name == "root" || name == "parent"))
-			{
-				// Select initial row only once when the widget is attached to the
-				// widget hierarchy (root/parent notify) to avoid selecting on every
-				// collapse/expand.
-				if (_flyoutListBox != null)
-				{
-					_flyoutListBox.SelectRow(_flyoutListBox.GetRowAtIndex(0));
-					_initialSelected = true;
-				}
-			}
-		};
+		_splitView.OnNotify += Notified;
 
 		// Add split view to this container
 		Append(_splitView);
 		_splitView.Show();
 		_contentBox.QueueResize();
+	}
+
+	private void Notified(GObject.Object sender, NotifySignalArgs args)
+	{
+		var name = args.Pspec.GetName();
+		if (name == "show-sidebar")
+		{
+			// keep the toggle button state in sync when the property changes
+			if (_flyoutToggleButton != null)
+			{
+				_flyoutToggleButton.Active = ShowSidebar;
+			}
+			// programmatic update finished
+			_isUpdating = false;
+		}
+		else if (!_initialSelected && (name == "root" || name == "parent"))
+		{
+			// Select initial row only once when the widget is attached to the
+			// widget hierarchy (root/parent notify) to avoid selecting on every
+			// collapse/expand.
+			if (_flyoutListBox != null)
+			{
+				_flyoutListBox.SelectRow(_flyoutListBox.GetRowAtIndex(0));
+				_initialSelected = true;
+			}
+		}
 	}
 
 	public bool IsOpened
@@ -204,35 +154,17 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 
 	Gtk.ToggleButton CreateFlyoutToggleButton()
 	{
-		// REF: ShellToggleButton.cs, sor 10-14
-		// SetIconName("menu_new-symbolic");
-		// SetTooltipText("Toggle Sidebar");
-		// SetActive(true);
-		// SetVisible(true);
-		// OnClicked += ShellToggleButton_OnClicked;
 		var toggleButton = Gtk.ToggleButton.New();
 		toggleButton.SetIconName("menu_new-symbolic");
 		toggleButton.SetTooltipText("Toggle Sidebar");
-		toggleButton.SetActive(true); // Initial state: sidebar is open
+		toggleButton.SetActive(false); // Initial state: sidebar is closed (matches initial _isOpen = false)
 		toggleButton.SetVisible(true);
 
-		// REF: ShellToggleButton.cs, sor 18-35
-		// void ShellToggleButton_OnClicked(Button sender, EventArgs args)
-		// {
-		//     if (_shell.IsUpdating) { return; }
-		//     _shell.IsUpdating = true;
-		//     var newState = !_shell.ShowSidebar;
-		//     _shell.Native.SetShowSidebar(newState);
-		//     SetActive(newState);
-		// }
 		toggleButton.OnClicked += (sender, args) =>
 		{
 			// If a programmatic update is in progress, ignore user clicks to avoid races
 			if (_isUpdating)
 			{
-#if DEBUG
-				Console.Out.WriteLine($"---- [ShellToggleButton][OnClicked] ignored due to IsUpdating=true");
-#endif
 				return;
 			}
 
@@ -243,44 +175,41 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 			_splitView?.SetShowSidebar(newState);
 			// Immediately sync button state to match the requested native state
 			toggleButton.SetActive(newState);
-
-#if DEBUG
-			Console.Out.WriteLine($"[ShellToggleButton][OnClicked] after: ShowSidebar={ShowSidebar}, Active={toggleButton.Active}");
-#endif
 		};
 
 		return toggleButton;
 	}
 
-	Gtk.Button CreateSidebarCloseButton()
+	public void SetElement(Shell shell, IMauiContext? context)
 	{
-		var closeButton = Gtk.Button.New();
-		closeButton.SetIconName("window-close-symbolic");
-		closeButton.SetTooltipText("Close Sidebar");
-		closeButton.SetVisible(false); // Hidden by default, shown by breakpoint
-
-		closeButton.OnClicked += (sender, args) =>
-		{
-			if (_isUpdating)
-			{
-				return;
-			}
-
-			_isUpdating = true;
-			_splitView?.SetShowSidebar(false);
-			// OnNotify handler will reset _isUpdating and sync toggle button
-		};
-
-		return closeButton;
-	}
-
-	public void SetElement(Shell shell, IMauiContext context)
-	{
-		_ = shell ?? throw new ArgumentNullException($"{nameof(shell)} cannot be null here.");
-		_ = context ?? throw new ArgumentNullException($"{nameof(context)} cannot be null here.");
+		ArgumentNullException.ThrowIfNull(shell, $"{nameof(shell)} cannot be null here.");
+		ArgumentNullException.ThrowIfNull(context, $"{nameof(context)} cannot be null here.");
 
 		Element = shell;
 		MauiContext = context;
+
+		// NEW: Get global toolbar from WindowRootView and add DIRECTLY to _contentBox
+		_contentToolbar = context.GetNavigationRootManager()?.Toolbar;
+		if (_contentToolbar != null && _contentBox != null)
+		{
+			// Unparent from WindowRootView
+			if (_contentToolbar.GetParent() != null)
+			{
+				_contentToolbar.Unparent();
+			}
+
+			// Add toolbar DIRECTLY to _contentBox (not wrapped in ToolbarView)
+			_contentBox.Prepend(_contentToolbar);
+
+			// Add flyout toggle button to global toolbar
+			_contentToolbar.PackStart(_flyoutToggleButton);
+
+			// Add content box after toolbar
+			if (_contentInnerBox != null)
+			{
+				_contentBox.Append(_contentInnerBox);
+			}
+		}
 
 		Element.PropertyChanged += (s, e) =>
 		{
@@ -288,45 +217,91 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 			{
 				UpdateSearchHandler();
 			}
+			else if (e.PropertyName == PlatformConfiguration.GNOMESpecific.Shell.AutoFlyoutProperty.PropertyName)
+			{
+				UpdateAutoFlyout();
+			}
 		};
+
+		// Setup initial breakpoint if configured
+		UpdateAutoFlyout();
 	}
 
-	public void SetupBreakpoint(Adw.ApplicationWindow window, int breakpointWidth = 500)
+	void UpdateAutoFlyout()
 	{
-		if (window == null || _splitView == null || _flyoutToggleButton == null || _sidebarCloseButton == null)
+		var breakpointWidth = PlatformConfiguration.GNOMESpecific.Shell.GetAutoFlyout(Element);
+		// Find the native window
+		Adw.ApplicationWindow? nativeWindow = null;
+		if (Application.Current?.Windows is { } windows)
+		{
+			foreach (var window in windows)
+			{
+				if (window?.Handler?.PlatformView is Adw.ApplicationWindow appWindow)
+				{
+					nativeWindow = appWindow;
+					break;
+				}
+			}
+		}
+
+		if (nativeWindow == null)
 		{
 			return;
 		}
 
-		var breakpoint = Adw.Breakpoint.New(Adw.BreakpointCondition.Parse($"max-width: {breakpointWidth}sp"));
-		breakpoint.AddSetter(_splitView, "show-sidebar", new GObject.Value(false));
-		breakpoint.AddSetter(_splitView, "collapsed", new GObject.Value(true));
-		breakpoint.AddSetter(_flyoutToggleButton, "active", new GObject.Value(false));
-		breakpoint.AddSetter(_flyoutToggleButton, "icon-name", new GObject.Value("menu_new-symbolic"));
-		breakpoint.AddSetter(_sidebarCloseButton, "visible", new GObject.Value(true));
-		window.AddBreakpoint(breakpoint);
+		// Remove old breakpoint if exists
+		if (_autoFlyoutBreakpoint != null)
+		{
+			// NOTE: GirCore may not have RemoveBreakpoint, so we might need to recreate the window
+			// For now, we'll just replace it
+			_autoFlyoutBreakpoint = null;
+		}
+
+		// If breakpoint is disabled (0 or negative), don't add new one
+		if (breakpointWidth <= 0)
+		{
+			return;
+		}
+
+		// Create Adwaita breakpoint with native condition
+		var condition = Adw.BreakpointCondition.Parse($"max-width: {breakpointWidth}sp");
+		_autoFlyoutBreakpoint = Adw.Breakpoint.New(condition);
+
+		// Add setters for overlay mode (narrow screen)
+		_autoFlyoutBreakpoint.AddSetter(_splitView, "show-sidebar", new GObject.Value(false));
+		_autoFlyoutBreakpoint.AddSetter(_splitView, "collapsed", new GObject.Value(true));
+		_autoFlyoutBreakpoint.AddSetter(_flyoutToggleButton, "active", new GObject.Value(false));
+
+		// Add breakpoint to window
+		nativeWindow.AddBreakpoint(_autoFlyoutBreakpoint);
 	}
 
 	public void UpdateFlyoutBehavior(FlyoutBehavior flyoutBehavior)
 	{
+		_currentFlyoutBehavior = flyoutBehavior;
+
 		switch (flyoutBehavior)
 		{
 			case FlyoutBehavior.Disabled:
 				_splitView?.SetShowSidebar(false);
 				_splitView?.SetCollapsed(true);
 				_isOpen = false;
+				_flyoutToggleButton?.SetVisible(false);
 				break;
 			case FlyoutBehavior.Flyout:
-				// Desktop mode - side-by-side layout with sidebar open (like TestGnome1)
-				//_splitView?.SetCollapsed(false);
-				_splitView?.SetShowSidebar(true);
-				_isOpen = true;
+				// Flyout mode - toggle-able sidebar with overlay (like Windows)
+				// Collapsed=true means overlay (sidebar appears on top of content)
+				// Actual open/closed state controlled by IsPresented
+				_splitView?.SetCollapsed(true);
+				_flyoutToggleButton?.SetVisible(true);
+				// Don't change ShowSidebar here - let IsPresented control it
 				break;
 			case FlyoutBehavior.Locked:
 				// Locked mode - side-by-side mode, sidebar always visible
 				_splitView?.SetCollapsed(false);
 				_splitView?.SetShowSidebar(true);
 				_isOpen = true;
+				_flyoutToggleButton?.SetVisible(false);
 				break;
 		}
 	}
@@ -378,6 +353,7 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 		{
 			_currentItemHandler = (ShellItemHandler)newItem.ToHandler(MauiContext);
 			var platformView = newItem.ToPlatform(MauiContext);
+
 			_contentInnerBox.Append(platformView);
 			platformView.Show();
 			platformView.QueueResize();
@@ -394,47 +370,54 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 
 	public void UpdateFlyoutFooter(Shell shell)
 	{
-		// Footer implementation - could use a separate box at the bottom of sidebar
-		if (ShellController.FlyoutFooter != null && MauiContext != null && _sidebarBox != null)
+		if (_flyoutView != null)
 		{
-			var footerView = ShellController.FlyoutFooter.ToPlatform(MauiContext);
-			// Append at the end of sidebar
-			_sidebarBox.Append(footerView);
+			return;
 		}
+
+		var newFooterView = shell?.FlyoutFooter as View;
+
+		// Check if this is a DIFFERENT footer view
+		if (_footerView != null && _footerView != newFooterView)
+		{
+			if (_footerView.Handler is IPlatformViewHandler nativeHandler)
+			{
+				_footerView.Handler = null;
+			}
+			_footerPlatformView = null;
+		}
+
+		_footerView = newFooterView;
+
+		// Rebuild sidebar structure
+		RebuildSidebarStructure();
 	}
 
 	public void UpdateFlyoutHeader(Shell shell)
 	{
 		_headerBehavior = shell.FlyoutHeaderBehavior;
 
-		// Update sidebar header title (use Shell.Title or default "Menu")
-		if (_sidebarHeaderBar != null)
-		{
-			var title = !string.IsNullOrEmpty(shell.Title) ? shell.Title : "Menu";
-			_sidebarHeaderBar.SetTitleWidget(Gtk.Label.New(title));
-		}
-
 		if (_flyoutView != null)
 		{
 			return;
 		}
 
-		if (_headerView != null && _headerView.Handler is IPlatformViewHandler nativeHandler)
+		var newHeaderView = ShellController.FlyoutHeader;
+
+		// Check if this is a DIFFERENT header view - only then dispose the old one
+		if (_headerView != null && _headerView != newHeaderView)
 		{
-			//nativeHandler.Dispose();
-			_headerView.Handler = null;
+			if (_headerView.Handler is IPlatformViewHandler nativeHandler)
+			{
+				_headerView.Handler = null;
+			}
+			_headerPlatformView = null;
 		}
 
-		_headerView = ShellController.FlyoutHeader;
+		_headerView = newHeaderView;
 
-		if (HeaderOnMenu && _headerView != null && MauiContext != null && _sidebarBox != null)
-		{
-			var headerPlatformView = _headerView.ToPlatform(MauiContext);
-			_sidebarBox.Prepend(headerPlatformView);
-			headerPlatformView.Show();
-		}
-
-		UpdateItems();
+		// Rebuild sidebar structure based on FlyoutHeaderBehavior
+		RebuildSidebarStructure();
 	}
 
 	public void UpdateItems()
@@ -449,25 +432,7 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 			return;
 		}
 
-		// Clear existing children (keep header if not in menu)
-		Gtk.Widget? headerWidget = null;
-		if (_headerView != null && !HeaderOnMenu)
-		{
-			headerWidget = _sidebarBox.GetFirstChild();
-		}
-
-		while (_sidebarBox.GetFirstChild() != null)
-		{
-			var child = _sidebarBox.GetFirstChild();
-			if (child == headerWidget)
-			{
-				break;
-			}
-
-			_sidebarBox.Remove(child!);
-		}
-
-		// Create flyout items list
+		// Update items list
 		var newGrouping = ShellController.GenerateFlyoutGrouping();
 		if (IsItemChanged(newGrouping))
 		{
@@ -482,16 +447,186 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 			}
 		}
 
-		var adaptor = new ShellFlyoutItemAdaptor(Element!, _items, HeaderOnMenu);
-		var listBox = adaptor.CreateListBox();
+		// Rebuild sidebar structure with updated items
+		RebuildSidebarStructure();
+	}
 
-		listBox.OnRowActivated += OnFlyoutItemSelected;
+	void RebuildSidebarStructure()
+	{
+		if (_sidebarBox == null || MauiContext == null)
+		{
+			return;
+		}
 
-		_sidebarBox.Append(listBox);
-		listBox.Show();
+		// 1. Clear all existing children from _sidebarBox
+		while (_sidebarBox.GetFirstChild() != null)
+		{
+			var child = _sidebarBox.GetFirstChild();
+			child?.Unparent(); // CRITICAL: Unparent instead of Remove
+		}
 
-		_flyoutListBox = listBox;
+		// Disconnect old ListBox event if exists
+		if (_flyoutListBox != null)
+		{
+			_flyoutListBox.OnRowActivated -= OnFlyoutItemSelected;
+			_flyoutListBox = null;
+		}
 
+		// Clear cached platform views AND disconnect handlers to force recreation
+		if (_headerView != null && _headerPlatformView != null)
+		{
+			_headerView.Handler = null; // Disconnect handler to force new widget creation
+		}
+		if (_footerView != null && _footerPlatformView != null)
+		{
+			_footerView.Handler = null; // Disconnect handler to force new widget creation
+		}
+
+		_headerPlatformView = null;
+		_footerPlatformView = null;
+		_sidebarScrolledWindow = null;
+		_sidebarScrollableBox = null;
+
+		// 2. Create header platform view if needed
+		if (_headerView != null)
+		{
+			_headerPlatformView = _headerView.ToPlatform(MauiContext);
+		}
+
+		// 3. Create footer platform view if needed
+		if (_footerView != null)
+		{
+			_footerPlatformView = _footerView.ToPlatform(MauiContext);
+		}
+
+		// 4. Create ListBox with items
+		if (_items.Count > 0)
+		{
+			var adaptor = new ShellFlyoutItemAdaptor(Element!, _items, false); // HeaderOnMenu always false - we handle header separately
+			_flyoutListBox = adaptor.CreateListBox();
+			_flyoutListBox.OnRowActivated += OnFlyoutItemSelected;
+		}
+
+		// 5. Build structure based on FlyoutHeaderBehavior
+		switch (_headerBehavior)
+		{
+			case FlyoutHeaderBehavior.Default:
+			case FlyoutHeaderBehavior.Fixed:
+				// Fixed: Header + ScrolledWindow(ListBox) + Footer
+				BuildFixedHeaderStructure();
+				break;
+
+			case FlyoutHeaderBehavior.Scroll:
+				// Scroll: ScrolledWindow(Header + ListBox + Footer)
+				BuildScrollHeaderStructure();
+				break;
+
+			case FlyoutHeaderBehavior.CollapseOnScroll:
+				// TODO: CollapseOnScroll implementation
+				// For now, use Scroll behavior
+				BuildScrollHeaderStructure();
+				break;
+		}
+
+		// Select initial row
+		if (_flyoutListBox != null && !_initialSelected)
+		{
+			_flyoutListBox.SelectRow(_flyoutListBox.GetRowAtIndex(0));
+			_initialSelected = true;
+		}
+	}
+
+	void BuildFixedHeaderStructure()
+	{
+		// Structure:
+		// _sidebarBox
+		// ├─ _headerPlatformView (if exists) - FIXED, not scrollable
+		// ├─ Gtk.ScrolledWindow
+		// │  └─ _flyoutListBox - SCROLLABLE
+		// └─ _footerPlatformView (if exists) - FIXED, not scrollable
+
+		// Add fixed header at top
+		if (_headerPlatformView != null)
+		{
+			_headerPlatformView.SetVexpand(false); // Only take needed height
+			_headerPlatformView.SetHexpand(true);  // Fill width
+			_sidebarBox.Append(_headerPlatformView);
+			_headerPlatformView.Show();
+		}
+
+		// Create ScrolledWindow for ListBox
+		if (_flyoutListBox != null)
+		{
+			_sidebarScrolledWindow = Gtk.ScrolledWindow.New();
+			_sidebarScrolledWindow.SetVexpand(true);
+			_sidebarScrolledWindow.SetHexpand(true);
+			_sidebarScrolledWindow.SetChild(_flyoutListBox);
+
+			_sidebarBox.Append(_sidebarScrolledWindow);
+			_sidebarScrolledWindow.Show();
+			_flyoutListBox.Show();
+		}
+
+		// Add fixed footer at bottom
+		if (_footerPlatformView != null)
+		{
+			_footerPlatformView.SetVexpand(false); // Only take needed height
+			_footerPlatformView.SetHexpand(true);  // Fill width
+			_sidebarBox.Append(_footerPlatformView);
+			_footerPlatformView.Show();
+		}
+	}
+
+	void BuildScrollHeaderStructure()
+	{
+		// Structure:
+		// _sidebarBox
+		// └─ Gtk.ScrolledWindow
+		//    └─ Gtk.Box (_sidebarScrollableBox)
+		//       ├─ _headerPlatformView (if exists) - SCROLLS together
+		//       ├─ _flyoutListBox - SCROLLS
+		//       └─ _footerPlatformView (if exists) - SCROLLS together
+
+		// Create ScrolledWindow
+		_sidebarScrolledWindow = Gtk.ScrolledWindow.New();
+		_sidebarScrolledWindow.SetVexpand(true);
+		_sidebarScrolledWindow.SetHexpand(true);
+
+		// Create inner scrollable box
+		_sidebarScrollableBox = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
+
+		// Add header to scrollable box
+		if (_headerPlatformView != null)
+		{
+			_headerPlatformView.SetVexpand(false); // Only take needed height
+			_headerPlatformView.SetHexpand(true);  // Fill width
+			_sidebarScrollableBox.Append(_headerPlatformView);
+			_headerPlatformView.Show();
+		}
+
+		// Add ListBox to scrollable box
+		if (_flyoutListBox != null)
+		{
+			_sidebarScrollableBox.Append(_flyoutListBox);
+			_flyoutListBox.Show();
+		}
+
+		// Add footer to scrollable box
+		if (_footerPlatformView != null)
+		{
+			_footerPlatformView.SetVexpand(false); // Only take needed height
+			_footerPlatformView.SetHexpand(true);  // Fill width
+			_sidebarScrollableBox.Append(_footerPlatformView);
+			_footerPlatformView.Show();
+		}
+
+		// Set scrollable box as ScrolledWindow child
+		_sidebarScrolledWindow.SetChild(_sidebarScrollableBox);
+
+		// Add ScrolledWindow to sidebar
+		_sidebarBox.Append(_sidebarScrolledWindow);
+		_sidebarScrolledWindow.Show();
+		_sidebarScrollableBox.Show();
 	}
 
 	bool IsItemChanged(List<List<Element>> groups)
@@ -517,30 +652,6 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 			{
 				return true;
 			}
-			// REF: Program.cs, sor 146-190
-			// flyoutItems.OnRowSelected += (sender, args) =>
-			// {
-			//     if (args.Row != null)
-			//     {
-			//         if (shell.IsUpdating) { return; }
-			//         
-			//         var index = args.Row.GetIndex();
-			//         var item = shellContents[index];
-			//         var page = (Page)Activator.CreateInstance(item.ContentTemplate!)!;
-			//         window.SetTitle(page.Title);
-			//         contentNavbar.SetContent(page);
-			//         
-			//         if (shell.Collapsed)
-			//         {
-			//             shell.IsUpdating = true;
-			//             shell.Native.SetShowSidebar(false);
-			//             shell.Collapsed = true;
-			//             shell.Native.QueueResize();
-			//             contentNavbar.Native.GrabFocus();
-			//             shellToggleButton.Active = false;
-			//         }
-			//     }
-			// };
 
 			for (int j = 0; j < groups[i].Count; j++)
 			{
@@ -566,9 +677,8 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 
 			var index = args.Row.GetIndex();
 
-			// Skip header row if present (MAUI specific)
-			int offset = HeaderOnMenu && _headerView != null ? 1 : 0;
-			index -= offset;
+			// NO header offset needed - header is NOT in ListBox anymore
+			// It's a separate widget in the sidebar structure
 
 			if (index >= 0 && index < _items.Count)
 			{
@@ -666,5 +776,53 @@ public class ShellView : Gtk.Box, IFlyoutBehaviorObserver
 	void IFlyoutBehaviorObserver.OnFlyoutBehaviorChanged(FlyoutBehavior behavior)
 	{
 		UpdateFlyoutBehavior(behavior);
+	}
+
+	public override void Dispose()
+	{
+		// 1. Disconnect event handlers
+		_splitView.OnNotify -= Notified;
+		Element?.PropertyChanged -= OnPagePropertyChanged;
+		_currentPage?.PropertyChanged -= OnPagePropertyChanged;
+		_currentSearchHandler?.PropertyChanged -= OnCurrentSearchHandlerPropertyChanged;
+		_flyoutListBox?.OnRowActivated -= OnFlyoutItemSelected;
+
+		// 2. Unparent child widgets (inside-out order)
+
+		// Unparent _contentInnerBox children
+		if (_contentInnerBox != null)
+		{
+			while (_contentInnerBox.GetFirstChild() != null)
+			{
+				var child = _contentInnerBox.GetFirstChild();
+				child?.Unparent();
+			}
+		}
+
+		// Unparent _sidebarBox children
+		if (_sidebarBox != null)
+		{
+			while (_sidebarBox.GetFirstChild() != null)
+			{
+				var child = _sidebarBox.GetFirstChild();
+				child?.Unparent();
+			}
+		}
+
+		// Unparent _contentToolbar (remove from _contentBox)
+		if (_contentToolbar != null && _contentToolbar.GetParent() != null)
+		{
+			_contentToolbar.Unparent();
+		}
+
+		// Unparent _contentInnerBox (remove from _contentBox)
+		if (_contentInnerBox != null && _contentInnerBox.GetParent() != null)
+		{
+			_contentInnerBox.Unparent();
+		}
+
+		// 3. Call base dispose
+		base.Dispose();
+		GC.SuppressFinalize(this);
 	}
 }

@@ -28,6 +28,15 @@ public partial class ScrollViewHandler : ViewHandler<IScrollView, Gtk.ScrolledWi
 	protected override void DisconnectHandler(Gtk.ScrolledWindow platformView)
 	{
 		platformView.DisconnectScrollHandler(this);
+
+		// KRITIKUS: Unparent a child-ot mielőtt a handler disconnect-olódik
+		var child = platformView.GetChild();
+		if (child != null)
+		{
+			child.Unparent();
+			platformView.SetChild(null);
+		}
+
 		base.DisconnectHandler(platformView);
 	}
 

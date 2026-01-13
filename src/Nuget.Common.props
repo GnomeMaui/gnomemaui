@@ -1,6 +1,9 @@
 <Project>
     <PropertyGroup>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <Title>GNOME MAUI .NET</Title>
+        <Description>GNOME MAUI .NET is a modern, Linux-first .NET MAUI backend for building native GNOME desktop apps with C# and MAUI XAML. Built on GirCore with GTK4 and Adwaita integration, it enables the single-project model via the maui-gnome workload and the net10.0-gnome TFM. Optimized for NativeAOT with fast startup and SkiaSharp CPU/GPU rendering.</Description>
+        <PackageTags>gnome;maui;dotnet;microsoft-maui;linux;gtk;gtk4;libadwaita;adw;adwaita;gircore;maui-gnome;net10.0-gnome;nativeaot;skiasharp;graphics;desktop;xaml</PackageTags>
 
         <Copyright>© Copyright Ferenc Czirok. All rights reserved.</Copyright>
 

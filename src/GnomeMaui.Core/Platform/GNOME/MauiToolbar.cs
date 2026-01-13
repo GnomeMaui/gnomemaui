@@ -134,13 +134,12 @@ public class MauiToolbar : Adw.Bin
 		}
 	}
 
-	// Back button kezelés - használja az Adw.HeaderBar beépített show-back-button property-jét
+	// Back button kezelés - custom back button használata
 	public bool IsBackButtonVisible
 	{
-		get => CommandBar.GetShowBackButton();
+		get => _backButton?.GetVisible() ?? false;
 		set
 		{
-			CommandBar.SetShowBackButton(value);
 			if (_backButton != null)
 			{
 				_backButton.SetVisible(value);

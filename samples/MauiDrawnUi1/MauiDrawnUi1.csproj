@@ -85,13 +85,6 @@
 
     <!-- GNOME MAUI -->
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
-        <!-- Using PackageReference for all packages to ensure proper source generator registration -->
-        <!-- <PackageReference Include="GnomeMaui.Controls" Version="$(GnomeMauiVersion)" />
-        <PackageReference Include="GnomeMaui.Essentials" Version="$(GnomeMauiVersion)" />
-        <PackageReference Include="GnomeMaui.SkiaSharp.Controls" Version="$(GnomeMauiVersion)" /> -->
-        <!-- <PackageReference Include="GnomeMaui.DrawnUi" Version="$(GnomeMauiVersion)" /> -->
-        <!-- <PackageReference Include="GnomeMaui.Graphics" Version="$(GnomeMauiVersion)" /> -->
-
         <PackageReference Include="GnomeMaui.Controls.Build.Tasks" Version="$(GnomeMauiVersion)" />
         <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
         <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />
@@ -111,20 +104,20 @@
 
     <!-- Exclude other platform files when building for GNOME -->
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
-        <Compile Remove="Platforms\Android\**\*.cs" />
-        <Compile Remove="Platforms\iOS\**\*.cs" />
-        <Compile Remove="Platforms\MacCatalyst\**\*.cs" />
-        <Compile Remove="Platforms\Windows\**\*.cs" />
-        <None Include="Platforms\Android\**\*.cs" />
-        <None Include="Platforms\iOS\**\*.cs" />
-        <None Include="Platforms\MacCatalyst\**\*.cs" />
-        <None Include="Platforms\Windows\**\*.cs" />
+        <Compile Remove="Platforms\Android\**\*" />
+        <Compile Remove="Platforms\iOS\**\*" />
+        <Compile Remove="Platforms\MacCatalyst\**\*" />
+        <Compile Remove="Platforms\Windows\**\*" />
+        <None Include="Platforms\Android\**\*" />
+        <None Include="Platforms\iOS\**\*" />
+        <None Include="Platforms\MacCatalyst\**\*" />
+        <None Include="Platforms\Windows\**\*" />
     </ItemGroup>
 
     <!-- Exclude GNOME platform files when building for other platforms -->
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'gnome'">
-        <Compile Remove="Platforms\GNOME\**\*.cs" />
-        <None Include="Platforms\GNOME\**\*.cs" />
+        <Compile Remove="Platforms\GNOME\**\*" />
+        <None Include="Platforms\GNOME\**\*" />
     </ItemGroup>
 
     <!-- GNOME-specific: Copy Images to output directory -->

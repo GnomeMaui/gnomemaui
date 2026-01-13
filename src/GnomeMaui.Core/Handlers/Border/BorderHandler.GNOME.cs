@@ -43,7 +43,13 @@ public partial class BorderHandler : ViewHandler<IBorderView, ContentWidget>
 
 	protected override void DisconnectHandler(ContentWidget platformView)
 	{
+		// KRITIKUS: Unparent a child-ot mielőtt a handler disconnect-olódik
+		if (platformView.Content != null)
+		{
+			platformView.Content.Unparent();
+			platformView.Content = null;
+		}
+
 		base.DisconnectHandler(platformView);
-		platformView.Content = null;
 	}
 }

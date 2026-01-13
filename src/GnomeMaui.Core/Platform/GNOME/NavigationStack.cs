@@ -20,7 +20,7 @@ public class NavigationStack
 		if (_stack.Count > 0)
 		{
 			var current = _stack.Peek();
-			_container.Remove(current);
+			current.Unparent();
 		}
 
 		_stack.Push(page);
@@ -41,7 +41,7 @@ public class NavigationStack
 		}
 
 		var page = _stack.Pop();
-		_container.Remove(page);
+		page.Unparent();
 
 		if (_stack.Count > 0)
 		{
@@ -76,7 +76,7 @@ public class NavigationStack
 				_stack.Push(tempStack.Pop());
 			}
 
-			_container.Remove(page);
+			page.Unparent();
 		}
 	}
 

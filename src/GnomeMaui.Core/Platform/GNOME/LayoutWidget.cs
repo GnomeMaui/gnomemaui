@@ -7,7 +7,9 @@ namespace Microsoft.Maui.Platform;
 public class LayoutWidget : Gtk.Widget, ICrossPlatformLayoutBacking, IVisualTreeElementProvidable, GObject.InstanceFactory, IPlatformMeasureInvalidationController
 {
 	// MUST be strong reference to prevent GC from collecting BaseWidget while GTK uses CustomAllocate callbacks
-	private static readonly Dictionary<IntPtr, LayoutWidget> _widgetInstances = [];
+	// Use C# GetHashCode() as primary key to avoid GTK IntPtr reuse issues
+	private static readonly Dictionary<int, LayoutWidget> _widgetsByHash = [];
+	private static readonly Dictionary<IntPtr, int> _ptrToHash = [];
 	private static GObject.Type? _registeredType;
 	private LayoutWidgetManager _layoutManager;
 
@@ -48,7 +50,10 @@ public class LayoutWidget : Gtk.Widget, ICrossPlatformLayoutBacking, IVisualTree
 	public LayoutWidget(Gtk.Internal.WidgetHandle handle) : base(handle)
 	{
 		var ptr = handle.DangerousGetHandle();
-		_widgetInstances[ptr] = this;
+		var hash = this.GetHashCode();
+
+		_widgetsByHash[hash] = this;
+		_ptrToHash[ptr] = hash;
 
 		_layoutManager = new LayoutWidgetManager();
 		SetLayoutManager(_layoutManager.GetLayoutManager());
@@ -68,7 +73,10 @@ public class LayoutWidget : Gtk.Widget, ICrossPlatformLayoutBacking, IVisualTree
 			true))
 	{
 		var ptr = Handle.DangerousGetHandle();
-		_widgetInstances[ptr] = this;
+		var hash = this.GetHashCode();
+
+		_widgetsByHash[hash] = this;
+		_ptrToHash[ptr] = hash;
 
 		_layoutManager = new LayoutWidgetManager();
 		SetLayoutManager(_layoutManager.GetLayoutManager());
@@ -86,12 +94,23 @@ public class LayoutWidget : Gtk.Widget, ICrossPlatformLayoutBacking, IVisualTree
 
 	internal static LayoutWidget? GetInstance(IntPtr handle)
 	{
-		if (_widgetInstances.TryGetValue(handle, out var widget))
+		// Lookup hash from IntPtr, then get widget by hash              
+		if (_ptrToHash.TryGetValue(handle, out var hash) &&
+			_widgetsByHash.TryGetValue(hash, out var widget))
 		{
-			return widget;
+			// Safety check: verify the widget's IntPtr still matches    
+			// This protects against GTK IntPtr reuse                    
+			if (widget.Handle.DangerousGetHandle() == handle)
+			{
+				return widget;
+			}
+
+			// IntPtr was reused, cleanup stale mapping                  
+			_ptrToHash.Remove(handle);
 		}
 		return null;
 	}
+
 
 	public List<Gtk.Widget> CachedChildren { get; } = new();
 
@@ -124,12 +143,33 @@ public class LayoutWidget : Gtk.Widget, ICrossPlatformLayoutBacking, IVisualTree
 	{
 		OnMap -= BaseWidget_OnMap;
 
+		// Unparent all children to prevent "Finalizing ... but it still has children left" warning
+		var child = GetFirstChild();
+		if (child != null)
+		{
+			while (child != null)
+			{
+				var next = child.GetNextSibling();
+				child.Unparent();
+
+				// Optional: Ensure child is disposed if it's managed
+				// if (child is IDisposable disposable) disposable.Dispose();
+
+				child = next;
+			}
+		}
+
+		CachedChildren.Clear();
+
 		// Cleanup layout manager to prevent memory leak
 		_layoutManager?.Dispose();
 
 		// Remove from widget instances
 		var ptr = Handle.DangerousGetHandle();
-		_widgetInstances.Remove(ptr);
+		var hash = this.GetHashCode();
+
+		_ptrToHash.Remove(ptr);
+		_widgetsByHash.Remove(hash);
 
 		base.Dispose();
 	}

@@ -2,10 +2,11 @@ using Microsoft.Maui.Graphics.Platform;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using System.IO;
+using System.Text;
 
 namespace Microsoft.Maui.Platform;
 
-public class SKImageView : SKGLArea
+public class SKImageView : SKDrawingArea
 {
 	private SKImage? _image;
 	private Aspect _aspect = Aspect.AspectFit;
@@ -30,16 +31,18 @@ public class SKImageView : SKGLArea
 		}
 	}
 
-	protected override void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
+	protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
 	{
-		var canvas = e.Surface.Canvas;
+		var surface = e.Surface;
+		var canvas = surface.Canvas;
 		canvas.Clear(SKColors.Transparent);
 
 		if (_image == null)
 			return;
 
-		var info = e.Surface.Canvas.DeviceClipBounds;
-		var destRect = CalculateDestRect(info.Width, info.Height);
+		var viewWidth = GetAllocatedWidth();
+		var viewHeight = GetAllocatedHeight();
+		var destRect = CalculateDestRect(viewWidth, viewHeight);
 
 		using var paint = new SKPaint
 		{
@@ -48,6 +51,7 @@ public class SKImageView : SKGLArea
 
 		var sampling = new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear);
 		canvas.DrawImage(_image, destRect, sampling, paint);
+		canvas.Flush();
 	}
 
 	private SKRect CalculateDestRect(float viewWidth, float viewHeight)
@@ -75,6 +79,13 @@ public class SKImageView : SKGLArea
 		var scaledHeight = ih * scale;
 		var x = (vw - scaledWidth) / 2;
 		var y = (vh - scaledHeight) / 2;
+
+		// Round to avoid floating point precision issues
+		x = MathF.Round(x, 2);
+		y = MathF.Round(y, 2);
+		scaledWidth = MathF.Round(scaledWidth, 2);
+		scaledHeight = MathF.Round(scaledHeight, 2);
+
 		return new SKRect(x, y, x + scaledWidth, y + scaledHeight);
 	}
 
@@ -85,6 +96,13 @@ public class SKImageView : SKGLArea
 		var scaledHeight = ih * scale;
 		var x = (vw - scaledWidth) / 2;
 		var y = (vh - scaledHeight) / 2;
+
+		// Round to avoid floating point precision issues
+		x = MathF.Round(x, 2);
+		y = MathF.Round(y, 2);
+		scaledWidth = MathF.Round(scaledWidth, 2);
+		scaledHeight = MathF.Round(scaledHeight, 2);
+
 		return new SKRect(x, y, x + scaledWidth, y + scaledHeight);
 	}
 
@@ -92,6 +110,11 @@ public class SKImageView : SKGLArea
 	{
 		var x = (vw - iw) / 2;
 		var y = (vh - ih) / 2;
+
+		// Round to avoid floating point precision issues
+		x = MathF.Round(x, 2);
+		y = MathF.Round(y, 2);
+
 		return new SKRect(x, y, x + iw, y + ih);
 	}
 }

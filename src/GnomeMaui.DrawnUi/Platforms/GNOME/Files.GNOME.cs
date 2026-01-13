@@ -6,9 +6,6 @@
 		{
 			// GNOME/Linux doesn't require special system refresh for file changes
 			// The file system is automatically updated
-#if DEBUG
-			Console.Out.WriteLine($"[Files][RefreshSystem] File system refresh not needed on GNOME: {file.FullFilename}");
-#endif
 		}
 
 		public static string GetPublicDirectory()
@@ -53,21 +50,6 @@
 		{
 			MainThread.BeginInvokeOnMainThread(async () =>
 			{
-				try
-				{
-#if DEBUG
-					Console.Out.WriteLine($"[Files][Share] Share requested: {message}");
-					foreach (var file in fullFilenames)
-					{
-						Console.Out.WriteLine($"  - {file}");
-					}
-#endif
-
-				}
-				catch (Exception e)
-				{
-					Super.Log(e);
-				}
 			});
 		}
 	}

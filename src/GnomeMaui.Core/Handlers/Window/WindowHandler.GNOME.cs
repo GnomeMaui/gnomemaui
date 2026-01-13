@@ -1,9 +1,9 @@
-using System;
 using Adw;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
+using System;
 
 namespace Microsoft.Maui.Handlers;
 
@@ -16,6 +16,9 @@ public partial class WindowHandler : ElementHandler<IWindow, Adw.ApplicationWind
 	{
 		base.ConnectHandler(platformView);
 
+		// Subscribe to size changes to update MAUI Window.Width/Height for AdaptiveTrigger
+		platformView.OnNotify += OnPlatformViewPropertyChanged;
+
 		// Create NavigationRootManager for managing WindowRootView with HeaderBar
 		if (MauiContext != null)
 		{
@@ -25,9 +28,30 @@ public partial class WindowHandler : ElementHandler<IWindow, Adw.ApplicationWind
 
 	protected override void DisconnectHandler(Adw.ApplicationWindow platformView)
 	{
+		platformView.OnNotify -= OnPlatformViewPropertyChanged;
 		_navigationRootManager?.Disconnect();
 		_navigationRootManager = null;
 		base.DisconnectHandler(platformView);
+	}
+
+	void OnPlatformViewPropertyChanged(GObject.Object sender, GObject.Object.NotifySignalArgs args)
+	{
+		var propName = args.Pspec.GetName();
+
+		// Update MAUI Window.Width/Height when GTK window size changes
+		// This is needed for AdaptiveTrigger to work
+		if ((propName == "default-width" || propName == "default-height") && VirtualView is IWindow window)
+		{
+			// Use GetWidth/GetHeight for immediate values during resize
+			var newWidth = PlatformView.GetWidth();
+			var newHeight = PlatformView.GetHeight();
+
+			if (newWidth > 0 && newHeight > 0)
+			{
+				// Use FrameChanged to update window size (Width/Height are read-only)
+				window.FrameChanged(new Graphics.Rect(0, 0, newWidth, newHeight));
+			}
+		}
 	}
 
 	public static void MapTitle(IWindowHandler handler, IWindow window)

@@ -10,10 +10,6 @@
 
         <RootNamespace>Microsoft.Maui.Controls</RootNamespace>
         <AssemblyName>GnomeMaui.Controls</AssemblyName>
-
-        <Title>MAUI Graphics with SkiaSharp for GNOME</Title>
-        <Description>Microsoft.Maui.Graphics implementation using SkiaSharp for GNOME applications. Provides GirCoreSkiaGraphicsView widget with IDrawable support for cross-platform graphics API in Linux desktop applications with hardware-accelerated rendering.</Description>
-        <PackageTags>maui;graphics;skiasharp;gtk;cross-platform;drawing;shapes;canvas;gircore;linux;desktop;vector-graphics;idrawable;widget;renderer</PackageTags>
         <PackageId>GnomeMaui.Controls.Core</PackageId>
     </PropertyGroup>
 

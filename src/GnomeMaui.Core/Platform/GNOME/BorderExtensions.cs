@@ -22,9 +22,6 @@ public static class BorderExtensions
 		_ = handler.VirtualView ?? throw new InvalidOperationException($"VirtualView should have been set by base class.");
 		_ = handler.MauiContext ?? throw new InvalidOperationException($"MauiContext should have been set by base class.");
 
-		// Remove previous content
-		handler.PlatformView.Content = null;
-
 		// Add new content if exists
 		if (handler.VirtualView.PresentedContent is IView view)
 		{
@@ -32,6 +29,11 @@ public static class BorderExtensions
 
 			// Apply padding via CSS
 			handler.PlatformView.UpdatePadding(handler.VirtualView.Padding);
+		}
+		else
+		{
+			// Remove previous content
+			handler.PlatformView.Content = null;
 		}
 	}
 

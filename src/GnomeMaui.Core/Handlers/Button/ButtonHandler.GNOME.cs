@@ -59,7 +59,7 @@ public partial class ButtonHandler : ViewHandler<IButton, Gtk.Button>
 
 	partial class ButtonImageSourcePartSetter
 	{
-		public override void SetImageSource(Microsoft.Maui.Platform.SKImageView? platformImage) { }
+		public override void SetImageSource(SkiaSharp.SKImage? platformImage) { }
 	}
 
 	protected override void ConnectHandler(Gtk.Button platformView)

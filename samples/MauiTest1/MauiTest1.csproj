@@ -71,7 +71,6 @@
     </ItemGroup>
 
     <!-- Microsoft MAUI -->
-    <!-- Microsoft MAUI -->
     <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' ">
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
@@ -89,17 +88,6 @@
 
     <!-- GNOME MAUI -->
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
-        <!-- Using PackageReference for all packages to ensure proper source generator registration -->
-        <!-- <PackageReference Include="GnomeMaui.Controls" Version="$(GnomeMauiVersion)" />
-        <PackageReference Include="GnomeMaui.Essentials" Version="$(GnomeMauiVersion)" />
-        <PackageReference Include="GnomeMaui.SkiaSharp.Controls" Version="$(GnomeMauiVersion)" /> -->
-        <!-- <PackageReference Include="GnomeMaui.Graphics" Version="$(GnomeMauiVersion)" /> -->
-        <!-- <ProjectReference Include="../../src/GnomeMaui.Controls/GnomeMaui.Controls.csproj" />
-        <ProjectReference Include="../../src/GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
-        <ProjectReference Include="../../src/GnomeMaui.Core/GnomeMaui.Core.csproj" />
-        <ProjectReference Include="../../src/GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
-        <ProjectReference Include="../../src/GnomeMaui.Controls.Build.Tasks/GnomeMaui.Controls.Build.Tasks.csproj"> -->
-
         <PackageReference Include="GnomeMaui.Controls.Build.Tasks" Version="$(GnomeMauiVersion)" />
         <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
 

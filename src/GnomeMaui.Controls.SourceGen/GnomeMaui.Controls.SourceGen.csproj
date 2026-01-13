@@ -11,10 +11,6 @@
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <DefineConstants>$(DefineConstants);__SOURCEGEN__</DefineConstants>
 
-        <Title>MAUI Controls XAML Source Generator for GNOME</Title>
-        <Description>.NET Multi-platform App UI (.NET MAUI) XAML source generation for GNOME applications. This package contains the Roslyn source generator for compile-time XAML to C# code generation.</Description>
-        <PackageTags>maui;xaml;source-generator;roslyn;code-generation;gnome;linux;desktop</PackageTags>
-
         <PackageId>GnomeMaui.Controls.SourceGen</PackageId>
         <AssemblyName>GnomeMaui.Controls.SourceGen</AssemblyName>
         <RootNamespace>Microsoft.Maui.Controls.SourceGen</RootNamespace>

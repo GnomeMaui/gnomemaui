@@ -1,0 +1,154 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net10.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(TargetFrameworks);net10.0-gnome</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(TargetFrameworks);net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
+
+        <OutputType>Exe</OutputType>
+        <UseMaui>true</UseMaui>
+
+        <SingleProject>true</SingleProject>
+        <MauiTestProject>true</MauiTestProject>
+        <IsPackable>false</IsPackable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <!-- Disable multi-RID builds to workaround a parallel build issue -->
+        <RuntimeIdentifiers Condition="$(TargetFramework.Contains('-maccatalyst'))">maccatalyst-x64</RuntimeIdentifiers>
+        <RuntimeIdentifiers Condition="$(TargetFramework.Contains('-maccatalyst')) and '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'arm64'">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
+        <ExcludeMicrosoftNetTestSdk>true</ExcludeMicrosoftNetTestSdk>
+        <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <OutputType>Exe</OutputType>
+        <SingleProject>true</SingleProject>
+        <DisableMauiImplicitPackageReferences>true</DisableMauiImplicitPackageReferences>
+        <UseGnomeMaui>true</UseGnomeMaui>
+
+        <!-- Use SourceGen for XAML compilation -->
+        <MauiXamlInflator>SourceGen</MauiXamlInflator>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <ApplicationTitle>Controls.TestCases.HostApp</ApplicationTitle>
+        <ApplicationId>com.microsoft.maui.uitests</ApplicationId>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+        <_FastDeploymentDiagnosticLogging>True</_FastDeploymentDiagnosticLogging>
+        <WindowsPackageType>None</WindowsPackageType>
+        <!-- TODO: remove these obsolete nowarns and fix it in code -->
+        <NoWarn>$(NoWarn);CS0618;CS0672;XC0618;IL2026;IL2091;IL2067;IL2072;IL2087;IL3050</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(_UseNativeAot)' == 'true' ">
+        <PublishAot>true</PublishAot>
+        <_IsPublishing>true</_IsPublishing>
+        <IlcTreatWarningsAsErrors>false</IlcTreatWarningsAsErrors>
+        <WarningsNotAsErrors>IL3050</WarningsNotAsErrors>
+        <DefineConstants>$(DefineConstants);NATIVE_AOT</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup Condition=" '$(UseMaui)' != 'true' ">
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    </ItemGroup>
+
+    <!-- Microsoft MAUI -->
+    <ItemGroup Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' ">
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
+        <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
+    </ItemGroup>
+
+    <!-- GNOME MAUI -->
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <!-- Using PackageReference for all packages to ensure proper source generator registration -->
+        <!-- <PackageReference Include="GnomeMaui.Controls" Version="$(GnomeMauiVersion)" />
+        <PackageReference Include="GnomeMaui.Essentials" Version="$(GnomeMauiVersion)" />
+        <PackageReference Include="GnomeMaui.SkiaSharp.Controls" Version="$(GnomeMauiVersion)" /> -->
+        <!-- <PackageReference Include="GnomeMaui.Graphics" Version="$(GnomeMauiVersion)" /> -->
+        <!-- <ProjectReference Include="../../src/GnomeMaui.Controls/GnomeMaui.Controls.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Core/GnomeMaui.Core.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Controls.Build.Tasks/GnomeMaui.Controls.Build.Tasks.csproj"> -->
+
+        <PackageReference Include="GnomeMaui.Controls.Build.Tasks" Version="$(GnomeMauiVersion)" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
+
+        <ProjectReference Include="../../src/GnomeMaui.Controls.Core/GnomeMaui.Controls.Core.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Core/GnomeMaui.Core.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.Essentials/GnomeMaui.Essentials.csproj" />
+        <ProjectReference Include="../../src/GnomeMaui.SkiaSharp.Controls/GnomeMaui.SkiaSharp.Controls.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="SkiaSharp" Version="3.119.1" />
+        <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
+    </ItemGroup>
+
+    <!-- Exclude other platform files when building for GNOME -->
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'gnome'">
+        <Compile Remove="Platforms\Android\**\*.cs" />
+        <Compile Remove="Platforms\iOS\**\*.cs" />
+        <Compile Remove="Platforms\MacCatalyst\**\*.cs" />
+        <Compile Remove="Platforms\Windows\**\*.cs" />
+        <Compile Remove="Platforms\Windows\**\*.xaml" />
+        <None Include="Platforms\Android\**\*.cs" />
+        <None Include="Platforms\iOS\**\*.cs" />
+        <None Include="Platforms\MacCatalyst\**\*.cs" />
+        <None Include="Platforms\Windows\**\*.cs" />
+        <None Include="Platforms\Windows\**\*.xaml" />
+    </ItemGroup>
+
+    <!-- Exclude GNOME platform files when building for other platforms -->
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'gnome'">
+        <Compile Remove="Platforms\GNOME\**\*.cs" />
+        <None Include="Platforms\GNOME\**\*.cs" />
+    </ItemGroup>
+
+    <!-- <ItemGroup Condition=" '$(UseMaui)' != 'true' ">
+        <ProjectReference Include="..\..\..\Core\src\Core.csproj" />
+        <ProjectReference Include="..\..\src\Xaml\Controls.Xaml.csproj" />
+        <ProjectReference Include="..\..\src\Core\Controls.Core.csproj" />
+        <ProjectReference Include="..\..\..\BlazorWebView\src\Maui\Microsoft.AspNetCore.Components.WebView.Maui.csproj" />
+        <ProjectReference Condition="'$(IncludeCompatibilityProjects)' == 'true'" Include="..\..\..\Compatibility\Core\src\Compatibility.csproj" />
+        <ProjectReference Include="..\..\Maps\src\Controls.Maps.csproj" />
+        <ProjectReference Include="..\..\Foldable\src\Controls.Foldable.csproj" />
+        <ProjectReference Include="..\..\..\Graphics\src\Graphics\Graphics.csproj" />
+    </ItemGroup> -->
+
+    <!-- <ItemGroup Condition=" '$(UseMaui)' == 'true' ">
+        <PackageReference Include="Microsoft.Maui.Controls.Foldable" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    </ItemGroup> -->
+
+    <ItemGroup>
+        <MauiImage Include="Resources\Images\*" />
+        <MauiImage Update="Resources\Images\dotnet_bot.svg" Color="#FFFFFF" BaseSize="168,208" />
+        <MauiImage Update="Resources\Images\dotnet_bot_resized.svg" Color="#FFFFFF" BaseSize="20,20" />
+        <MauiImage Update="Resources\Images\dotnet_bot_resized2.svg" Color="#FFFFFF" BaseSize="40,40" />
+        <MauiImage Update="Resources\Images\dotnet_bot_resized3.svg" Color="#FFFFFF" BaseSize="70,70" />
+        <MauiImage Include="Resources\Images\dotnet_bot.svg" Link="Resources\Images\small_dotnet_bot.svg" Color="#FFFFFF" BaseSize="64,64" />
+        <MauiImage Include="Resources\AppIcons\appicon.svg" ForegroundFile="Resources\AppIcons\appicon_foreground.svg" IsAppIcon="true" />
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#FFFFFF" BaseSize="168,208" />
+        <MauiFont Include="Resources\Fonts\**" />
+        <MauiFont Remove="Resources\Fonts\Dokdo-Regular.ttf" />
+        <EmbeddedResource Include="Resources\Fonts\Dokdo-Regular.ttf" />
+        <EmbeddedResource Include="Resources\Images\royals.png" />
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\CustomAttributes\*.cs" />
+        <Using Include="Microsoft.Maui.Controls.CustomAttributes" />
+    </ItemGroup>
+
+    <!-- <Import Project="$(MauiSrcDirectory)Maui.InTree.props" Condition=" '$(UseMaui)' != 'true' " /> -->
+
+    <ItemGroup>
+        <MauiXaml Update="**\*.xaml" Inflator="SourceGen" NoWarn="0612" />
+    </ItemGroup>
+</Project>

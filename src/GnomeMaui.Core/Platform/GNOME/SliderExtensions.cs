@@ -147,9 +147,8 @@ public static class SliderExtensions
 				SetThumbImageCss(path);
 			}
 		}
-		catch (Exception ex)
+		catch
 		{
-			Console.Error.WriteLine($"[SliderExtensions] Failed to load thumb image: {ex.Message}");
 		}
 	}
 }

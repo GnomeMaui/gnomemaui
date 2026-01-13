@@ -8,7 +8,7 @@ namespace DrawnUi.Draw
 	{
 		public static void ConfigureHandlers(IMauiHandlersCollection handlers)
 		{
-			handlers.AddHandler(typeof(SkiaViewAccelerated), typeof(SKGLViewHandler));
+			handlers.AddHandler(typeof(SkiaViewAccelerated), typeof(SKCanvasViewHandler));
 			handlers.AddHandler(typeof(SkiaView), typeof(SKCanvasViewHandler));
 			handlers.AddHandler(typeof(MauiEntry), typeof(MauiEntryHandler));
 			handlers.AddHandler(typeof(MauiEditor), typeof(MauiEditorHandler));

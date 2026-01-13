@@ -69,7 +69,7 @@ public partial class ImageHandler : ViewHandler<IImage, SKImageView>
 
 	partial class ImageImageSourcePartSetter
 	{
-		public override void SetImageSource(Microsoft.Maui.Platform.SKImageView? platformImage)
+		public override void SetImageSource(SkiaSharp.SKImage? platformImage)
 		{
 			if (Handler?.PlatformView is not SKImageView view)
 			{
@@ -78,7 +78,7 @@ public partial class ImageHandler : ViewHandler<IImage, SKImageView>
 
 			if (platformImage is not null)
 			{
-				view.Image = platformImage.Image;
+				view.Image = platformImage;
 			}
 
 			if (Handler?.VirtualView is IImage image && image.Source is IStreamImageSource)

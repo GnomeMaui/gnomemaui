@@ -13,31 +13,30 @@
 		<x:Reference Name="Self" />
 	</BindableObject.BindingContext>
 
-	<ScrollView>
-		<VerticalStackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="10">
-			<Label Text="Test Headline Style" Style="{StaticResource Headline}" Margin="0,10" />
-			<Label Text="Test SubHeadline Style" Style="{StaticResource SubHeadline}" Margin="0,10" />
-			<Label Text="Default Label (implicit style)" Margin="0,10" />
+	<ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+		<VerticalStackLayout VerticalOptions="Start" HorizontalOptions="FillAndExpand" Padding="10" Spacing="10">
+			<Label Text="GNOME MAUI .NET" Style="{StaticResource Headline}" TextColor="Beige" />
 
-			<Image Source="Images/dotnet_bot.png" WidthRequest="200" HeightRequest="200" />
-			<ActivityIndicator x:Name="activityIndicator" IsRunning="True" VerticalOptions="Center" />
-			<Entry Placeholder="Email" Margin="0,10" IsPassword="False" />
-			<Entry Placeholder="Password" Margin="0,10" IsPassword="True" />
-			<Editor Placeholder="Enter your comments here..." HeightRequest="100" Margin="0,10" />
+			<Image Source="Images/Logo.png" WidthRequest="150" HeightRequest="150" />
 
-			<Picker Title="Select a monkey">
-				<Picker.Items>
-					<x:String>Baboon</x:String>
-					<x:String>Capuchin Monkey</x:String>
-					<x:String>Blue Monkey</x:String>
-					<x:String>Squirrel Monkey</x:String>
-					<x:String>Golden Lion Tamarin</x:String>
-					<x:String>Howler Monkey</x:String>
-					<x:String>Japanese Macaque</x:String>
-				</Picker.Items>
-			</Picker>
+			<Label
+				Text="Native GNOME applications built on .NET MAUI, using GTK4 and Adwaita."
+				Style="{StaticResource SubHeadline}"
+				TextColor="Beige"
+				LineBreakMode="WordWrap"
+			/>
 
-			<ProgressBar Progress="0.5" ProgressColor="Orange" />
+			<Label
+				Text="GNOME MAUI is a MAUI platform designed for Linux, built on the modern components of the GNOME ecosystem. Its goal is to provide .NET developers with a first-class GNOME experience while respecting the system’s design guidelines and technological layers."
+				HorizontalTextAlignment="Center"
+				LineBreakMode="WordWrap"
+			/>
+
+			<Label
+				Text="The project builds on the experience of earlier community efforts and, by rethinking them, offers a modern GTK4 and Adwaita-based approach that aligns with the long-term direction of the GNOME desktop."
+				HorizontalTextAlignment="Center"
+				LineBreakMode="WordWrap"
+			/>
 		</VerticalStackLayout>
 	</ScrollView>
 </ContentPage>

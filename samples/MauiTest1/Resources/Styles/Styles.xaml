@@ -206,6 +206,7 @@
 		<Setter Property="BackgroundColor" Value="Transparent" />
 		<Setter Property="FontFamily" Value="OpenSansRegular" />
 		<Setter Property="FontSize" Value="14" />
+		<!-- Need fix <Setter Property="LineHeight" Value="1.5" /> -->
 		<Setter Property="VisualStateManager.VisualStateGroups">
 			<VisualStateGroupList>
 				<VisualStateGroup x:Name="CommonStates">
@@ -229,7 +230,7 @@
 			Value="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}"
 		/>
 		<Setter Property="FontSize" Value="24" />
-		<Setter Property="HorizontalOptions" Value="Center" />
+		<!-- <Setter Property="HorizontalOptions" Value="Center" /> -->
 		<Setter Property="HorizontalTextAlignment" Value="Center" />
 	</Style>
 

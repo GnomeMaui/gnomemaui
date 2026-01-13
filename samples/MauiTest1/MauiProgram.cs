@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.Maui.Hosting;
 using Microsoft.Maui.LifecycleEvents;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -37,8 +38,9 @@ public static class MauiProgram
 
 					if (args.Window is Adw.ApplicationWindow adwWindow)
 					{
-						adwWindow.DefaultWidth = 1280;
-						adwWindow.DefaultHeight = 800;
+						adwWindow.DefaultWidth = 1024;
+						adwWindow.DefaultHeight = 768;
+						adwWindow.SetSizeRequest(650, 600);
 					}
 				});
 			});

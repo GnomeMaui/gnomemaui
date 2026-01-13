@@ -24,7 +24,7 @@ public partial class FirstAppPageCode : BasePageReloadable, IDisposable
 
 		Canvas = new Canvas()
 		{
-			RenderingMode = RenderingModeType.Accelerated,
+			RenderingMode = RenderingModeType.Default,
 			Gestures = GesturesMode.Enabled,
 			VerticalOptions = LayoutOptions.Fill,
 			HorizontalOptions = LayoutOptions.Fill,

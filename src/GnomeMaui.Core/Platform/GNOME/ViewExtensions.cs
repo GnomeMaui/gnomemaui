@@ -5,6 +5,11 @@ namespace Microsoft.Maui.Platform;
 
 public static partial class ViewExtensions
 {
+	internal static float GetDisplayDensity(this Gtk.Widget? view)
+	{
+		return (float)Devices.DeviceDisplay.MainDisplayInfo.Density;
+	}
+
 	public static void UpdateIsEnabled(this Gtk.Widget platformView, IView view)
 	{
 		platformView.Sensitive = view.IsEnabled;

@@ -3,9 +3,9 @@ using Microsoft.Maui.Graphics.Platform;
 
 namespace Microsoft.Maui.Handlers;
 
-public partial class ShapeViewHandler : ViewHandler<IShapeView, SkiaGLGraphicsView>
+public partial class ShapeViewHandler : ViewHandler<IShapeView, SkiaGraphicsView>
 {
-	protected override SkiaGLGraphicsView CreatePlatformView() => new();
+	protected override SkiaGraphicsView CreatePlatformView() => new();
 
 	public override bool NeedsContainer =>
 		VirtualView?.Background != null ||

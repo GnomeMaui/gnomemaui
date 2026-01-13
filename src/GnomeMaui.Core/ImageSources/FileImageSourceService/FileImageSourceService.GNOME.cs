@@ -9,19 +9,15 @@ namespace Microsoft.Maui;
 
 public partial class FileImageSourceService
 {
-	public override Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
+	public override Task<IImageSourceServiceResult<SKImage>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
 		GetImageAsync((IFileImageSource)imageSource, cancellationToken);
 
-	public Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IFileImageSource imageSource, CancellationToken cancellationToken = default)
+	public Task<IImageSourceServiceResult<SKImage>?> GetImageAsync(IFileImageSource imageSource, CancellationToken cancellationToken = default)
 	{
-		Console.WriteLine($"[FileImageSourceService][GetImageAsync] called");
 		if (imageSource.IsEmpty)
 			return FromResult(null);
 
 		var filename = imageSource.File;
-#if DEBUG
-		Console.Out.WriteLine($"[FileImageSourceService][GetImageAsync] filename: {filename}");
-#endif
 		if (string.IsNullOrEmpty(filename))
 		{
 			Logger?.LogWarning("Unable to load image file: filename is null or empty.");
@@ -29,9 +25,6 @@ public partial class FileImageSourceService
 		}
 
 		var fullPath = GetFullPath(filename);
-#if DEBUG
-		Console.Out.WriteLine($"[FileImageSourceService][GetImageAsync] fullPath: {fullPath}");
-#endif
 
 		if (!File.Exists(fullPath))
 		{
@@ -43,14 +36,11 @@ public partial class FileImageSourceService
 		if (skImage == null)
 			return FromResult(null);
 
-		var view = new SKImageView();
-		view.Image = skImage;
-
-		var result = new ImageSourceServiceResult(view);
+		var result = new ImageSourceServiceResult(skImage);
 		return FromResult(result);
 	}
 
-	static Task<IImageSourceServiceResult<SKImageView>?> FromResult(IImageSourceServiceResult<SKImageView>? result) =>
+	static Task<IImageSourceServiceResult<SKImage>?> FromResult(IImageSourceServiceResult<SKImage>? result) =>
 		Task.FromResult(result);
 
 	static string GetFullPath(string filename)

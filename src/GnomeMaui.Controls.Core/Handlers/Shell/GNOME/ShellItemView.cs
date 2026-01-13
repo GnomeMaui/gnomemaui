@@ -1,52 +1,76 @@
-using Gtk;
-using Microsoft.Maui.Graphics;
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
+using System.Text;
 
-namespace Microsoft.Maui.Controls.Platform
+namespace Microsoft.Maui.Controls.Platform;
+
+public class ShellItemView : Gtk.Box
 {
-	public class ShellItemView : Gtk.Box
+	Gtk.Notebook? _tabBar;
+	bool _isTabBarVisible;
+	int _lastSelected = 0;
+	bool _isHandlerConnected = false;
+
+	readonly Lock _updateLock = new();
+	readonly Gtk.Stack _sectionStack;
+	readonly Dictionary<ShellSection, Gtk.Widget> _shellSectionViewCache = [];
+
+	protected Shell Shell { get; private set; } = default!;
+	protected ShellItem ShellItem { get; private set; } = default!;
+	protected IMauiContext MauiContext { get; private set; } = default!;
+	protected IShellItemController ShellItemController => (ShellItem as IShellItemController)!;
+
+	public ShellItemView(ShellItem item, IMauiContext context)
 	{
-		Gtk.Box? _currentSectionView;
-		Gtk.Notebook? _tabBar;
-		bool _isTabBarVisible;
-		int _lastSelected = 0;
+		ArgumentNullException.ThrowIfNull(item);
+		ArgumentNullException.ThrowIfNull(context);
 
-		Dictionary<ShellSection, Gtk.Box> _shellSectionViewCache = new Dictionary<ShellSection, Gtk.Box>();
+		SetOrientation(Gtk.Orientation.Vertical);
+		SetSpacing(0);
+		ShellItem = item;
+		MauiContext = context;
+		Shell = (Shell)item.Parent;
 
-		protected Shell Shell { get; private set; }
-		protected ShellItem ShellItem { get; private set; }
-		protected IMauiContext MauiContext { get; private set; }
-		protected IShellItemController ShellItemController => (ShellItem as IShellItemController)!;
+		_isTabBarVisible = true;
 
-		public ShellItemView(ShellItem item, IMauiContext context)
+		SetHexpand(true);
+		SetVexpand(true);
+
+		_sectionStack = Gtk.Stack.New();
+		_sectionStack.SetVexpand(true);
+		_sectionStack.SetHexpand(true);
+		// We can set transition if we want
+		// _sectionStack.SetTransitionType(Gtk.StackTransitionType.SlideLeft);
+		Append(_sectionStack);
+
+		if (ShellItem?.Items is INotifyCollectionChanged notifyCollectionChanged)
 		{
-			SetOrientation(Gtk.Orientation.Vertical);
-			SetSpacing(0);
-			ShellItem = item;
-			MauiContext = context;
-			Shell = (Shell)item.Parent;
-
-			_isTabBarVisible = true;
-
-			SetHexpand(true);
-			SetVexpand(true);
-
-			if (ShellItem.Items is INotifyCollectionChanged notifyCollectionChanged)
-			{
-				notifyCollectionChanged.CollectionChanged += OnShellItemsCollectionChanged;
-			}
-
-			UpdateTabBar(true);
+			notifyCollectionChanged.CollectionChanged += OnShellItemsCollectionChanged;
 		}
+	}
 
-		public void UpdateTabBar(bool isVisible)
+	public void UpdateTabBar(bool isVisible)
+	{
+		lock (_updateLock)
 		{
+			// Prevent signal loop
+			EnsureHandlerDisconnected();
+
 			if (isVisible)
 			{
-				ShowTabBar();
+				EnsureTabBar();
+
+				// Restore selection
+				if (_tabBar != null && ShellItem.CurrentItem != null)
+				{
+					var idx = ShellItem.Items.IndexOf(ShellItem.CurrentItem);
+					if (idx >= 0 && idx < _tabBar.GetNPages())
+					{
+						_tabBar.SetCurrentPage(idx);
+						_lastSelected = idx;
+					}
+				}
+
+				EnsureHandlerConnected();
 			}
 			else
 			{
@@ -55,33 +79,46 @@ namespace Microsoft.Maui.Controls.Platform
 
 			_isTabBarVisible = isVisible;
 		}
+	}
 
-		public void UpdateCurrentItem(ShellSection? section)
+	public void UpdateCurrentItem(ShellSection? section)
+	{
+		if (section == null)
 		{
-			if (section == null)
-			{
-				return;
-			}
+			return;
+		}
 
-			if (_currentSectionView != null)
-			{
-				Remove(_currentSectionView);
-				_currentSectionView = null;
-			}
+		lock (_updateLock)
+		{
+			// Temporarily disconnect the switch-page signal to prevent interference
+			EnsureHandlerDisconnected();
 
+			Gtk.Widget? targetView = null;
 			if (_shellSectionViewCache.ContainsKey(section))
 			{
-				_currentSectionView = _shellSectionViewCache[section];
+				targetView = _shellSectionViewCache[section];
 			}
 			else
 			{
-				_currentSectionView = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
+				// We still create a Box wrapper, or append directly. Existing code used a wrapper box.
+				var wrapper = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
 				var sectionPlatformView = section.ToPlatform(MauiContext);
-				_currentSectionView.Append(sectionPlatformView);
-				try
-				{ sectionPlatformView.Show(); }
-				catch { }
-				_shellSectionViewCache[section] = _currentSectionView;
+				wrapper.Append(sectionPlatformView);
+
+				// Add to stack
+				_sectionStack.AddChild(wrapper);
+
+				// Ensure visibility after adding to stack
+				wrapper.Show();
+				sectionPlatformView.Show();
+
+				_shellSectionViewCache[section] = wrapper;
+				targetView = wrapper;
+			}
+
+			if (targetView != null)
+			{
+				_sectionStack.SetVisibleChild(targetView);
 			}
 
 			var selectedIdx = ShellItem.Items.IndexOf(section);
@@ -92,20 +129,39 @@ namespace Microsoft.Maui.Controls.Platform
 				_tabBar.SetCurrentPage(selectedIdx);
 			}
 
-			Append(_currentSectionView);
-			_currentSectionView.Show();
+			// No need to append anything to 'this' anymore, _sectionStack is already there.
 
-			var child = _currentSectionView.GetFirstChild();
-			if (child != null)
+			if (targetView != null)
 			{
-				child.QueueResize();
-				_currentSectionView.QueueResize();
+				// If wrapper
+				if (targetView is Gtk.Box box)
+				{
+					var child = box.GetFirstChild();
+					if (child != null)
+					{
+						child.QueueResize();
+					}
+				}
+				targetView.QueueResize();
 			}
+
 		}
 
-		void OnTabItemSelected(Gtk.Notebook sender, Gtk.Notebook.SwitchPageSignalArgs args)
+		// Reconnect the switch-page signal OUTSIDE the lock to avoid deadlock
+		EnsureHandlerConnected();
+	}
+
+	void OnTabItemSelected(Gtk.Notebook sender, Gtk.Notebook.SwitchPageSignalArgs args)
+	{
+		if (!_updateLock.TryEnter())
+		{
+			return;
+		}
+
+		try
 		{
 			var pageNum = (int)args.PageNum;
+
 
 			if (pageNum == _lastSelected)
 			{
@@ -120,75 +176,107 @@ namespace Microsoft.Maui.Controls.Platform
 				Shell.CurrentItem = shellSection;
 			}
 		}
-
-		void OnShellItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+		finally
 		{
-			UpdateTabBar(_isTabBarVisible);
+			_updateLock.Exit();
 		}
+	}
 
-		void ShowTabBar()
+	void OnShellItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+	{
+		lock (_updateLock)
 		{
-			if (!ShellItemController.ShowTabs)
+			if (_isTabBarVisible)
 			{
-				return;
-			}
-
-			if (_tabBar == null)
-			{
-				_tabBar = Gtk.Notebook.New();
-				_tabBar.SetHexpand(true);
-				_tabBar.SetVexpand(true);
-				_tabBar.OnSwitchPage += OnTabItemSelected;
-				Prepend(_tabBar);
-			}
-
-			// Clear existing tabs
-			while (_tabBar.GetNPages() > 0)
-			{
-				_tabBar.RemovePage(0);
-			}
-
-			// Add tabs for each shell section
-			foreach (var section in ShellItem.Items)
-			{
-				var label = Gtk.Label.New(section.Title);
-				var content = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
-
-				_tabBar.AppendPage(content, label);
-			}
-
-			if (_lastSelected >= 0 && _lastSelected < _tabBar.GetNPages())
-			{
-				_tabBar.SetCurrentPage(_lastSelected);
+				EnsureHandlerDisconnected();
+				RepopulateTabBar();
+				EnsureHandlerConnected();
 			}
 		}
+	}
 
-		void HideTabBar()
+	void EnsureTabBar()
+	{
+		if (!ShellItemController.ShowTabs)
 		{
-			if (_tabBar != null)
-			{
-				Remove(_tabBar);
-				_tabBar = null;
-			}
+			return;
 		}
 
-		public override void Dispose()
+		if (_tabBar == null)
 		{
-			if (ShellItem.Items is INotifyCollectionChanged notifyCollectionChanged)
-			{
-				notifyCollectionChanged.CollectionChanged -= OnShellItemsCollectionChanged;
-			}
+			_tabBar = Gtk.Notebook.New();
+			_tabBar.SetHexpand(true);
+			_tabBar.SetVexpand(true);
+			Prepend(_tabBar);
 
-			if (_tabBar != null)
-			{
-				_tabBar.OnSwitchPage -= OnTabItemSelected;
-			}
-
-			foreach (var cachedView in _shellSectionViewCache.Values)
-			{
-				cachedView.Dispose();
-			}
-			_shellSectionViewCache.Clear();
+			RepopulateTabBar();
 		}
+	}
+
+	void RepopulateTabBar()
+	{
+		if (_tabBar == null) return;
+
+		// Clear existing
+		while (_tabBar.GetNPages() > 0)
+		{
+			_tabBar.RemovePage(0);
+		}
+
+		// Add tabs for each shell section
+		foreach (var section in ShellItem.Items)
+		{
+			var label = Gtk.Label.New(section.Title);
+			var content = Gtk.Box.New(Gtk.Orientation.Vertical, 0);
+
+			_tabBar.AppendPage(content, label);
+		}
+	}
+
+	void HideTabBar()
+	{
+		if (_tabBar != null)
+		{
+			EnsureHandlerDisconnected();
+			Remove(_tabBar);
+			_tabBar = null;
+		}
+	}
+
+	void EnsureHandlerConnected()
+	{
+		if (_tabBar != null && !_isHandlerConnected)
+		{
+			_tabBar.OnSwitchPage += OnTabItemSelected;
+			_isHandlerConnected = true;
+		}
+	}
+
+	void EnsureHandlerDisconnected()
+	{
+		if (_tabBar != null && _isHandlerConnected)
+		{
+			_tabBar.OnSwitchPage -= OnTabItemSelected;
+			_isHandlerConnected = false;
+		}
+	}
+
+	public override void Dispose()
+	{
+		if (ShellItem.Items is INotifyCollectionChanged notifyCollectionChanged)
+		{
+			notifyCollectionChanged.CollectionChanged -= OnShellItemsCollectionChanged;
+		}
+
+		EnsureHandlerDisconnected();
+
+		foreach (var cachedView in _shellSectionViewCache.Values)
+		{
+			cachedView.Dispose();
+		}
+		_shellSectionViewCache.Clear();
+
+		base.Dispose();
+		GC.SuppressFinalize(this);
 	}
 }

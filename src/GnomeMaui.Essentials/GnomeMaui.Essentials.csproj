@@ -10,11 +10,6 @@
 
         <AssemblyName>GnomeMaui.Essentials</AssemblyName>
         <RootNamespace>Microsoft.Maui.Essentials</RootNamespace>
-
-        <Title>MAUI Graphics with SkiaSharp for GNOME</Title>
-        <Description>Microsoft.Maui.Graphics implementation using SkiaSharp for GNOME applications. Provides GirCoreSkiaGraphicsView widget with IDrawable support for cross-platform graphics API in Linux desktop applications with hardware-accelerated rendering.</Description>
-        <PackageTags>maui;graphics;skiasharp;gtk;cross-platform;drawing;shapes;canvas;gircore;linux;desktop;vector-graphics;idrawable;widget;renderer</PackageTags>
-
         <PackageId>GnomeMaui.Essentials</PackageId>
     </PropertyGroup>
 
@@ -27,5 +22,9 @@
         <PackageReference Include="GirCore.Adw-1" />
         <PackageReference Include="GirCore.GLib-2.0" />
         <PackageReference Include="GirCore.Gtk-4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../GnomeMaui.Graphics/GnomeMaui.Graphics.csproj" />
     </ItemGroup>
 </Project>

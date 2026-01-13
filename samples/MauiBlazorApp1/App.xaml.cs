@@ -9,7 +9,7 @@
 
 		protected override Window CreateWindow(IActivationState? activationState)
 		{
-			return new Window(new MainPage()) { Title = "MauiBlazorApp1" };
+			return new Window(new NavigationPage(new MainPage())) { Title = "MauiBlazorApp1" };
 		}
 	}
 }

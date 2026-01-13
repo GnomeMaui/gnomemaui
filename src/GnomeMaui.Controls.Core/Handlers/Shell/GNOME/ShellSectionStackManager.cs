@@ -2,42 +2,41 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GColor = Microsoft.Maui.Graphics.Color;
 
-namespace Microsoft.Maui.Controls.Platform
+namespace Microsoft.Maui.Controls.Platform;
+
+public class ShellSectionStackManager : StackNavigationManager
 {
-	public class ShellSectionStackManager : StackNavigationManager
+	protected ShellSection? ShellSection { get; private set; }
+
+	ShellSectionView? _rootView;
+
+	public void Connect(IElement navigationView, IMauiContext mauiContext)
 	{
-		protected ShellSection? ShellSection { get; private set; }
+		NavigationView = (IStackNavigation)navigationView;
+		MauiContext = mauiContext;
+		ShellSection = (ShellSection)navigationView;
+	}
 
-		ShellSectionView? _rootView;
+	public override void Disconnect()
+	{
+		base.Disconnect();
+		ShellSection = null;
+	}
 
-		public void Connect(IElement navigationView, IMauiContext mauiContext)
+	protected override async Task InitializeStack(IReadOnlyList<IView> newStack, bool animated)
+	{
+		if (newStack.Count == 0)
 		{
-			NavigationView = (IStackNavigation)navigationView;
-			MauiContext = mauiContext;
-			ShellSection = (ShellSection)navigationView;
+			return;
 		}
 
-		public override void Disconnect()
-		{
-			base.Disconnect();
-			ShellSection = null;
-		}
+		List<IView> navigationStack = new List<IView>(newStack);
 
-		protected override async Task InitializeStack(IReadOnlyList<IView> newStack, bool animated)
-		{
-			if (newStack.Count == 0)
-			{
-				return;
-			}
+		_rootView = new ShellSectionView(ShellSection!, MauiContext!);
 
-			List<IView> navigationStack = new List<IView>(newStack);
+		await PlatformNavigation.Push(_rootView, false);
 
-			_rootView = new ShellSectionView(ShellSection!, MauiContext!);
-
-			await PlatformNavigation.Push(_rootView, false);
-
-			navigationStack.RemoveAt(0);
-			await base.InitializeStack(navigationStack, animated);
-		}
+		navigationStack.RemoveAt(0);
+		await base.InitializeStack(navigationStack, animated);
 	}
 }

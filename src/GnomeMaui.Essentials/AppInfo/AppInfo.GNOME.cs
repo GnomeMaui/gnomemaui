@@ -27,16 +27,10 @@ class AppInfoImplementation : IAppInfo
 			{
 				var styleManager = Adw.StyleManager.GetDefault();
 				bool isDark = styleManager.GetDark();
-#if DEBUG
-				Console.WriteLine($"Current theme is {(isDark ? "Dark" : "Light")}");
-#endif
 				return isDark ? AppTheme.Dark : AppTheme.Light;
 			}
 			catch
 			{
-#if DEBUG
-				Console.WriteLine("Could not determine current theme");
-#endif
 				return AppTheme.Unspecified;
 			}
 		}

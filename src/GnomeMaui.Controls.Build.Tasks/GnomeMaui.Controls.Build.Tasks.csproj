@@ -11,9 +11,6 @@
 
         <!-- NuGet package information -->
         <IsPackable>true</IsPackable>
-        <Title>GnomeMaui Build Tasks and Tooling</Title>
-        <Description>Build tasks and MSBuild integration for GnomeMaui. This package contains the MSBuild tasks, props, and targets for building GnomeMaui applications on GNOME. Provides implicit using directives and XAML compilation support.</Description>
-        <PackageTags>gnome;gtk;maui;msbuild;build-tasks;xaml;linux;desktop</PackageTags>
 
         <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
         <NoPackageAnalysis>true</NoPackageAnalysis>

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using SkiaSharp;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,18 +8,15 @@ namespace Microsoft.Maui;
 
 public partial class UriImageSourceService
 {
-	public override Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
+	public override Task<IImageSourceServiceResult<SKImage>?> GetImageAsync(IImageSource imageSource, CancellationToken cancellationToken = default) =>
 		GetImageAsync((IUriImageSource)imageSource, cancellationToken);
 
-	public async Task<IImageSourceServiceResult<SKImageView>?> GetImageAsync(IUriImageSource imageSource, CancellationToken cancellationToken = default)
+	public async Task<IImageSourceServiceResult<SKImage>?> GetImageAsync(IUriImageSource imageSource, CancellationToken cancellationToken = default)
 	{
 		if (imageSource.IsEmpty)
 			return null;
 
 		var uri = imageSource.Uri;
-#if DEBUG
-		Console.Out.WriteLine($"[UriImageSourceService][GetImageAsync] uri: {uri}");
-#endif
 
 		if (uri is null)
 		{
@@ -54,19 +52,7 @@ public partial class UriImageSourceService
 				return null;
 			}
 
-#if DEBUG
-			Console.Out.WriteLine($"[UriImageSourceService][GetImageAsync] SKImage created: {skImage.Width}x{skImage.Height}");
-#endif
-
-			// Create SKImageView and set the image
-			var picture = new SKImageView();
-			picture.Image = skImage;
-
-#if DEBUG
-			Console.Out.WriteLine($"[UriImageSourceService][GetImageAsync] SKImageView created");
-#endif
-
-			return new ImageSourceServiceResult(picture);
+			return new ImageSourceServiceResult(skImage);
 		}
 		catch (Exception ex)
 		{

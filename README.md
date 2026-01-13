@@ -4,106 +4,43 @@
 
 ## Overview
 
-GNOME MAUI .NET is a [GirCore](https://gircore.github.io/)-based, modern GTK4/Adwaita .NET MAUI backend for Linux. Its goal is to bring first-class, native GNOME integration to .NET MAUI while preserving the familiar MAUI development model and tooling.
+GNOME MAUI .NET is a modern, legacy-free .NET MAUI backend for Linux, built on [GirCore](https://gircore.github.io/) with native GTK4 and Adwaita integration.
+
+> [!NOTE]
+> The project is not intended to carry forward technologies from the past, therefore it **does not include**:
+>
+> * a Xamarin.Forms compatibility layer
+> * obsolete APIs or features
+> * TwoPaneView (will be implemented when the first foldable GNOME phone ships 😉)
+
+Its goal is to deliver first-class, native GNOME integration for .NET MAUI while preserving the familiar MAUI development model and tooling.
 
 The project provides a dedicated `maui-gnome` workload that introduces the `net10.0-gnome` TFM, allowing MAUI applications to be built and run on Linux using the single-project model, without splitting the app into platform-specific projects.
 
-User interfaces are described using the familiar MAUI XAML dialect, which is mapped to native GNOME widgets and Skia-based rendering primitives. The system is optimized for NativeAOT, delivers ultra-fast startup, and supports Skia CPU and GPU rendering for modern, high-performance graphics on Linux.
+User interfaces are described using the familiar MAUI XAML dialect, which is mapped to native GNOME widgets and SkiaSharp-based rendering primitives. The system is optimized for NativeAOT, delivers ultra-fast startup, and supports SkiaSharp CPU and GPU rendering for modern, high-performance graphics on Linux.
 
-GNOME MAUI .NET is a Linux-first MAUI backend that follows GNOME design and technology guidelines while remaining a fully standards-compliant .NET and MAUI stack.
+GNOME MAUI .NET is a Linux-first MAUI backend that follows GNOME design and technology guidelines while maintaining full compliance with .NET and MAUI standards.
 
-> [!NOTE]
-> The project is now functional with core MAUI features implemented: all layouts, most views, XAML, Blazor, and Skia rendering are ready. Some areas like Shell navigation and MAUI Essentials are still under active development. The goal remains full MAUI compatibility.
+> [!IMPORTANT]
+> The project is currently in an active validation phase.
+>
+> Comprehensive testing of the MAUI feature matrix is in progress, along with parallel execution and verification of **134 official MAUI sample projects**.
+>
+> In parallel, the [GnomeMaui Samples](https://github.com/GnomeMaui/gnomemaui-samples) repository is being continuously updated with successfully validated examples, while ongoing minor fixes, fine-tuning, and stabilization work take place.
 
-## Samples
+## Getting started
 
-Below are two short animated demos showcasing the current state of the project:
+TODO: Create documentation for end users to install GNOME MAUI .NET SDK and workload.
 
-- **[MAUI sample app](/samples/MauiTest1)** (Shell navigation, Skia CPU & GPU pages)
+## Developer environment setup
 
-https://github.com/user-attachments/assets/ce239643-d9cb-4fcd-8832-1e64a05ef2db
+The development environment currently does not support Flatpak, Snap, and similar packages. These are isolated environments. Use native Linux installation. You will find instructions below.
 
-- **[MAUI Blazor sample app](/samples/MauiBlazorApp1)** (XAML host with Blazor integration)
+Follow the [Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md) documentation to set up your development environment.
 
-https://github.com/user-attachments/assets/5790be5e-f9af-4da7-bc6d-2de14340341b
+## Changelog
 
-## What's ready
-
-| Area | Status |
-| - | - |
-| `net10.0-gnome` TFM | ✅ Ready |
-| `maui-gnome` workload | ✅ Ready |
-| Single-project MAUI model | ✅ Ready |
-| XAML dialect support | ✅ Ready |
-| Blazor integration | ✅ Ready |
-| Skia CPU rendering | ✅ Ready |
-| Skia GPU rendering | ✅ Ready |
-
-### Layouts
-
-| Area | Status |
-| - | - |
-| Stack layout | ✅ Ready |
-| Absolute layout | ✅ Ready |
-| Grid layout | ✅ Ready |
-| Flex layout | ✅ Ready |
-| Custom layout | ✅ Ready |
-
-### Views
-
-| Area | Status |
-| - | - |
-| Activity indicator | ✅ Ready |
-| Blazor WebView | ✅ Ready |
-| Border | 🚧 Basic |
-| Box view | ✅ Ready |
-| Button | ✅ Ready |
-| Editor | ✅ Ready |
-| Entry | ✅ Ready |
-| Graphics view | ✅ Ready |
-| Image | ✅ Ready |
-| Label | ✅ Ready |
-| Picker | ✅ Ready |
-| Progress bar | ✅ Ready |
-| Scroll view | ✅ Ready |
-| Shapes | 🚧 Basic |
-| Slider | ✅ Ready |
-| Switch | ✅ Ready |
-
-### Under development
-
-| Area | Status |
-| - | - |
-| Shell navigation | 🚧 Basic |
-| MAUI Essentials | 🚧 Partial |
-
-## Skia-based integrations
-
-*Write once, run it on the GPU.*
-
-One of the strongest features of GNOME MAUI .NET is its Skia-based rendering ecosystem, which performs exceptionally well on Linux. This is not traditional widget composition, but a consciously designed, GPU-friendly rendering pipeline.
-
-| Area | Status |
-| - | - |
-| DrawnUi | 🧩 Almost Ready ~97% |
-
-https://github.com/user-attachments/assets/bf07a511-9988-4fd6-8e7e-c80eef08c233
-
-Sample available at: [samples/MauiDrawnUi1](/samples/MauiDrawnUi1)
-
-**DrawnUi** is a Skia-based, fully drawn UI approach with its own layout and animation pipeline. Instead of managing thousands of native controls, everything is rendered onto a unified surface, resulting in precise control, smooth animations, and high performance. On Linux, this model truly shines: write the code once, and execute it directly on the GPU.
-
-The same rendering philosophy underpins the following integrations, which are actively planned and under development (coming soon):
-
-- **DrawnUi** – fully drawn UI, animations, gestures, effects
-- **Mapsui** – maps, layers, large object counts, continuous redraw
-- **LiveCharts2** – charts, animations, real-time updates
-
-Together, these components define a graphics stack where MAUI on Linux is not a compromise, but a platform that is powerful and shamelessly fast.
-
-## Developer environment
-
-Detailed instructions for setting up a GNOME MAUI .NET development environment on Linux: [gnomemaui-linux-dev-setup.md](docs/gnomemaui-linux-dev-setup.md)
+See the [.github/releases](.github/releases) folder for the changelog.
 
 ## License
 

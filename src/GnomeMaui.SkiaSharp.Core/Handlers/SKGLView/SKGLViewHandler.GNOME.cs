@@ -99,8 +99,7 @@ public partial class SKGLViewHandler : ViewHandler<ISKGLView, SKGLArea>
 	{
 		if (VirtualView?.IgnorePixelScaling == false && PlatformView != null)
 		{
-			var scale = 1.0f; // TODO: Get the actual scale factor
-
+			var scale = (float)Microsoft.Maui.Devices.DeviceDisplay.MainDisplayInfo.Density;
 			x *= scale;
 			y *= scale;
 		}

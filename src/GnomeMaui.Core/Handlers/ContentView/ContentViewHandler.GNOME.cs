@@ -34,17 +34,26 @@ public partial class ContentViewHandler : ViewHandler<IContentView, ContentWidge
 		_ = handler.VirtualView ?? throw new InvalidOperationException($"{nameof(VirtualView)} should have been set by base class.");
 		_ = handler.MauiContext ?? throw new InvalidOperationException($"{nameof(MauiContext)} should have been set by base class.");
 
-		// Remove previous content
-		handler.PlatformView.Content = null;
-
 		// Add new content if exists
 		if (handler.VirtualView.PresentedContent is IView view)
 		{
 			var platformContent = view.ToPlatform(handler.MauiContext);
+
+			// If the widget already has a parent, unparent it (in case of reusing OLD widget)
+			if (platformContent.GetParent() != null)
+			{
+				platformContent.Unparent();
+			}
+
 			handler.PlatformView.Content = platformContent;
 
 			// Apply padding via CSS
 			handler.PlatformView.UpdatePadding(handler.VirtualView.Padding);
+		}
+		else
+		{
+			// Remove previous content
+			handler.PlatformView.Content = null;
 		}
 	}
 
@@ -60,7 +69,13 @@ public partial class ContentViewHandler : ViewHandler<IContentView, ContentWidge
 
 	protected override void DisconnectHandler(ContentWidget platformView)
 	{
-		platformView.Content = null;
+		// Critical: Unparent the child before the handler is disconnected
+		if (platformView.Content != null)
+		{
+			platformView.Content.Unparent();
+			platformView.Content = null;
+		}
+
 		base.DisconnectHandler(platformView);
 	}
 }

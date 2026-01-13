@@ -1,5 +1,6 @@
 using Microsoft.Maui.Graphics;
 using System.Text;
+using GeometryUtil = Microsoft.Maui.Graphics.GeometryUtil;
 
 namespace Microsoft.Maui.Platform;
 
@@ -99,38 +100,39 @@ public class LayoutWidgetManager
 
 		if (orientation == Gtk.Orientation.Horizontal)
 		{
-			// Measuring width: use cached width from previous vertical measurement if available,
+			// Measuring width: use cached width as fallback if available,
 			// otherwise use infinite width
 			widthConstraint = _cachedWidth > 0 ? _cachedWidth : double.PositiveInfinity;
 			heightConstraint = forSize < 0 ? double.PositiveInfinity : forSize;
 		}
 		else
 		{
-			// Measuring height: constrain width if provided, use infinite height
-			widthConstraint = forSize < 0 ? double.PositiveInfinity : forSize;
-			heightConstraint = double.PositiveInfinity;
-
-			// Cache the width for next horizontal measurement
+			// Measuring height: ALWAYS use forSize directly if available
+			// Cache is only fallback when no constraint is provided (forSize < 0)
+			// This allows the window to shrink - don't cache unconditionally!
 			if (forSize > 0)
 			{
-				_cachedWidth = forSize;
+				// We have a width constraint, use it directly
+				widthConstraint = forSize;
+				// DON'T cache it automatically - this would prevent window shrinking
 			}
+			else
+			{
+				// No width constraint provided (forSize < 0), use cache as fallback
+				widthConstraint = _cachedWidth > 0 ? _cachedWidth : double.PositiveInfinity;
+			}
+			heightConstraint = double.PositiveInfinity;
 		}
 
 		var size = _crossPlatformLayout.CrossPlatformMeasure(widthConstraint, heightConstraint);
 
+		// Apply Android-style rounding: Ceiling - Epsilon to avoid rounding up unnecessarily
+		// This prevents 1px gaps caused by floating-point precision errors
+		// Example: 294.000000000000026 - 0.0000000001 = 294.000000000000016 -> Ceiling = 294 (not 295)
 		if (orientation == Gtk.Orientation.Horizontal)
-			natural = (int)size.Width;
+			natural = (int)Math.Ceiling(size.Width - GeometryUtil.Epsilon);
 		else
-			natural = (int)size.Height;
-
-		Console.Out.WriteLine(new StringBuilder()
-			.AppendLine("[LayoutWidgetManager][CustomMeasure]")
-			.AppendLine($" Orientation: {orientation}")
-			.AppendLine($" forSize: {forSize}")
-			.AppendLine($" WidthConstraint: {widthConstraint}, HeightConstraint: {heightConstraint}")
-			.AppendLine($" Measured Size: {size.Width}x{size.Height}")
-			.ToString());
+			natural = (int)Math.Ceiling(size.Height - GeometryUtil.Epsilon);
 
 		minimum = natural;
 	}
@@ -163,10 +165,17 @@ public class LayoutWidgetManager
 			child.SetValign(Gtk.Align.Fill);
 
 			// GTK: transform adjusts position without affecting allocated size
-			var point = new Graphene.Point { X = (float)frame.X, Y = (float)frame.Y };
+			// Use Ceiling - Epsilon for consistent pixel rounding (same as Android platform)
+			// CRITICAL: Round position to whole pixels to prevent sub-pixel rendering artifacts (1px gaps/blurring)
+			var x = (float)Math.Ceiling(frame.X - GeometryUtil.Epsilon);
+			var y = (float)Math.Ceiling(frame.Y - GeometryUtil.Epsilon);
+			var point = new Graphene.Point { X = x, Y = y };
 			var transform = Gsk.Transform.New()?.Translate(point);
 
-			child.Allocate((int)frame.Width, (int)frame.Height, -1, transform);
+			var allocWidth = (int)Math.Ceiling(frame.Width - GeometryUtil.Epsilon);
+			var allocHeight = (int)Math.Ceiling(frame.Height - GeometryUtil.Epsilon);
+
+			child.Allocate(allocWidth, allocHeight, -1, transform);
 		}
 	}
 

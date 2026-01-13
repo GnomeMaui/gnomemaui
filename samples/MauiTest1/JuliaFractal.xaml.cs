@@ -54,7 +54,7 @@ vec4 main(vec2 fragCoord) {{
     return vec4(color, 1.0);
 }}";
 
-	readonly SKFont _statFont = new(SKTypeface.FromFamilyName("monospace"), 12);
+	readonly SKFont _statFont = new(SKTypeface.FromFamilyName("Open Sans"), 12);
 	readonly SKPaint _statPaint = new() { IsAntialias = false };
 
 	readonly SKRuntimeEffect _juliaEffect = default!;

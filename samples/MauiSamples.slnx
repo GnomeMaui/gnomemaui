@@ -11,10 +11,6 @@
         <Project Path="../src/GnomeMaui.Controls.SourceGen/GnomeMaui.Controls.SourceGen.csproj" />
         <Project Path="../src/GnomeMaui.Controls.Xaml/GnomeMaui.Controls.Xaml.csproj" />
     </Folder>
-    <Folder Name="/MauiGraphics1/">
-        <Project Path="MauiGraphics1/GraphicsTester.Portable/GraphicsTester.Portable.csproj" />
-        <Project Path="MauiGraphics1/GraphicsTesterApp/GraphicsTesterApp.csproj" />
-    </Folder>
 
     <Project Path="../src/GnomeMaui.Blazor/GnomeMaui.Blazor.csproj" />
     <Project Path="../src/GnomeMaui.Controls/GnomeMaui.Controls.csproj" />
@@ -30,4 +26,5 @@
     <Project Path="MauiBlazorApp1/MauiBlazorApp1.csproj" />
     <Project Path="MauiDrawnUi1/MauiDrawnUi1.csproj" />
     <Project Path="MauiTest1/MauiTest1.csproj" />
+    <Project Path="TestCases.HostApp/Controls.TestCases.HostApp.csproj" />
 </Solution>

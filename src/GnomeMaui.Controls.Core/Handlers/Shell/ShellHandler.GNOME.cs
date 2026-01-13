@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Maui.Controls.Platform;
 
 namespace Microsoft.Maui.Controls.Handlers;
@@ -8,22 +7,7 @@ public partial class ShellHandler : ViewHandler<Shell, ShellView>
 	protected override ShellView CreatePlatformView()
 	{
 		var shellView = new ShellView();
-		shellView.SetElement(VirtualView, MauiContext!);
-
-		// Find the native window from the MAUI Application
-		if (Application.Current?.Windows is { } windows)
-		{
-			Console.WriteLine($"Found {windows.Count} windows in the application.");
-			foreach (var window in windows)
-			{
-				if (window?.Handler?.PlatformView is Adw.ApplicationWindow nativeWindow)
-				{
-					shellView.SetupBreakpoint(nativeWindow, 500);
-					break;
-				}
-			}
-		}
-
+		shellView.SetElement(VirtualView, MauiContext);
 		return shellView;
 	}
 

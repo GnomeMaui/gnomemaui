@@ -1,25 +1,37 @@
 # Chicken-egg scenario. Dependency paradox neutralization…
 
-> [!NOTE]
-> This documentation depends on the [Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md) and the [Microsoft MAUI and SkiaSharp Patch](/docs/2-patch.md) documentation.
+This documentation depends on
 
-This document exists because, in the case of GNOME MAUI .NET, a classic chicken-and-egg situation arises:
-the `net10.0-gnome` TFM only exists if the maui-gnome workload is already installed, but building and testing the workload itself requires the `net10.0-gnome` TFM. This circular dependency cannot be avoided; it can only be resolved through deliberate bootstrap steps. The following steps neutralize this paradox and ensure that the GNOME MAUI development environment can be set up in a reproducible way.
+- [Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md)
+- [Patch](/docs/2-patch.md)
 
-Open Ptyxis and select the GNOME MAUI profile from the profile list.
+## Start GNOME MAUI ptyxis terminal
 
-![Open GNOME MAUI terminal](/assets/GnomeMauiIcon.png)
+You can start the ptyxis terminal in two ways:
 
-Return to the GNOME MAUI home directory:
+**Option 1 - From the desktop launcher**:
+The setup script installs a launcher named **GNOME MAUI** with its own icon (`gnomemaui.desktop`). You can start it directly from your GNOME application menu.
+
+**Option 2 - From Ptyxis**:
+Open **Ptyxis** and select the **GNOME MAUI** profile.
+This profile is also created automatically by the setup scripts.
+
+## Installing .NET workloads
 
 ```bash
-h
+dotnet workload install maui-android wasm-tools --temp-dir ~/.cache
+
+# verify
+dotnet workload list
 ```
 
-Install the required workloads:
+### Add local NuGet package source
 
 ```bash
-.vscode/.linux/install.sh --maui
+dotnet nuget add source "$DOTNET_ROOT/library-packs/" --name "Apps"
+
+# verify
+dotnet nuget list source
 ```
 
 ## Build and install GNOME MAUI SDK

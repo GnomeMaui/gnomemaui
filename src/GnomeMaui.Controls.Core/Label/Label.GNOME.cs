@@ -1,3 +1,5 @@
+using Microsoft.Maui.Controls.Platform;
+
 namespace Microsoft.Maui.Controls
 {
 	/// <summary>A <see cref="Microsoft.Maui.Controls.View"/> that displays text.</summary>
@@ -5,8 +7,10 @@ namespace Microsoft.Maui.Controls
 	{
 		public static void MapText(ILabelHandler handler, Label label)
 			=> handler.PlatformView?.UpdateText(label);
-		public static void MapLineBreakMode(ILabelHandler handler, Label label) { }
-		public static void MapMaxLines(ILabelHandler handler, Label label) { }
+		public static void MapLineBreakMode(ILabelHandler handler, Label label)
+			=> handler.PlatformView?.UpdateLineBreakMode(label);
+		public static void MapMaxLines(ILabelHandler handler, Label label)
+			=> handler.PlatformView?.UpdateMaxLines(label);
 		public static void MapTextColor(ILabelHandler handler, Label label)
 			=> handler.PlatformView?.UpdateTextColor(label);
 		public static void MapCharacterSpacing(ILabelHandler handler, Label label)

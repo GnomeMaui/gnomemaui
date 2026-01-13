@@ -6,6 +6,4 @@ Use SkiaSharp with Microsoft.Maui.Graphics on Linux using GTK4 with Cairo and Op
 
 This package enables drawing with SkiaSharp in Maui.Graphics environments on Linux, using native GTK4 support through GirCore with both CPU (Cairo) and GPU (OpenGL ES) rendering.
 
-Please do not reference this package directly.
-
-[GNOMEMAUI]: https://gnomemaui.net
+[GNOMEMAUI]: https://github.com/GnomeMaui/gnomemaui

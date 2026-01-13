@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Gtk;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Gtk;
 
 namespace Microsoft.Maui.Platform;
 
@@ -45,23 +45,24 @@ public class StackNavigationManager : Gtk.Box, IToolbarContainer
 
 	public void SetToolbar(Gtk.Widget toolbar)
 	{
-		if (_toolbar != null)
-		{
-			Remove(_toolbar);
-			_toolbar = null;
-		}
-
 		_toolbar = toolbar;
-		Prepend(toolbar);
-
-		// Ensure toolbar back button reflects current stack
 		UpdateToolbarBackButton();
 	}
 
-	public virtual void Connect(IView navigationView, IMauiContext mauiContext)
+	public virtual void Connect(IView navigationView)
 	{
 		NavigationView = (IStackNavigation)navigationView;
-		MauiContext = mauiContext;
+		MauiContext = navigationView.Handler?.MauiContext;
+
+		// Get the toolbar from the NavigationRootManager (WindowRootView)
+		if (MauiContext != null)
+		{
+			var toolbar = MauiContext.GetNavigationRootManager()?.Toolbar;
+			if (toolbar != null)
+			{
+				SetToolbar(toolbar);
+			}
+		}
 	}
 
 	public virtual void Disconnect()

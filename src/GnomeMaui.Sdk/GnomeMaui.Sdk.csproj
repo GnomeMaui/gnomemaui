@@ -7,9 +7,6 @@
 
     <PropertyGroup>
         <PackageId>GnomeMaui.Sdk</PackageId>
-
-        <Title>GNOME MAUI .NET SDK</Title>
-        <Description>GNOME MAUI .NET SDK for .NET MAUI on GNOME.</Description>
     </PropertyGroup>
 
     <PropertyGroup>

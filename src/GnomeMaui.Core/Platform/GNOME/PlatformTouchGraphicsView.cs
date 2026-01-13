@@ -5,7 +5,7 @@ using System;
 
 namespace Microsoft.Maui.Platform
 {
-	public class PlatformTouchGraphicsView : SkiaGLGraphicsView
+	public class PlatformTouchGraphicsView : SkiaGraphicsView
 	{
 		IGraphicsView? _graphicsView;
 		RectF _bounds;

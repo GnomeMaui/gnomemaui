@@ -69,7 +69,7 @@ wget -O devenv.tar.bz2 https://github.com/czirok/devenv/releases/download/v2026.
 Safe extract the archive:
 
 ```bash
-rm -rf devenv  # remove previous version if exists
+rm -rf devenv  # remove previous version if exists, make sure to restore a backup copy of install.env
 tar xjfv devenv.tar.bz2
 ```
 
@@ -78,6 +78,10 @@ Check dependencies:
 ```bash
 .vscode/.linux/install.sh
 ```
+
+> [!NOTE]
+> You can opt to use GNOME Terminal instead of Ptyxis, it the latter is not available in the packet souces of your distro. 
+> Comment out 
 
 If you see that everything is checked, then everything is fine. (This example was run on Arch Linux):
 
@@ -102,6 +106,9 @@ On Ubuntu 24.04 LTS, Ptyxis is not available, so this output will appear instead
 [✗] Ptyxis not found - install Ptyxis terminal
 [✗] Some dependencies are missing. Please install them before running the installer.
 ```
+
+In `.vscode/.linux/install.env` change PROJECT_TERMINAL="gnome-terminal" and set the GNOME_TERMINAL_ID var to the GUID of your GNOME Terminal profile 
+as described in 1.1-gnome-terminal-setup.md. You might want to protect your install.env from possible upstream changes using `git update-index --assume-unchanged .vscode/.linux/install.env`.
 
 > [!CAUTION]
 > Flatpak Visual Studio Code is not supported. Please install the native version: [Ubuntu VS Code](https://github.com/czirok/devenv?tab=readme-ov-file#ubuntu-plucky-puffin-2510-and-debian-trixie-13)

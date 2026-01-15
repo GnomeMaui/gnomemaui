@@ -22,7 +22,7 @@ export GNOMEMAUI=$GNOMEMAUIROOT/gnomemaui
 ```
 
 > [!CAUTION]
-> You need to log out and back in for the environment variables to take effect!
+> You need to restart your terminal or run `source ~/.bashrc` for the environment variables to take effect.
 
 ## Install the required dependencies
 
@@ -32,15 +32,13 @@ export GNOMEMAUI=$GNOMEMAUIROOT/gnomemaui
 - Debian 13
 - Fedora 43
 - OpenSUSE Tumbleweed
-- Ubuntu 25.10
+- Ubuntu 24.04 or 25.10
 
-Follow the instructions found here:
-
-[https://github.com/czirok/devenv?tab=readme-ov-file#dependencies](https://github.com/czirok/devenv?tab=readme-ov-file#dependencies)
+Follow the operating system specific instructions found in the [devenv readme](https://github.com/czirok/devenv?tab=readme-ov-file#dependencies) but stop at the Download section and proceed with this document.):
 
 ## Setting up the development environment
 
-Open Ptyxis terminal or GNOME Terminal.
+(Re)open Ptyxis terminal or GNOME Terminal.
 
 Create the GNOMEMAUIROOT directory:
 
@@ -65,13 +63,14 @@ cd $GNOMEMAUI
 Download devenv
 
 ```bash
-wget https://github.com/czirok/devenv/releases/download/v2026.01.13/devenv.tar.bz2
+wget -O devenv.tar.bz2 https://github.com/czirok/devenv/releases/download/v2026.01.15/devenv.tar.bz2
 ```
 
 Safe extract the archive:
 
 ```bash
-tar xjfv devenv.tar.bz2 --skip-old-files
+rm -rf devenv  # remove previous version if exists
+tar xjfv devenv.tar.bz2
 ```
 
 Check dependencies:
@@ -142,7 +141,7 @@ You should see this or something similar:
 ```
 
 > [!CAUTION]
-> You need to log out again and back in for the environment variables to take effect!
+> You need to log out again and back in to your GNOME session for the environment variables to take effect!
 
 ## Next step
 

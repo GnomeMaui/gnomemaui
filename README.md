@@ -15,6 +15,8 @@ GNOME MAUI .NET is a modern, legacy-free .NET MAUI backend for Linux, built on [
 
 Its goal is to deliver first-class, native GNOME integration for .NET MAUI while preserving the familiar MAUI development model and tooling.
 
+https://github.com/user-attachments/assets/c5441240-55d0-4127-9467-c097ce6bb635
+
 The project provides a dedicated `maui-gnome` workload that introduces the `net10.0-gnome` TFM, allowing MAUI applications to be built and run on Linux using the single-project model, without splitting the app into platform-specific projects.
 
 User interfaces are described using the familiar MAUI XAML dialect, which is mapped to native GNOME widgets and SkiaSharp-based rendering primitives. The system is optimized for NativeAOT, delivers ultra-fast startup, and supports SkiaSharp CPU and GPU rendering for modern, high-performance graphics on Linux.

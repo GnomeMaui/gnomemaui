@@ -3,6 +3,10 @@
 > [!NOTE]
 > This documentation depends on the [# Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md) documentation.
 
+## Start GNOME Terminal
+
+Open **GNOME Terminal** and select the **GNOME MAUI** profile.
+
 ## Start GNOME MAUI ptyxis terminal
 
 You can start the ptyxis terminal in two ways:

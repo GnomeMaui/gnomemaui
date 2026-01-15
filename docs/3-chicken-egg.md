@@ -5,6 +5,12 @@ This documentation depends on
 - [Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md)
 - [Patch](/docs/2-patch.md)
 
+## Start GNOME Terminal
+
+Open **GNOME Terminal** and select the **GNOME MAUI** profile.
+
+If the GNOME Terminal **GNOME MAUI** profile is open, press `h` and `enter` to return to the devenv home.
+
 ## Start GNOME MAUI ptyxis terminal
 
 If the GNOME MAUI ptyxis terminal is open, press `h` and `enter` to return to the devenv home.

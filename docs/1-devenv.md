@@ -2,7 +2,7 @@
 
 The development environment currently does not support Flatpak, Snap, and similar packages. These are isolated environments. Use native Linux installation. You will find instructions below.
 
-The development environment requires a minimum of GNOME 48.
+The development environment requires a minimum of GNOME 48. The current GNOME MAUI .NET development environment still works with GNOME 46, but GNOME 48 or newer is required for future development.
 
 ## Environment Variables
 
@@ -40,7 +40,7 @@ Follow the instructions found here:
 
 ## Setting up the development environment
 
-Open Ptyxis terminal.
+Open Ptyxis terminal or GNOME Terminal.
 
 Create the GNOMEMAUIROOT directory:
 
@@ -92,6 +92,21 @@ If you see that everything is checked, then everything is fine. (This example wa
 [✓] All dependencies are installed!
 ```
 
+On Ubuntu 24.04 LTS, Ptyxis is not available, so this output will appear instead. A GNOME Terminal can be used instead of Ptyxis.
+
+```bash
+[✓] Trash CLI found (version: 0.23.11.10)
+[✓] BC found (version: bc 1.07.1)
+[✓] Curl found (version: curl 8.5.0 (x86_64-pc-linux-gnu) libcurl/8.5.0 OpenSSL/3.0.13 zlib/1.3 brotli/1.1.0 zstd/1.5.5 libidn2/2.3.7 libpsl/0.21.2 (+libidn2/2.3.7) libssh/0.10.6/openssl/zlib nghttp2/1.59.0 librtmp/2.3 OpenLDAP/2.6.7)
+[✓] Bash found (version: GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu))
+[✓] Visual Studio Code found (version: 1.108.0)
+[✗] Ptyxis not found - install Ptyxis terminal
+[✗] Some dependencies are missing. Please install them before running the installer.
+```
+
+> [!CAUTION]
+> Flatpak Visual Studio Code is not supported. Please install the native version: [Ubuntu VS Code](https://github.com/czirok/devenv?tab=readme-ov-file#ubuntu-plucky-puffin-2510-and-debian-trixie-13)
+
 If something is not installed, you can find the documentation required for installation here: [devenv](https://github.com/czirok/devenv?tab=readme-ov-file#dependencies)
 
 When everything is in order, the next step is to install the development environment:
@@ -130,5 +145,7 @@ You should see this or something similar:
 > You need to log out again and back in for the environment variables to take effect!
 
 ## Next step
+
+If you are using GNOME Terminal, follow the instructions found here: [GNOME Terminal manual setup](/docs/1.1-gnome-terminal-setup.md)
 
 You can now continue with the [patch](/docs/2-patch.md) documentation.

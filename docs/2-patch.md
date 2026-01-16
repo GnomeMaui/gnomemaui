@@ -3,11 +3,15 @@
 > [!NOTE]
 > This documentation depends on the [# Development Environment Setup for GNOME MAUI .NET on Linux](/docs/1-devenv.md) documentation.
 
-## Start GNOME Terminal
+## Start preferred Terminal
+
+Depending on the terminal you have setu up, choose one of the two options below:
+
+### Start GNOME Terminal
 
 Open **GNOME Terminal** and select the **GNOME MAUI** profile.
 
-## Start GNOME MAUI ptyxis terminal
+### Start GNOME MAUI ptyxis terminal
 
 You can start the ptyxis terminal in two ways:
 
@@ -18,9 +22,9 @@ The setup script installs a launcher named **GNOME MAUI** with its own icon (`gn
 Open **Ptyxis** and select the **GNOME MAUI** profile.
 This profile is also created automatically by the setup scripts.
 
-### NodeJS installation
+## NodeJS installation
 
-Say yes to install the required NodeJS version:
+If asked, say yes to install the required NodeJS version:
 
 ```bash
 Can't find an installed Node version matching v24.12.0.

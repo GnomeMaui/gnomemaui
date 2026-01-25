@@ -22,7 +22,7 @@ export GNOMEMAUI=$GNOMEMAUIROOT/gnomemaui
 ```
 
 > [!CAUTION]
-> You need to log out and back in for the environment variables to take effect!
+> You need to restart your terminal or run `source ~/.bashrc` for the environment variables to take effect.
 
 ## Install the required dependencies
 
@@ -32,15 +32,13 @@ export GNOMEMAUI=$GNOMEMAUIROOT/gnomemaui
 - Debian 13
 - Fedora 43
 - OpenSUSE Tumbleweed
-- Ubuntu 25.10
+- Ubuntu 24.04 or 25.10
 
-Follow the instructions found here:
-
-[https://github.com/czirok/devenv?tab=readme-ov-file#dependencies](https://github.com/czirok/devenv?tab=readme-ov-file#dependencies)
+Follow the operating system specific instructions found in the [devenv readme](https://github.com/czirok/devenv?tab=readme-ov-file#dependencies) but stop at the Download section and proceed with this document.):
 
 ## Setting up the development environment
 
-Open Ptyxis terminal or GNOME Terminal.
+(Re)open Ptyxis terminal or GNOME Terminal.
 
 Create the GNOMEMAUIROOT directory:
 
@@ -65,13 +63,13 @@ cd $GNOMEMAUI
 Download devenv
 
 ```bash
-wget https://github.com/czirok/devenv/releases/download/v2026.01.13/devenv.tar.bz2
+wget -O devenv.tar.bz2 https://github.com/czirok/devenv/releases/download/v2026.01.15/devenv.tar.bz2
 ```
 
 Safe extract the archive:
 
 ```bash
-tar xjfv devenv.tar.bz2 --skip-old-files
+tar xjfv devenv.tar.bz2 --exclude='./.vscode/.linux/install.env' --exclude='./.vscode/.linux/install.svg'
 ```
 
 Check dependencies:
@@ -79,6 +77,10 @@ Check dependencies:
 ```bash
 .vscode/.linux/install.sh
 ```
+
+> [!NOTE]
+> You can opt to use GNOME Terminal instead of Ptyxis, it the latter is not available in the packet souces of your distro.
+> Comment out
 
 If you see that everything is checked, then everything is fine. (This example was run on Arch Linux):
 
@@ -103,6 +105,9 @@ On Ubuntu 24.04 LTS, Ptyxis is not available, so this output will appear instead
 [✗] Ptyxis not found - install Ptyxis terminal
 [✗] Some dependencies are missing. Please install them before running the installer.
 ```
+
+In `.vscode/.linux/install.env` change PROJECT_TERMINAL="gnome-terminal" and set the GNOME_TERMINAL_ID var to the GUID of your GNOME Terminal profile
+as described in [GNOME Terminal Setup](/docs/1.1-gnome-terminal-setup.md). You might want to protect your install.env from possible upstream changes using `git update-index --assume-unchanged .vscode/.linux/install.env`.
 
 > [!CAUTION]
 > Flatpak Visual Studio Code is not supported. Please install the native version: [Ubuntu VS Code](https://github.com/czirok/devenv?tab=readme-ov-file#ubuntu-plucky-puffin-2510-and-debian-trixie-13)
@@ -142,10 +147,10 @@ You should see this or something similar:
 ```
 
 > [!CAUTION]
-> You need to log out again and back in for the environment variables to take effect!
+> You need to log out again and back in to your GNOME session for the environment variables to take effect!
 
 ## Next step
 
-If you are using GNOME Terminal, follow the instructions found here: [GNOME Terminal manual setup](/docs/1.1-gnome-terminal-setup.md)
+If you are using GNOME Terminal, follow the instructions found here: [GNOME Terminal Setup](/docs/1.1-gnome-terminal-setup.md)
 
 You can now continue with the [patch](/docs/2-patch.md) documentation.
